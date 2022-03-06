@@ -1,4 +1,4 @@
-package com.www.scheduleer;
+package com.www.scheduleer.config;
 
 import com.www.scheduleer.service.Member.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter { // 2
                 .anyRequest().authenticated() // 나머지 요청들은 권한의 종류에 상관 없이 권한이 있어야 접근 가능
                 .and()
                 .formLogin() // 7
-//                .loginPage("/login") // 로그인 페이지 링크
+                .loginPage("/login") // 로그인 페이지 링크
                 .defaultSuccessUrl("/") // 로그인 성공 후 리다이렉트 주소
                 .and()
                 .logout() // 8
@@ -43,9 +43,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter { // 2
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception { // 9
-//        auth.userDetailsService(memberService)
+        auth.userDetailsService(memberService)
                 // 해당 서비스(userService)에서는 UserDetailsService를 implements해서
                 // loadUserByUsername() 구현해야함 (서비스 참고)
-//                .passwordEncoder(new BCryptPasswordEncoder());
+                .passwordEncoder(new BCryptPasswordEncoder());
     }
 }
