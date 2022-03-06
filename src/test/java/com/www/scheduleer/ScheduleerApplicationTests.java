@@ -28,9 +28,9 @@ class ScheduleerApplicationTests {
     void insertMember() {
         tx.begin();
 
-        Member member = new Member("osk", "osk2090@naver.com", "1234");
+//        Member member = new Member("osk", "osk2090@naver.com", "1234");
 
-        em.persist(member);
+//        em.persist(member);
 
         tx.commit();
     }

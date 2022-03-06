@@ -28,7 +28,7 @@ public class MemberController {
 
     @PostMapping("/new")
     public String insertMember(@ModelAttribute Member member) {
-        memberService.addMember(member);
+        memberService.save(member);
         return "/member/insertMember";
     }
 }
