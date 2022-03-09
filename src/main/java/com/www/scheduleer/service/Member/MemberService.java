@@ -28,4 +28,10 @@ public class MemberService {
         em.persist(m);
         tx.commit();
     }
+
+    public Member getMember(String email) {
+        Member findMember = em.find(Member.class, email);
+        System.out.println("findMember = " + findMember.toString());
+        return findMember;
+    }
 }
