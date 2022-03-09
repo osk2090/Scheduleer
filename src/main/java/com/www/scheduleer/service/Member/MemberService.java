@@ -1,6 +1,13 @@
 package com.www.scheduleer.service.Member;
 
+import com.www.scheduleer.Repository.MemberRepository;
 import com.www.scheduleer.VO.Member;
+import com.www.scheduleer.VO.UserInfo;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -20,12 +27,12 @@ public class MemberService {
     public void addMember(Member member) {
         tx.begin();
 
-        Member m = new Member();
-        m.setName(member.getName());
-        m.setEmail(member.getEmail());
-        m.setPassword(member.getPassword());
-
-        em.persist(m);
+//        Member m = new Member();
+//        m.setName(member.getName());
+//        m.setEmail(member.getEmail());
+//        m.setPassword(member.getPassword());
+//
+//        em.persist(m);
         tx.commit();
     }
 
