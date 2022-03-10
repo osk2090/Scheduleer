@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>회원찾기</title>
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+        <th class="one wide">번호</th>
+        <th class="ten wide">이름</th>
+        <th class="two wide">이메일</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <!-- CONTENTS !-->
+    <tr th:each="member : ${memberList}">
+        <td>
+            <span th:text="${member.memberId}"></span>
+        </td>
+        <td>
+            <span th:text="${member.name}"></span>
+        </td>
+        <td>
+            <span th:text="${member.email}"></span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<form action="#" th:action="@{/member/find}" method="get">
+    <div>
+        <label>
+            <input name="email" type="text" placeholder="찾으시려는 이메일 주소를 입력해주세요.">
+        </label>
+    </div>
+    <button>검색하기</button>
+</form>
+</body>
+</html>

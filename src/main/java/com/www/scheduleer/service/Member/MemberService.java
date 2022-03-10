@@ -2,43 +2,39 @@ package com.www.scheduleer.service.Member;
 
 import com.www.scheduleer.Repository.MemberRepository;
 import com.www.scheduleer.VO.Member;
-import com.www.scheduleer.VO.UserInfo;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
+import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class MemberService {
 
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory("scheduleer");
+    private MemberRepository memberRepository;
 
-    EntityManager em = emf.createEntityManager();
-
-    EntityTransaction tx = em.getTransaction();
-
-    public void addMember(Member member) {
-        tx.begin();
-
-//        Member m = new Member();
-//        m.setName(member.getName());
-//        m.setEmail(member.getEmail());
-//        m.setPassword(member.getPassword());
+//    EntityManagerFactory emf = Persistence.createEntityManagerFactory("scheduleer");
 //
-//        em.persist(m);
-        tx.commit();
+//    EntityManager em = emf.createEntityManager();
+//
+//    EntityTransaction tx = em.getTransaction();
+
+    @Transactional
+    public void addMember(Member member) {
+        Member m = new Member();
+        m.setName(member.getName());
+        m.setEmail(member.getEmail());
+        m.setPassword(member.getPassword());
     }
 
-    public Member getMember(String email) {
-        Member findMember = em.find(Member.class, email);
-        System.out.println("findMember = " + findMember.toString());
-        return findMember;
+//    public Member getMember(String email) {
+//        Member findMember = em.find(Member.class, email);
+//        System.out.println("findMember = " + findMember.toString());
+//        return findMember;
+//    }
+
+    public List<Member> getMemberList() {
+        return memberRepository.findAll();
     }
 }

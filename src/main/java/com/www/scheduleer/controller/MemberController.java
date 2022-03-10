@@ -3,29 +3,18 @@ package com.www.scheduleer.controller;
 import com.www.scheduleer.VO.Member;
 import com.www.scheduleer.service.Member.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping
+@RequestMapping("member")
 public class MemberController {
 
     private final MemberService memberService;
-
-    public MemberController(MemberService memberService) {
-        this.memberService = memberService;
-    }
 
     @GetMapping("/new")
     public String insertMemberForm() {
@@ -37,4 +26,19 @@ public class MemberController {
         memberService.addMember(member);
         return "/member/insertMember";
     }
+
+    @GetMapping("list")
+    public String list(Model model) {
+        List<Member> memberList = memberService.getMemberList();
+        model.addAttribute("memberList", memberList);
+        return "/member/list";
+    }
+
+//    @GetMapping("/find")
+//    public String findMember(@RequestParam(value = "email") String email, Model model) {
+//        Member m = memberService.getMember(email);
+//        model.addAttribute("member", m);
+//        return "/member/findMember";
+//    }
+
 }
