@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,10 +23,7 @@ public class MemberService {
 
     @Transactional
     public void addMember(Member member) {
-        Member m = new Member();
-        m.setName(member.getName());
-        m.setEmail(member.getEmail());
-        m.setPassword(member.getPassword());
+        memberRepository.save(member);
     }
 
 //    public Member getMember(String email) {
@@ -35,6 +33,13 @@ public class MemberService {
 //    }
 
     public List<Member> getMemberList() {
-        return memberRepository.findAll();
+        List<Member> memberList = new ArrayList<>();
+
+        System.out.println(memberRepository.findAll().isEmpty());
+
+        for (Member m : memberRepository.findAll()) {
+            memberList.add(m);
+        }
+        return memberList;
     }
 }
