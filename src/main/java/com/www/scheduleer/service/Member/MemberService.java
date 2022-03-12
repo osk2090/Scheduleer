@@ -9,6 +9,8 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
 @Service
 @AllArgsConstructor
 public class MemberService {
@@ -26,20 +28,17 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-//    public Member getMember(String email) {
-//        Member findMember = em.find(Member.class, email);
-//        System.out.println("findMember = " + findMember.toString());
-//        return findMember;
-//    }
-
     public List<Member> getMemberList() {
-        List<Member> memberList = new ArrayList<>();
+        return memberRepository.findAll();
+    }
 
-        System.out.println(memberRepository.findAll().isEmpty());
-
-        for (Member m : memberRepository.findAll()) {
-            memberList.add(m);
+    public List<Member> findMember(String email) {
+        List<Member> members = memberRepository.findByEmailContaining(email);
+        List<Member> m = new ArrayList<>();
+        for (Member member : members) {
+            m.add(member);
         }
-        return memberList;
+
+        return m;
     }
 }
