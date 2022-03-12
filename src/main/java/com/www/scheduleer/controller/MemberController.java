@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -15,6 +16,13 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService memberService;
+
+    @GetMapping("/login")
+    public String loginForm(HttpServletRequest req) {
+        String referer = req.getHeader("Referer");
+        req.getSession().setAttribute("prevPage", referer);
+        return "login";
+    }
 
     @GetMapping("/new")
     public String insertMemberForm() {
