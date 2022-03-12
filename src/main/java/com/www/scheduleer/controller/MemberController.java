@@ -3,7 +3,6 @@ package com.www.scheduleer.controller;
 import com.www.scheduleer.VO.Member;
 import com.www.scheduleer.service.Member.MemberService;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -35,11 +34,11 @@ public class MemberController {
         return "/member/list";
     }
 
-//    @GetMapping("/find")
-//    public String findMember(@RequestParam(value = "email") String email, Model model) {
-//        Member m = memberService.getMember(email);
-//        model.addAttribute("member", m);
-//        return "/member/findMember";
-//    }
+    @GetMapping("/find")
+    public String findMember(@RequestParam(value = "email") String email, Model model) {
+        List<Member> memberList = memberService.findMember(email);
+        model.addAttribute("memberList", memberList);
+        return "/member/list";
+    }
 
 }
