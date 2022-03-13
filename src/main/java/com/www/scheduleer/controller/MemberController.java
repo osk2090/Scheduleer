@@ -1,18 +1,21 @@
 package com.www.scheduleer.controller;
 
 import com.www.scheduleer.VO.Member;
+import com.www.scheduleer.VO.security.MemberInfo;
 import com.www.scheduleer.service.Member.MemberService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Controller
 @AllArgsConstructor
-@RequestMapping("/member")
 public class MemberController {
 
     private final MemberService memberService;
@@ -24,15 +27,17 @@ public class MemberController {
         return "login";
     }
 
-    @GetMapping("/new")
-    public String insertMemberForm() {
-        return "/member/insertMember";
+    @GetMapping("/logout")
+    public String logoutPage(HttpServletRequest request, HttpServletResponse response) {
+        new SecurityContextLogoutHandler().logout(request,response, SecurityContextHolder
+                .getContext().getAuthentication());
+        return "redirect:/login";
     }
 
-    @PostMapping("/new")
-    public String insertMember(@ModelAttribute Member member) {
-        memberService.addMember(member);
-        return "/member/insertMember";
+    @PostMapping("/member")
+    public String signup(MemberInfo memberInfo) {
+        memberService.save(memberInfo);
+        return "redirect:/login";
     }
 
     @GetMapping("/list")

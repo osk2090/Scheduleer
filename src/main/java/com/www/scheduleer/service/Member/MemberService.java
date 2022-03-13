@@ -2,18 +2,21 @@ package com.www.scheduleer.service.Member;
 
 import com.www.scheduleer.Repository.MemberRepository;
 import com.www.scheduleer.VO.Member;
+import com.www.scheduleer.VO.security.MemberInfo;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
-
 @Service
 @AllArgsConstructor
-public class MemberService {
+public class MemberService implements UserDetailsService {
 
     private MemberRepository memberRepository;
 
@@ -24,8 +27,14 @@ public class MemberService {
 //    EntityTransaction tx = em.getTransaction();
 
     @Transactional
-    public void addMember(Member member) {
-        memberRepository.save(member);
+    public Long save(MemberInfo memberInfo) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        memberInfo.setPassword(encoder.encode(memberInfo.getPassword()));
+
+        return memberRepository.save(Member.builder()
+                .email(memberInfo.getEmail())
+                .auth(memberInfo.getAuth())
+                .password(memberInfo.getPassword()).build()).getId();
     }
 
     public List<Member> getMemberList() {
@@ -40,5 +49,10 @@ public class MemberService {
         }
 
         return m;
+    }
+
+    @Override
+    public Member loadUserByUsername(String email) throws UsernameNotFoundException {
+        return memberRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(email));
     }
 }

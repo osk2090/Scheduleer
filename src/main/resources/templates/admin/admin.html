@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자</title>
+</head>
+<body>
+<h2>관리자 페이지(관리자)</h2>
+ID : <span sec:authentication="name"></span> <br>
+소유 권한 : <span sec:authentication="authorities"></span> <br>
+<a href="/">관리자 페이지</a>
+</body>
+</html>

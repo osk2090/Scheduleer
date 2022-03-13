@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>회원가입</title>
+</head>
+<body>
+<h1>회원가입</h1>
+<form th:action="@{/member}" method="post">
+    email : <input type="text" name="email"> <br>
+    password : <input type="text" name="email"> <br>
+    <input type="radio" name="auth" value="ROLE_ADMIN, ROLE_GENERAL"> admin
+    <input type="radio" name="auth" value="ROLE_USER" checked="checked"> general <br>
+    <button type="submit">승인</button>
+</form>
+</body>
+</html>
