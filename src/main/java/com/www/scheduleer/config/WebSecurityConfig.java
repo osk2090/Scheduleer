@@ -28,8 +28,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().headers().frameOptions().disable()
                 .and().authorizeRequests()
-                .antMatchers("/login", "/new", "/user").permitAll()
-                .antMatchers("/main").hasRole("MEMBER")
+                .antMatchers("/login", "/member/signup", "/member/user").permitAll()
+                .antMatchers("/").hasRole("MEMBER")
                 .antMatchers("/admin").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()

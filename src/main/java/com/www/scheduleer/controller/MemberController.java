@@ -34,7 +34,7 @@ public class MemberController {
         return "redirect:/login";
     }
 
-    @PostMapping("/member")
+    @PostMapping("/user")
     public String signup(MemberInfo memberInfo) {
         memberService.save(memberInfo);
         return "redirect:/login";
