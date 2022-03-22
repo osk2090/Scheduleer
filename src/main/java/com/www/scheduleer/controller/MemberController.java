@@ -4,6 +4,7 @@ import com.www.scheduleer.VO.Member;
 import com.www.scheduleer.VO.security.MemberInfo;
 import com.www.scheduleer.service.Member.MemberService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
@@ -15,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Controller
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
@@ -54,4 +55,8 @@ public class MemberController {
         return "/member/list";
     }
 
+    @GetMapping("/signup")
+    public String ss() {
+        return "/member/signup";
+    }
 }

@@ -4,6 +4,7 @@ import com.www.scheduleer.Repository.MemberRepository;
 import com.www.scheduleer.VO.Member;
 import com.www.scheduleer.VO.security.MemberInfo;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class MemberService implements UserDetailsService {
 
     private MemberRepository memberRepository;
