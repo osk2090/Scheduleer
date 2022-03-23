@@ -1,9 +1,8 @@
 package com.www.scheduleer.controller;
 
-import com.www.scheduleer.VO.Member;
-import com.www.scheduleer.VO.security.MemberInfo;
+import com.www.scheduleer.VO.MemberInfo;
+import com.www.scheduleer.VO.security.MemberInfoDto;
 import com.www.scheduleer.service.Member.MemberService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -21,12 +20,12 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @GetMapping("/login")
-    public String loginForm(HttpServletRequest req) {
-        String referer = req.getHeader("Referer");
-        req.getSession().setAttribute("prevPage", referer);
-        return "login";
-    }
+//    @GetMapping("/login")
+//    public String loginForm(HttpServletRequest req) {
+//        String referer = req.getHeader("Referer");
+//        req.getSession().setAttribute("prevPage", referer);
+//        return "login";
+//    }
 
     @GetMapping("/logout")
     public String logoutPage(HttpServletRequest request, HttpServletResponse response) {
@@ -36,27 +35,22 @@ public class MemberController {
     }
 
     @PostMapping("/user")
-    public String signup(MemberInfo memberInfo) {
-        memberService.save(memberInfo);
+    public String signup(MemberInfoDto infoDto) {
+        memberService.save(infoDto);
         return "redirect:/login";
     }
 
-    @GetMapping("/list")
-    public String list(Model model) {
-        List<Member> memberList = memberService.getMemberList();
-        model.addAttribute("memberList", memberList);
-        return "/member/list";
-    }
-
-    @GetMapping("/find")
-    public String findMember(@RequestParam(value = "email") String email, Model model) {
-        List<Member> memberList = memberService.findMember(email);
-        model.addAttribute("memberList", memberList);
-        return "/member/list";
-    }
-
-    @GetMapping("/signup")
-    public String ss() {
-        return "/member/signup";
-    }
+//    @GetMapping("/list")
+//    public String list(Model model) {
+//        List<MemberInfo> memberList = memberService.getMemberList();
+//        model.addAttribute("memberList", memberList);
+//        return "/member/list";
+//    }
+//
+//    @GetMapping("/find")
+//    public String findMember(@RequestParam(value = "email") String email, Model model) {
+//        List<MemberInfo> memberList = memberService.findMember(email);
+//        model.addAttribute("memberList", memberList);
+//        return "/member/list";
+//    }
 }

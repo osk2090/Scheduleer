@@ -1,11 +1,9 @@
 package com.www.scheduleer.service.Member;
 
 import com.www.scheduleer.Repository.MemberRepository;
-import com.www.scheduleer.VO.Member;
-import com.www.scheduleer.VO.security.MemberInfo;
-import lombok.AllArgsConstructor;
+import com.www.scheduleer.VO.MemberInfo;
+import com.www.scheduleer.VO.security.MemberInfoDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberService implements UserDetailsService {
 
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
 //    EntityManagerFactory emf = Persistence.createEntityManagerFactory("scheduleer");
 //
@@ -28,24 +26,25 @@ public class MemberService implements UserDetailsService {
 //    EntityTransaction tx = em.getTransaction();
 
     @Transactional
-    public Long save(MemberInfo memberInfo) {
+    public Long save(MemberInfoDto infoDto) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        memberInfo.setPassword(encoder.encode(memberInfo.getPassword()));
+        infoDto.setPassword(encoder.encode(infoDto.getPassword()));
 
-        return memberRepository.save(Member.builder()
-                .email(memberInfo.getEmail())
-                .auth(memberInfo.getAuth())
-                .password(memberInfo.getPassword()).build()).getId();
+        return memberRepository.save(MemberInfo.builder()
+                .name(infoDto.getName())
+                .email(infoDto.getEmail())
+                .auth(infoDto.getAuth())
+                .password(infoDto.getPassword()).build()).getId();
     }
 
-    public List<Member> getMemberList() {
+    public List<MemberInfo> getMemberList() {
         return memberRepository.findAll();
     }
 
-    public List<Member> findMember(String email) {
-        List<Member> members = memberRepository.findByEmailContaining(email);
-        List<Member> m = new ArrayList<>();
-        for (Member member : members) {
+    public List<MemberInfo> findMember(String email) {
+        List<MemberInfo> members = memberRepository.findByEmailContaining(email);
+        List<MemberInfo> m = new ArrayList<>();
+        for (MemberInfo member : members) {
             m.add(member);
         }
 
@@ -53,7 +52,7 @@ public class MemberService implements UserDetailsService {
     }
 
     @Override
-    public Member loadUserByUsername(String email) throws UsernameNotFoundException {
+    public MemberInfo loadUserByUsername(String email) throws UsernameNotFoundException {
         return memberRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(email));
     }
 }
