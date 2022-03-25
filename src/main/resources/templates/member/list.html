@@ -33,13 +33,12 @@
     </tbody>
 </table>
 
-<form action="/member/find" method="get">
+<form id="find" th:action="@{/find}" method="get">
     <div>
         <label>
             <input name="email" type="text" placeholder="찾으시려는 이메일 주소를 입력해주세요.">
         </label>
     </div>
-    <button>검색하기</button>
-</form>
+    <button>검색하기</button></form>
 </body>
 </html>
