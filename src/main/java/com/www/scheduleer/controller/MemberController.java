@@ -1,31 +1,21 @@
 package com.www.scheduleer.controller;
 
-import com.www.scheduleer.VO.MemberInfo;
 import com.www.scheduleer.VO.security.MemberInfoDto;
 import com.www.scheduleer.service.Member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
-
-//    @GetMapping("/login")
-//    public String loginForm(HttpServletRequest req) {
-//        String referer = req.getHeader("Referer");
-//        req.getSession().setAttribute("prevPage", referer);
-//        return "login";
-//    }
 
     @GetMapping("/logout")
     public String logoutPage(HttpServletRequest request, HttpServletResponse response) {
@@ -34,7 +24,7 @@ public class MemberController {
         return "redirect:/login";
     }
 
-    @PostMapping("/user")
+    @PostMapping("/member")
     public String signup(MemberInfoDto infoDto) {
         memberService.save(infoDto);
         return "redirect:/login";
