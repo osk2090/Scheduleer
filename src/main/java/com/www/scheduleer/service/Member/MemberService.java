@@ -1,21 +1,23 @@
 package com.www.scheduleer.service.Member;
 
 import com.www.scheduleer.Repository.MemberRepository;
-import com.www.scheduleer.VO.Member;
-import lombok.AllArgsConstructor;
+import com.www.scheduleer.VO.MemberInfo;
+import com.www.scheduleer.VO.security.MemberInfoDto;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
-
 @Service
-@AllArgsConstructor
-public class MemberService {
+@RequiredArgsConstructor
+public class MemberService implements UserDetailsService {
 
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
 //    EntityManagerFactory emf = Persistence.createEntityManagerFactory("scheduleer");
 //
@@ -24,21 +26,33 @@ public class MemberService {
 //    EntityTransaction tx = em.getTransaction();
 
     @Transactional
-    public void addMember(Member member) {
-        memberRepository.save(member);
+    public Long save(MemberInfoDto infoDto) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        infoDto.setPassword(encoder.encode(infoDto.getPassword()));
+
+        return memberRepository.save(MemberInfo.builder()
+                .name(infoDto.getName())
+                .email(infoDto.getEmail())
+                .auth(infoDto.getAuth())
+                .password(infoDto.getPassword()).build()).getId();
     }
 
-    public List<Member> getMemberList() {
+    public List<MemberInfo> getMemberList() {
         return memberRepository.findAll();
     }
 
-    public List<Member> findMember(String email) {
-        List<Member> members = memberRepository.findByEmailContaining(email);
-        List<Member> m = new ArrayList<>();
-        for (Member member : members) {
+    public List<MemberInfo> findMember(String email) {
+        List<MemberInfo> members = memberRepository.findByEmailContaining(email);
+        List<MemberInfo> m = new ArrayList<>();
+        for (MemberInfo member : members) {
             m.add(member);
         }
 
         return m;
+    }
+
+    @Override
+    public MemberInfo loadUserByUsername(String email) throws UsernameNotFoundException {
+        return memberRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(email));
     }
 }
