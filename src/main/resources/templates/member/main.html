@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
-      xmlns:th="http://www.w3.org/1999/xhtml">
+      xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <title>main</title>
 </head>
@@ -18,6 +18,8 @@ ID : <span sec:authentication="name"></span> <br>
 <li sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item">
     <button type="button" class="navyBtn" onclick="location.href='/admin'">관리자 페이지</button>
 </li>
+
+<button type="button" class="navyBtn" onclick="location.href='/addBoard'">계획 작성</button>
 
 </body>
 </html>
