@@ -4,14 +4,17 @@ import com.www.scheduleer.VO.MemberInfo;
 import com.www.scheduleer.VO.security.MemberInfoDto;
 import com.www.scheduleer.service.Member.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -31,6 +34,13 @@ public class MemberController {
     public String signup(MemberInfoDto infoDto) {
         memberService.save(infoDto);
         return "redirect:/login";
+    }
+
+    //현재 로그인된 멤버의 정보
+    @GetMapping("/info")
+    public String memberInfo(@AuthenticationPrincipal MemberInfo memberInfo, Model model) {
+        model.addAttribute("memberInfo", memberInfo);
+        return "/member/info";
     }
 
     @GetMapping("/list")
