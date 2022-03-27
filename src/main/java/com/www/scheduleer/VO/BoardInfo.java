@@ -9,7 +9,6 @@ import java.util.Date;
 
 @Entity
 @Getter
-@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BoardInfo {
 
@@ -17,10 +16,15 @@ public class BoardInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 30, nullable = false)
     private String title;
 
     private String content;
 
+//    @Column(nullable = false)
+//    private Long memberId;
+
+    @Column(nullable = false)
     private String writer;
 
     @CreationTimestamp
