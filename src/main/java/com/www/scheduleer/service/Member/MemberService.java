@@ -19,12 +19,6 @@ public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
-//    EntityManagerFactory emf = Persistence.createEntityManagerFactory("scheduleer");
-//
-//    EntityManager em = emf.createEntityManager();
-//
-//    EntityTransaction tx = em.getTransaction();
-
     @Transactional
     public Long save(MemberInfoDto infoDto) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
