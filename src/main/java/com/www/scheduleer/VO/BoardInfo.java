@@ -21,9 +21,6 @@ public class BoardInfo {
 
     private String content;
 
-//    @Column(nullable = false)
-//    private Long memberId;
-
     @Column(nullable = false)
     private String writer;
 

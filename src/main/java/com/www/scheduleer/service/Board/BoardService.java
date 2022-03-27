@@ -15,11 +15,11 @@ public class BoardService {
     private final BoardRepository boardRepository;
 
     @Transactional
-    public Long save(BoardInfo boardInfo) {
+    public Long save(BoardInfo boardInfo, String writer) {
         return boardRepository.save(BoardInfo.builder()
                 .title(boardInfo.getTitle())
                 .content(boardInfo.getContent())
-                .writer(boardInfo.getWriter())
+                .writer(writer)
                 .checkStar(boardInfo.getCheckStar()).build()).getId();
     }
 
