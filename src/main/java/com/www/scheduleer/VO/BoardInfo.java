@@ -19,10 +19,8 @@ public class BoardInfo {
     @Column(length = 30, nullable = false)
     private String title;
 
+    @Lob//대용량
     private String content;
-
-    @Column(nullable = false)
-    private String writer;
 
     @CreationTimestamp
     private Date regDate;//생성 날짜
@@ -32,11 +30,15 @@ public class BoardInfo {
 
     private Integer checkStar;//별표유무
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_info_id")
+    private MemberInfo writer;
+
     @Builder
-    public BoardInfo(String title, String content, String writer, Integer checkStar) {
+    public BoardInfo(String title, String content, Integer checkStar, MemberInfo writer) {
         this.title = title;
         this.content = content;
-        this.writer = writer;
         this.checkStar = checkStar;
+        this.writer = writer;
     }
 }

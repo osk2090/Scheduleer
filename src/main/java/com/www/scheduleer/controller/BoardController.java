@@ -17,7 +17,7 @@ public class BoardController {
 
     @PostMapping("/board")
     public String addBoard(BoardInfo boardInfo, @AuthenticationPrincipal MemberInfo memberInfo) {
-        boardService.save(boardInfo, memberInfo.getName());
+        boardService.save(boardInfo, memberInfo);
         return "redirect:/";
     }
 }

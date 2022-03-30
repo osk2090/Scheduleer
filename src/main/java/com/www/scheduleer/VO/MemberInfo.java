@@ -37,10 +37,6 @@ public class MemberInfo implements UserDetails {
     @Column(nullable = false)
     private String auth;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "member_info_id")
-    private List<BoardInfo> boardInfo;
-
     @Builder
     public MemberInfo(String name, String email, String password, String auth) {
         this.name = name;
