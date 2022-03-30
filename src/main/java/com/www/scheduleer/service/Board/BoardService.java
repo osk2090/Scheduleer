@@ -2,6 +2,7 @@ package com.www.scheduleer.service.Board;
 
 import com.www.scheduleer.Repository.BoardRepository;
 import com.www.scheduleer.VO.BoardInfo;
+import com.www.scheduleer.VO.MemberInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
 
     @Transactional
-    public Long save(BoardInfo boardInfo, String writer) {
+    public Long save(BoardInfo boardInfo, MemberInfo writer) {
         return boardRepository.save(BoardInfo.builder()
                 .title(boardInfo.getTitle())
                 .content(boardInfo.getContent())
