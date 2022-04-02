@@ -7,7 +7,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -19,5 +22,12 @@ public class BoardController {
     public String addBoard(BoardInfo boardInfo, @AuthenticationPrincipal MemberInfo memberInfo) {
         boardService.save(boardInfo, memberInfo);
         return "redirect:/";
+    }
+
+    @GetMapping("/boardList")
+    public String list(Model model) {
+        List<BoardInfo> boardInfoList = boardService.getBoardList();
+        model.addAttribute("boardList", boardInfoList);
+        return "/main";
     }
 }

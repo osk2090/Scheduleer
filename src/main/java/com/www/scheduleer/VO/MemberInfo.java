@@ -1,5 +1,6 @@
 package com.www.scheduleer.VO;
 
+import com.sun.istack.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -20,15 +21,18 @@ public class MemberInfo extends BaseTimeEntity implements UserDetails {
     private Long id;
 
     @Column(name = "name")
+    @NotNull
     private String name;
 
-    @Column(unique = true, nullable = false, name = "email")
+    @Column(unique = true,name = "email")
+    @NotNull
     private String email;
 
-    @Column(nullable = false, name = "password")
+    @Column(name = "password")
+    @NotNull
     private String password;
 
-    @Column(nullable = false)
+    @NotNull
     private String auth;
 
     @Builder

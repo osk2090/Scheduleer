@@ -1,5 +1,6 @@
 package com.www.scheduleer.VO;
 
+import com.sun.istack.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -16,16 +17,20 @@ public class BoardInfo extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 30, nullable = false)
+    @Column(length = 30)
+    @NotNull
     private String title;
 
     @Lob//대용량
+    @NotNull
     private String content;
 
+    @NotNull
     private Integer checkStar;//별표유무
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_info_id")
+    @NotNull
     private MemberInfo writer;
 
     @Builder
