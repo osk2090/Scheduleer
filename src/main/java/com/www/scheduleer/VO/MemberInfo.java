@@ -13,7 +13,7 @@ import java.util.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
-public class MemberInfo implements UserDetails {
+public class MemberInfo extends BaseTimeEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,12 +28,6 @@ public class MemberInfo implements UserDetails {
     @Column(nullable = false, name = "password")
     private String password;
 
-    @CreationTimestamp
-    private Date regDate;//생성 날짜
-
-    @UpdateTimestamp
-    private Date updateDate;//업데이트 날짜
-
     @Column(nullable = false)
     private String auth;
 
@@ -45,7 +39,7 @@ public class MemberInfo implements UserDetails {
         this.auth = auth;
     }
 
-//    사용자의 권한을 콜렉션 형태로 반환
+    //    사용자의 권한을 콜렉션 형태로 반환
     // 단, 클래스 자료형은 GrantedAuthority를 구현해야함
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -10,7 +10,7 @@ import java.util.Date;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BoardInfo {
+public class BoardInfo extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,12 +21,6 @@ public class BoardInfo {
 
     @Lob//대용량
     private String content;
-
-    @CreationTimestamp
-    private Date regDate;//생성 날짜
-
-    @UpdateTimestamp
-    private Date updateDate;//업데이트 날짜
 
     private Integer checkStar;//별표유무
 
