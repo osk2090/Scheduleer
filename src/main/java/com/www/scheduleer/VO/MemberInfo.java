@@ -1,5 +1,6 @@
 package com.www.scheduleer.VO;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -21,14 +22,17 @@ public class MemberInfo extends BaseTimeEntity implements UserDetails {
     private Long id;
 
     @Column(name = "name")
+    @NotBlank(message = "이름은 필수값입니다.")
     @NotNull
     private String name;
 
-    @Column(unique = true,name = "email")
+    @Column(unique = true, name = "email")
+    @NotBlank(message = "이메일은 필수값입니다.")
     @NotNull
     private String email;
 
     @Column(name = "password")
+    @NotBlank(message = "비밀번호는 필수값입니다.")
     @NotNull
     private String password;
 

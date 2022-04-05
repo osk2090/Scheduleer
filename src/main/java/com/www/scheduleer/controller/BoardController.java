@@ -24,7 +24,7 @@ public class BoardController {
         return "redirect:/";
     }
 
-    @GetMapping("/boardList")
+    @GetMapping("/main")
     public String list(Model model) {
         List<BoardInfo> boardInfoList = boardService.getBoardList();
         model.addAttribute("boardList", boardInfoList);
