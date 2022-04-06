@@ -41,8 +41,11 @@
         <td>
             <span th:text="${board.content}"></span>
         </td>
+<!--        <td>-->
+<!--            <span th:text="${board.checkStar}"></span>-->
+<!--        </td>-->
         <td>
-            <span th:text="${board.checkStar}"></span>
+           <input type="checkbox" th:field="${board.checkStar}" disabled>
         </td>
     </tr>
     </tbody>

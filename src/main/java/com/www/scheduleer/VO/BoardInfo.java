@@ -25,8 +25,7 @@ public class BoardInfo extends BaseTimeEntity {
     @NotNull
     private String content;
 
-    @NotNull
-    private Integer checkStar;//별표유무
+    private Boolean checkStar;//별표유무
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_info_id")
@@ -34,7 +33,7 @@ public class BoardInfo extends BaseTimeEntity {
     private MemberInfo writer;
 
     @Builder
-    public BoardInfo(String title, String content, Integer checkStar, MemberInfo writer) {
+    public BoardInfo(String title, String content, Boolean checkStar, MemberInfo writer) {
         this.title = title;
         this.content = content;
         this.checkStar = checkStar;
