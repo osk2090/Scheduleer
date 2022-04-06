@@ -9,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class MvcConfig implements WebMvcConfigurer {
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("/member/main");
+        registry.addViewController("/main").setViewName("/main");//전체글이 나오는 실제메인 위에 있는 메인은 수정/삭제 예정
         registry.addViewController("/login").setViewName("login");
         registry.addViewController("/admin").setViewName("/admin/admin");
         registry.addViewController("/signup").setViewName("/member/signup");

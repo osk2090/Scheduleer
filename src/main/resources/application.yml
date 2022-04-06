@@ -7,5 +7,10 @@ spring:
 
   jpa:
     show-sql: true
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
       ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        check_nullability: true
