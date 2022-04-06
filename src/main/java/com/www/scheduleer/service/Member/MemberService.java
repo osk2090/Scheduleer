@@ -8,18 +8,19 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
-    @Transactional
     public Long save(MemberInfoDto infoDto) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         infoDto.setPassword(encoder.encode(infoDto.getPassword()));
@@ -47,6 +48,13 @@ public class MemberService implements UserDetailsService {
 
     @Override
     public MemberInfo loadUserByUsername(String email) throws UsernameNotFoundException {
-        return memberRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(email));
+        return memberRepository.findByEmail(email).orElseThrow (() -> new UsernameNotFoundException(email));
+    }
+
+    private void validateDuplicateMember(MemberInfo memberInfo) {
+        Optional<MemberInfo> findMember = memberRepository.findByEmail(memberInfo.getEmail());
+        if (findMember != null) {
+            throw new IllegalStateException("이미 가입된 회원입니다.");
+        }
     }
 }
