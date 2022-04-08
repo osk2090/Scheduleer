@@ -8,10 +8,10 @@
 <h1>계획 작성하기</h1>
 
 <form th:action="@{/board}" method="POST">
-    제목 : <input type="text" name="title"> <br>
-    내용 : <textarea name="content" cols="50" rows="10"></textarea> <br>
+    제목 : <input type="text" name="title" minlength="3"> <br>
+    내용 : <textarea name="content" cols="50" rows="10" minlength="3"></textarea> <br>
 
-    <input type="checkbox" name="checkStar" value="false">
+    <input type="checkbox" name="checkStar" value="false" hidden>
     <button type="submit">완료</button>
 </form>
 </body>

@@ -18,18 +18,18 @@ public class BoardInfo extends BaseTimeEntity {
     private Long id;
 
     @Column(length = 30)
-    @NotNull
+//    @NotNull
     private String title;
 
     @Lob//대용량
-    @NotNull
+//    @NotNull
     private String content;
 
     private Boolean checkStar;//별표유무
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_info_id")
-    @NotNull
+//    @NotNull
     private MemberInfo writer;
 
     @Builder
