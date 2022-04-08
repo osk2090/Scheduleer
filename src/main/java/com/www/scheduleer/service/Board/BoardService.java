@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,5 +31,9 @@ public class BoardService {
 
     public List<BoardInfo> findBoardByWriter(String writer) {
         return boardRepository.findBoardInfoByWriter(writer);
+    }
+
+    public Optional<BoardInfo> findBoardById(Long boardId) {
+        return boardRepository.findBoardInfoById(boardId);
     }
 }

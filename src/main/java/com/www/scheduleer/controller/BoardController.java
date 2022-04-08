@@ -30,4 +30,11 @@ public class BoardController {
         model.addAttribute("boardList", boardInfoList);
         return "/main";
     }
+
+    @PostMapping("/detail")
+    public String detail(Model model, Long boardId) {
+        model.addAttribute("boardDetail", boardService.findBoardById(boardId));
+        return "/board/detail";
+    }
+
 }

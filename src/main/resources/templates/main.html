@@ -28,6 +28,8 @@
     <tr>
         <th class="one wide">제목</th>
         <th class="ten wide">계획내용</th>
+        <th class="ten wide">생성일자</th>
+        <th class="ten wide">달성일자</th>
         <th class="two wide">별표</th>
     </tr>
     </thead>
@@ -36,11 +38,23 @@
     <!-- CONTENTS !-->
     <tr th:each="board : ${boardList}">
         <td>
-            <span th:text="${board.title}"></span>
+            <a th:href="@{'/post/'+ ${board.id}">
+                <span th:text="${board.title}"></span>
+            </a>
         </td>
+
         <td>
             <span th:text="${board.content}"></span>
         </td>
+
+        <td>
+            <span th:text="${board.regDate}"></span>
+        </td>
+
+        <td>
+            <span th:text="${board.updateDate}"></span>
+        </td>
+
         <td>
             <span th:text="${board.checkStar}"></span>
         </td>

@@ -8,9 +8,9 @@
 <h1>Sign Up</h1> <hr>
 
 <form th:action="@{/member}" method="POST">
-    name : <input type="text" name="name"> <br>
+    name : <input type="text" name="name" minlength="3" maxlength="12"> <br>
     email : <input type="email" name="email"> <br>
-    password : <input type="password" name="password"> <br>
+    password : <input type="password" name="password" minlength="8" maxlength="12"> <br>
     <input type="radio" name="auth" value="ROLE_ADMIN,ROLE_USER"> admin
     <input type="radio" name="auth" value="ROLE_USER" checked="checked"> user <br>
     <button type="submit">Join</button>
