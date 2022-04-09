@@ -2,17 +2,16 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>add Board</title>
+    <title>Detail</title>
 </head>
 <body>
-<h1>계획 작성하기</h1>
 
-<form th:action="@{/board}" method="POST">
-    제목 : <input type="text" name="title" minlength="3"> <br>
-    내용 : <textarea name="content" cols="50" rows="10" minlength="3"></textarea> <br>
-
-    <input type="checkbox" name="checkStar" value="false" hidden>
-    <button type="submit">완료</button>
-</form>
+<div>
+    <h1>[[${boardDetail.title}]]</h1>
+    <p>작성자 : [[${boardDetail.writer.name}]]</p>
+    <p>[[${boardDetail.checkStar}]]</p>
+    <p>작성 일자 : [[${boardDetail.regDate}]]</p>
+    <p>계획 내용 : [[${boardDetail.content}]]</p>
+</div>
 </body>
 </html>

@@ -34,13 +34,13 @@ public class MemberController {
     public String logoutPage(HttpServletRequest request, HttpServletResponse response) {
         new SecurityContextLogoutHandler().logout(request,response, SecurityContextHolder
                 .getContext().getAuthentication());
-        return "redirect:/login";
+        return "/main";
     }
 
     @PostMapping("/member")
     public String signup(MemberInfoDto infoDto) {
         memberService.save(infoDto);
-        return "redirect:/login";
+        return "/main";
     }
 
     //현재 로그인된 멤버의 정보

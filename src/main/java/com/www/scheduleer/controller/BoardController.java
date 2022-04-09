@@ -21,7 +21,7 @@ public class BoardController {
     @PostMapping("/board")
     public String addBoard(BoardInfo boardInfo, @AuthenticationPrincipal MemberInfo memberInfo) {
         boardService.save(boardInfo, memberInfo);
-        return "redirect:/";
+        return "redirect:/main";
     }
 
     @GetMapping("/main")
@@ -31,7 +31,7 @@ public class BoardController {
         return "/main";
     }
 
-    @PostMapping("/detail")
+    @GetMapping("/detail")
     public String detail(Model model, Long boardId) {
         model.addAttribute("boardDetail", boardService.findBoardById(boardId));
         return "/board/detail";

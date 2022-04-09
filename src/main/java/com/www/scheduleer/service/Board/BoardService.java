@@ -33,7 +33,7 @@ public class BoardService {
         return boardRepository.findBoardInfoByWriter(writer);
     }
 
-    public Optional<BoardInfo> findBoardById(Long boardId) {
+    public BoardInfo findBoardById(Long boardId) {
         return boardRepository.findBoardInfoById(boardId);
     }
 }

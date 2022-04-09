@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
       xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta charset="UTF-8">
@@ -21,7 +22,21 @@
 
 <body>
 
-<button type="button" class="navyBtn" onclick="location.href='/login'">로그인</button>
+
+<li sec:authorize="hasAnyRole('ROLE_USER','ROLE_ADMIN')" class="nav-item">
+    <button type="button" class="navyBtn" onclick="location.href='/addBoard'">계획 작성</button>
+</li>
+
+<li sec:authorize="!hasAnyRole('ROLE_USER','ROLE_ADMIN')" class="nav-item">
+    <button type="button" class="navyBtn" onclick="location.href='/login'">로그인</button>
+</li>
+
+<li sec:authorize="hasAnyRole('ROLE_USER','ROLE_ADMIN')" class="nav-item">
+    <form id="logout" action="/logout" method="POST">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <input type="submit" value="로그아웃"/>
+    </form>
+</li>
 
 <table>
     <thead>
@@ -38,7 +53,7 @@
     <!-- CONTENTS !-->
     <tr th:each="board : ${boardList}">
         <td>
-            <a th:href="@{'/post/'+ ${board.id}">
+            <a th:href="@{/detail/(boardId=${board.id})}">
                 <span th:text="${board.title}"></span>
             </a>
         </td>
