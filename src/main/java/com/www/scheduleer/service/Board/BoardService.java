@@ -5,8 +5,8 @@ import com.www.scheduleer.VO.BoardInfo;
 import com.www.scheduleer.VO.MemberInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +22,12 @@ public class BoardService {
                 .title(boardInfo.getTitle())
                 .content(boardInfo.getContent())
                 .writer(writer)
+                .checkStar(boardInfo.getCheckStar()).build()).getId();
+    }
+
+    @Transactional
+    public Long update(BoardInfo boardInfo) {
+        return boardRepository.save(BoardInfo.builder()
                 .checkStar(boardInfo.getCheckStar()).build()).getId();
     }
 

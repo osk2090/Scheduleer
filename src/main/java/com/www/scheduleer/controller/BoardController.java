@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import java.util.List;
 
@@ -37,4 +38,9 @@ public class BoardController {
         return "/board/detail";
     }
 
+    @PostMapping("/update")
+    public String updateBoard(BoardInfo boardInfo) {
+        boardService.update(boardInfo);
+        return "redirect:/main";
+    }
 }

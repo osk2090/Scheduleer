@@ -1,17 +1,45 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Detail</title>
 </head>
 <body>
 
-<div>
-    <h1>[[${boardDetail.title}]]</h1>
-    <p>작성자 : [[${boardDetail.writer.name}]]</p>
-    <p>[[${boardDetail.checkStar}]]</p>
-    <p>작성 일자 : [[${boardDetail.regDate}]]</p>
-    <p>계획 내용 : [[${boardDetail.content}]]</p>
-</div>
+<form th:action="@{/update}" method="POST" name="checkStarForm">
+    <h1>[[${boardDetail.title}]]</h1><br>
+    <h3>[[${boardDetail.writer.name}]]</h3> &nbsp
+
+    <img id="image" onclick="changeImage()" src="/image/unchecked.png">
+    <input type="text" id="check" name="checkStar" value="" disabled>
+
+    <h4>작성일자 : [[${boardDetail.regDate}]]</h4> &nbsp
+    <h4>계획 달성 일자: [[${boardDetail.updateDate}]]</h4><br>
+
+    <textarea name="content" readonly="readonly">[[${boardDetail.content}]]</textarea><br>
+
+    <div sec:authorize="hasAnyRole('ROLE_USER','ROLE_ADMIN')" class="nav-item">
+        <button type="submit">저장</button>
+    </div>
+    <button type="button" class="navyBtn" onclick="location.href='/main'">이전으로</button>
+
+</form>
 </body>
 </html>
+
+<script type="text/javascript">
+    state = document.getElementById('check').value;
+    function changeImage() {
+        if (state === false) {
+            state = true;
+            document.checkStarForm.checkStar.value = state;
+            document.getElementById('image').src = "/templates/image/checked.png";
+        } else {
+            state = false;
+            document.checkStarForm.checkStar.value = state;
+            document.getElementById('image').src = "/templates/image/unchecked.png";
+        }
+    }
+</script>

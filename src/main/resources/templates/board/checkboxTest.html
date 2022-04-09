@@ -6,20 +6,19 @@
 </head>
 <body>
 
-<img id="image" onclick="changeImage()" border=0" src="/image/unchecked.png" />
+<img id="image" onclick="changeImage()" border=0" src="/image/unchecked.png"/>
 
 </body>
 </html>
 
 <script type="text/javascript">
-    state = 0;
+    state = false;
     function changeImage() {
-        if ( state == 0 ) {
-            state = 1;
+        if (state === false) {
+            state = true;
             document.getElementById('image').src = "/image/checked.png";
-        }
-        else {
-            state = 0;
+        } else {
+            state = false;
             document.getElementById('image').src = "/image/unchecked.png";
         }
     }

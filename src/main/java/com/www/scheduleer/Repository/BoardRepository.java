@@ -15,4 +15,5 @@ public interface BoardRepository extends JpaRepository<BoardInfo, Long> {
 
     BoardInfo findBoardInfoById(Long boardId);//상세보기
 
+//    void update(BoardInfo boardInfo);
 }
