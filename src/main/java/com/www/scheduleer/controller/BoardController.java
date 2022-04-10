@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class BoardController {
     @PostMapping("/board")
     public String addBoard(BoardInfo boardInfo, @AuthenticationPrincipal MemberInfo memberInfo) {
         boardService.save(boardInfo, memberInfo);
-        return "redirect:/";
+        return "redirect:/main";
     }
 
     @GetMapping("/main")
@@ -29,5 +30,17 @@ public class BoardController {
         List<BoardInfo> boardInfoList = boardService.getBoardList();
         model.addAttribute("boardList", boardInfoList);
         return "/main";
+    }
+
+    @GetMapping("/detail")
+    public String detail(Model model, Long boardId) {
+        model.addAttribute("boardDetail", boardService.findBoardById(boardId));
+        return "/board/detail";
+    }
+
+    @PostMapping("/update")
+    public String updateBoard(BoardInfo boardInfo) {
+        boardService.update(boardInfo);
+        return "redirect:/main";
     }
 }

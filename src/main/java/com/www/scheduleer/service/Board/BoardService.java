@@ -5,9 +5,10 @@ import com.www.scheduleer.VO.BoardInfo;
 import com.www.scheduleer.VO.MemberInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,11 +25,21 @@ public class BoardService {
                 .checkStar(boardInfo.getCheckStar()).build()).getId();
     }
 
+    @Transactional
+    public Long update(BoardInfo boardInfo) {
+        return boardRepository.save(BoardInfo.builder()
+                .checkStar(boardInfo.getCheckStar()).build()).getId();
+    }
+
     public List<BoardInfo> getBoardList() {
         return boardRepository.findAll();
     }
 
     public List<BoardInfo> findBoardByWriter(String writer) {
         return boardRepository.findBoardInfoByWriter(writer);
+    }
+
+    public BoardInfo findBoardById(Long boardId) {
+        return boardRepository.findBoardInfoById(boardId);
     }
 }

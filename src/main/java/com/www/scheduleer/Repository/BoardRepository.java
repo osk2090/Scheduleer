@@ -13,4 +13,7 @@ public interface BoardRepository extends JpaRepository<BoardInfo, Long> {
 
     List<BoardInfo> findBoardInfoByWriter(String writer);//글쓴이의 작성글만 가져오기
 
+    BoardInfo findBoardInfoById(Long boardId);//상세보기
+
+//    void update(BoardInfo boardInfo);
 }
