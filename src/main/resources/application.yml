@@ -1,4 +1,12 @@
 spring:
+  devtools:
+    livereload:
+      enabled: true
+  thymeleaf:
+    cache: false
+  freemarker:
+    cache: false
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/scheduleer?useUnicode=yes&characterEncoding=UTF-8

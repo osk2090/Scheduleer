@@ -2,16 +2,13 @@ package com.www.scheduleer.config;
 
 import com.www.scheduleer.service.Member.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 @RequiredArgsConstructor
@@ -26,7 +23,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**");
+        web.ignoring().antMatchers("/css/**", "/js/**", "/image/**");
     }
 
     @Override
@@ -34,18 +31,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .authorizeRequests() // 6
-                .antMatchers("/login", "/signup", "/member", "/main").permitAll() // 누구나 접근 허용
+                .antMatchers("/login", "/signup", "/member", "/main", "/detail/**").permitAll() // 누구나 접근 허용
                 .antMatchers("/").hasRole("USER") // USER, ADMIN만 접근 가능
-                .antMatchers("/admin/admin", "member/list").hasRole("ADMIN") // ADMIN만 접근 가능
+                .antMatchers("/admin/admin", "/member/list").hasRole("ADMIN") // ADMIN만 접근 가능
                 .anyRequest().authenticated(); // 나머지 요청들은 권한의 종류에 상관 없이 권한이 있어야 접근 가능
         http
                 .formLogin() // 7
                 .loginPage("/login") // 로그인 페이지 링크
-                .defaultSuccessUrl("/") // 로그인 성공 후 리다이렉트 주소
+                .defaultSuccessUrl("/main") // 로그인 성공 후 리다이렉트 주소
                 .failureHandler(authenticationFailureHandler)
                 .and()
                 .logout() // 8
-                .logoutSuccessUrl("/login") // 로그아웃 성공시 리다이렉트 주소
+                .logoutSuccessUrl("/main") // 로그아웃 성공시 리다이렉트 주소
                 .invalidateHttpSession(true) // 세션 날리기
         ;
     }

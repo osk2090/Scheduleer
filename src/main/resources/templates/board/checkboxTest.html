@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<form th:action="@{/update}" method="POST" name="checkStarForm">
+    <img id="image" onclick="changeImage()"  th:src="@{/image/checked.svg}">
+    <input type="text" id="check" name="checkStar" value="" disabled>
+</form>
+
+</body>
+</html>
+
+<script type="text/javascript">
+    state = document.getElementById('check').value;
+    function changeImage() {
+        if (state === false) {
+            document.checkStarForm.checkStar.value = true;
+            document.getElementById('imageF').src = "/image/checked.svg";
+        } else {
+            document.checkStarForm.checkStar.value = false;
+            document.getElementById('imageT').src = "/image/unchecked.svg";
+        }
+    }
+</script>
