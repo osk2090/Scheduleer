@@ -10,12 +10,28 @@
 
 <form th:action="@{/update}" method="POST" name="checkStarForm">
     <h1>[[${boardDetail.title}]]</h1><br>
-    <h3>[[${boardDetail.writer.name}]]</h3> &nbsp
+    <h3>[[${boardDetail.writer.name}]]</h3>
 
-    <img id="image" onclick="changeImage()" src="/image/unchecked.png">
-    <input type="text" id="check" name="checkStar" value="" disabled>
+<!--    <div th:if="${boardDetail.checkStar == 'true'}">-->
+<!--        <img id="imageT" onclick="changeImage()" src="resources/image/checked.svg">-->
 
-    <h4>작성일자 : [[${boardDetail.regDate}]]</h4> &nbsp
+<!--    </div>-->
+<!--    <div th:if="${boardDetail.checkStar == 'false'}">-->
+<!--        <img id="imageF" onclick="changeImage()" src="resources/image/unchecked.svg">-->
+<!--    </div>-->
+
+    <span th:if="${boardDetail.checkStar == false}">
+        <img id="image" onclick="changeImage()" th:src="@{/image/unchecked.svg}"/>
+    </span>
+
+<!--    <span th:if="${boardDetail.checkStar == true}">-->
+<!--        <img id="image" onclick="changeImage()" th:src="@{/image/checked.svg}"/>-->
+<!--    </span>-->
+
+<!--    <img id="image" onclick="changeImage()" src="resources/image/unchecked.svg">-->
+    <input type="text" id="check" name="checkStar" th:value="${boardDetail.checkStar}" disabled><br>
+
+    <h4>작성일자 : [[${boardDetail.regDate}]]</h4>
     <h4>계획 달성 일자: [[${boardDetail.updateDate}]]</h4><br>
 
     <textarea name="content" readonly="readonly">[[${boardDetail.content}]]</textarea><br>
@@ -31,15 +47,16 @@
 
 <script type="text/javascript">
     state = document.getElementById('check').value;
+
     function changeImage() {
         if (state === false) {
             state = true;
             document.checkStarForm.checkStar.value = state;
-            document.getElementById('image').src = "/templates/image/checked.png";
+            document.getElementById('image').src = "/image/checked.svg";
         } else {
             state = false;
             document.checkStarForm.checkStar.value = state;
-            document.getElementById('image').src = "/templates/image/unchecked.png";
+            document.getElementById('image').src = "/image/unchecked.svg";
         }
     }
 </script>
