@@ -26,7 +26,7 @@
     <h4>작성일자 : [[${boardDetail.regDate}]]</h4>
     <h4>계획 달성 일자: [[${boardDetail.updateDate}]]</h4><br>
 
-    <input type="text" name="content" th:value="${boardDetail.content}">
+    <textarea name="content" readonly="readonly" th:text="${boardDetail.content}" ></textarea><br>
 
     <div sec:authorize="hasAnyRole('ROLE_USER','ROLE_ADMIN')" class="nav-item">
         <button type="submit">저장</button>
