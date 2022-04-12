@@ -26,9 +26,9 @@ public class BoardService {
     }
 
     @Transactional
-    public Long update(BoardInfo boardInfo) {
-        return boardRepository.save(BoardInfo.builder()
-                .checkStar(boardInfo.getCheckStar()).build()).getId();
+    public void update(Long id) {
+        BoardInfo boardInfo = findBoardById(id);
+        boardRepository.save(boardInfo);
     }
 
     public List<BoardInfo> getBoardList() {

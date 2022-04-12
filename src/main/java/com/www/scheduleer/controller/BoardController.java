@@ -8,6 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
@@ -38,9 +39,9 @@ public class BoardController {
         return "/board/detail";
     }
 
-    @PostMapping("/update")
-    public String updateBoard(BoardInfo boardInfo) {
-        boardService.update(boardInfo);
+    @PutMapping("/update/{id}")
+    public String updateBoard(@PathVariable("id") Long id) {
+        boardService.update(id);
         return "redirect:/main";
     }
 }

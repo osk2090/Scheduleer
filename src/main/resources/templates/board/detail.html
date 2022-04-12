@@ -8,33 +8,25 @@
 </head>
 <body>
 
-<form th:action="@{/update}" method="POST" name="checkStarForm">
-    <h1>[[${boardDetail.title}]]</h1><br>
-    <h3>[[${boardDetail.writer.name}]]</h3>
+<form th:action="@{'/update/'+ ${boardDetail.id}}" method="POST" name="checkStarForm">
+    <input type="hidden" name="_method" value="put"/>
 
-<!--    <div th:if="${boardDetail.checkStar == 'true'}">-->
-<!--        <img id="imageT" onclick="changeImage()" src="resources/image/checked.svg">-->
-
-<!--    </div>-->
-<!--    <div th:if="${boardDetail.checkStar == 'false'}">-->
-<!--        <img id="imageF" onclick="changeImage()" src="resources/image/unchecked.svg">-->
-<!--    </div>-->
+    <input type="hidden" name="id" th:value="${boardDetail.id}">
+    <input type="text" name="title" th:value="${boardDetail.title}" disabled>
+    <input type="text" name="writer.name" th:value="${boardDetail.writer.name}" disabled>
 
     <span th:if="${boardDetail.checkStar == false}">
-        <img id="image" onclick="changeImage()" th:src="@{/image/unchecked.svg}"/>
+        <img id="imageF" onclick="changeImage()" th:src="@{/image/unchecked.svg}"/>
     </span>
-
-<!--    <span th:if="${boardDetail.checkStar == true}">-->
-<!--        <img id="image" onclick="changeImage()" th:src="@{/image/checked.svg}"/>-->
-<!--    </span>-->
-
-<!--    <img id="image" onclick="changeImage()" src="resources/image/unchecked.svg">-->
+    <span th:if="${boardDetail.checkStar == true}">
+        <img id="imageT" onclick="changeImage()" th:src="@{/image/checked.svg}"/>
+    </span>
     <input type="text" id="check" name="checkStar" th:value="${boardDetail.checkStar}" disabled><br>
 
     <h4>작성일자 : [[${boardDetail.regDate}]]</h4>
     <h4>계획 달성 일자: [[${boardDetail.updateDate}]]</h4><br>
 
-    <textarea name="content" readonly="readonly">[[${boardDetail.content}]]</textarea><br>
+    <input type="text" name="content" th:value="${boardDetail.content}">
 
     <div sec:authorize="hasAnyRole('ROLE_USER','ROLE_ADMIN')" class="nav-item">
         <button type="submit">저장</button>
@@ -52,11 +44,11 @@
         if (state === false) {
             state = true;
             document.checkStarForm.checkStar.value = state;
-            document.getElementById('image').src = "/image/checked.svg";
+            document.getElementById('imageF').src = "/image/checked.svg";
         } else {
             state = false;
             document.checkStarForm.checkStar.value = state;
-            document.getElementById('image').src = "/image/unchecked.svg";
+            document.getElementById('imageT').src = "/image/unchecked.svg";
         }
     }
 </script>

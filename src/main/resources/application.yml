@@ -1,4 +1,9 @@
 spring:
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
   devtools:
     livereload:
       enabled: true

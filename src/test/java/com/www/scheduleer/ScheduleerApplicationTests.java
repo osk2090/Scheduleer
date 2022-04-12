@@ -39,6 +39,12 @@ class ScheduleerApplicationTests {
     @Test
     void insertBoard() {
         BoardInfo boardInfo = new BoardInfo("test1", "test111", false, new MemberInfo("osk", "osk@naver.com", "osk", "admin"));
-        boardRepository.save(boardInfo);
+//        boardRepository.save(boardInfo);
+    }
+
+    @Test
+    void updateBoard() {
+        BoardInfo boardInfo = boardRepository.findBoardInfoById(1L);
+        System.out.println(boardInfo.getTitle());
     }
 }
