@@ -8,7 +8,7 @@
 </head>
 <body>
 
-<form th:action="@{'/update/'+ ${boardDetail.id}}" method="POST" name="checkStarForm">
+<form th:action="@{'/update/' + ${boardDetail.id}}" method="POST" name="checkStarForm">
     <input type="hidden" name="_method" value="put"/>
 
     <input type="hidden" name="id" th:value="${boardDetail.id}">
@@ -23,8 +23,8 @@
     </span>
     <input type="text" id="check" name="checkStar" th:value="${boardDetail.checkStar}" disabled><br>
 
-    <h4>작성일자 : [[${boardDetail.regDate}]]</h4>
-    <h4>계획 달성 일자: [[${boardDetail.updateDate}]]</h4><br>
+    작성일자 : <input type="text" name="writer.name" th:value="${boardDetail.regDate}" disabled>
+    계획 달성 일자: <input type="text" name="writer.name" th:value="${boardDetail.updateDate}" disabled><br>
 
     <textarea name="content" readonly="readonly" th:text="${boardDetail.content}" ></textarea><br>
 
