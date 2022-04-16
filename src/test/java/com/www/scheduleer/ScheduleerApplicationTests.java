@@ -45,6 +45,11 @@ class ScheduleerApplicationTests {
     @Test
     void updateBoard() {
         BoardInfo boardInfo = boardRepository.findBoardInfoById(1L);
-        System.out.println(boardInfo.getTitle());
+
+        System.out.println(boardInfo.getCheckStar());
+        boardInfo.setCheckStar(true);
+        System.out.println(boardInfo.getCheckStar());
+
+        boardRepository.save(boardInfo);
     }
 }

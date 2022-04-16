@@ -1,10 +1,12 @@
 spring:
   mvc:
-    hiddenmethod:
+    hidden-method:
       filter:
         enabled: true
 
   devtools:
+    restart:
+      enabled: false
     livereload:
       enabled: true
   thymeleaf:

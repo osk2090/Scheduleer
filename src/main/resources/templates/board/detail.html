@@ -7,6 +7,10 @@
     <title>Detail</title>
 </head>
 <body>
+<img id="img" src="">
+<button onclick="change()">클릭</button>
+<input th:id="test" value="">
+
 
 <form th:action="@{'/update/' + ${boardDetail.id}}" method="POST" name="checkStarForm">
     <input type="hidden" name="_method" value="put"/>
@@ -15,12 +19,7 @@
     <input type="text" name="title" th:value="${boardDetail.title}" disabled>
     <input type="text" name="writer.name" th:value="${boardDetail.writer.name}" disabled>
 
-    <span th:if="${boardDetail.checkStar == false}">
-        <img id="imageF" onclick="changeImage()" th:src="@{/image/unchecked.svg}"/>
-    </span>
-    <span th:if="${boardDetail.checkStar == true}">
-        <img id="imageT" onclick="changeImage()" th:src="@{/image/checked.svg}"/>
-    </span>
+    <img id="image" src=""/>
     <input type="text" id="check" name="checkStar" th:value="${boardDetail.checkStar}" disabled><br>
 
     작성일자 : <input type="text" name="writer.name" th:value="${boardDetail.regDate}" disabled>
@@ -38,17 +37,27 @@
 </html>
 
 <script type="text/javascript">
-    state = document.getElementById('check').value;
+    let e = document.getElementById('check').value;
+    if (e === 'false') {
+        document.getElementById('image').src = '/image/unchecked.svg';
+    } else {
+        document.getElementById('image').src = '/image/checked.svg';
+    }
+
+    // function change() {
+    //     document.getElementById('test').value = document.getElementById('check').value;
+    // }
 
     function changeImage() {
         if (state === false) {
             state = true;
             document.checkStarForm.checkStar.value = state;
-            document.getElementById('imageF').src = "/image/checked.svg";
+            document.getElementById('image').src = "/image/checked.svg";
         } else {
             state = false;
             document.checkStarForm.checkStar.value = state;
-            document.getElementById('imageT').src = "/image/unchecked.svg";
+            document.getElementById('image').src = "/image/unchecked.svg";
         }
     }
+
 </script>

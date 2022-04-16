@@ -26,8 +26,9 @@ public class BoardService {
     }
 
     @Transactional
-    public void update(Long id) {
+    public void update(Long id, Boolean yn) {
         BoardInfo boardInfo = findBoardById(id);
+        boardInfo.setCheckStar(yn);
         boardRepository.save(boardInfo);
     }
 

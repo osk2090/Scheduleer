@@ -39,9 +39,18 @@ public class BoardController {
         return "/board/detail";
     }
 
-    @PutMapping("/update/{id}")
-    public String updateBoard(@PathVariable("id") Long id) {
-        boardService.update(id);
+    @PutMapping("/update/{id}/{checkStar}")
+    public String edit(@PathVariable("id") Long boardId, @PathVariable("checkStar") Boolean yn) {
+        System.out.println("*****boardId = " + boardId);
+        System.out.println("****yn = " + yn);
+
+        boardService.update(boardId, yn);
         return "redirect:/main";
     }
+
+//    @PutMapping("/update/{id}")
+//    public String updateBoard(BoardInfo boardInfo, @AuthenticationPrincipal MemberInfo memberInfo) {
+//        boardService.save(boardInfo, memberInfo);
+//        return "redirect:/main";
+//    }
 }

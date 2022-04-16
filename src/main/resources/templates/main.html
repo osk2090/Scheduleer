@@ -53,7 +53,7 @@
     <!-- CONTENTS !-->
     <tr th:each="board : ${boardList}">
         <td>
-            <a th:href="@{/detail/(boardId=${board.id})}">
+            <a th:href="@{/detail(boardId=${board.id})}">
                 <span th:text="${board.title}"></span>
             </a>
         </td>
