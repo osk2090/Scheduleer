@@ -48,9 +48,9 @@
     // function change() {
     //     document.getElementById('test').value = document.getElementById('check').value;
     // }
-
     function changeImage() {
-        if (state === 'false') {
+        let e = document.getElementById('check').value;
+        if (e === 'false') {
             document.getElementById('check').value = 'true';
             document.getElementById('image').src = '/image/checked.svg';
         } else {
