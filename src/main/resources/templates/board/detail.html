@@ -19,7 +19,7 @@
     <input type="text" name="title" th:value="${boardDetail.title}" disabled>
     <input type="text" name="writer.name" th:value="${boardDetail.writer.name}" disabled>
 
-    <img id="image" src=""/>
+    <img id="image" src="" onclick="changeImage()"/>
     <input type="text" id="check" name="checkStar" th:value="${boardDetail.checkStar}" disabled><br>
 
     작성일자 : <input type="text" name="writer.name" th:value="${boardDetail.regDate}" disabled>
@@ -37,8 +37,9 @@
 </html>
 
 <script type="text/javascript">
-    let e = document.getElementById('check').value;
-    if (e === 'false') {
+    state = document.getElementById('check').value;
+    console.log(state);
+    if (state === 'false') {
         document.getElementById('image').src = '/image/unchecked.svg';
     } else {
         document.getElementById('image').src = '/image/checked.svg';
@@ -49,14 +50,12 @@
     // }
 
     function changeImage() {
-        if (state === false) {
-            state = true;
-            document.checkStarForm.checkStar.value = state;
-            document.getElementById('image').src = "/image/checked.svg";
+        if (state === 'false') {
+            document.getElementById('check').value = 'true';
+            document.getElementById('image').src = '/image/checked.svg';
         } else {
-            state = false;
-            document.checkStarForm.checkStar.value = state;
-            document.getElementById('image').src = "/image/unchecked.svg";
+            document.getElementById('check').value = 'false';
+            document.getElementById('image').src = '/image/unchecked.svg';
         }
     }
 
