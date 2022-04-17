@@ -1,15 +1,13 @@
 package com.www.scheduleer.VO;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BoardInfo extends BaseTimeEntity {
 
@@ -33,7 +31,8 @@ public class BoardInfo extends BaseTimeEntity {
     private MemberInfo writer;
 
     @Builder
-    public BoardInfo(String title, String content, Boolean checkStar, MemberInfo writer) {
+    public BoardInfo(Long id, String title, String content, Boolean checkStar, MemberInfo writer) {
+        this.id = id;
         this.title = title;
         this.content = content;
         this.checkStar = checkStar;

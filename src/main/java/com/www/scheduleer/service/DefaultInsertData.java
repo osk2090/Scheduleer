@@ -27,6 +27,6 @@ public class DefaultInsertData {
         MemberInfo memberInfo = new MemberInfo("osk", "osk@naver.com", encoder.encode("osk"), "ROLE_USER");
 
         memberRepository.save(memberInfo);
-        boardRepository.save(new BoardInfo("test title", "test content", false, memberInfo));
+        boardRepository.save(new BoardInfo(1L, "test title", "test content", true, memberInfo));
     }
 }
