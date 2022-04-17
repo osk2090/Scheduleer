@@ -7,56 +7,56 @@
     <title>Detail</title>
 </head>
 <body>
+<!--<img id="img" src="">-->
+<!--<button onclick="change()">클릭</button>-->
+<!--<input th:id="test" value="">-->
 
-<form th:action="@{/update}" method="POST" name="checkStarForm">
-    <h1>[[${boardDetail.title}]]</h1><br>
-    <h3>[[${boardDetail.writer.name}]]</h3>
+<form th:action="@{'/update/' + ${boardDetail.id}}" method="POST" name="checkStarForm">
+    <input type="hidden" name="_method" value="put"/>
 
-<!--    <div th:if="${boardDetail.checkStar == 'true'}">-->
-<!--        <img id="imageT" onclick="changeImage()" src="resources/image/checked.svg">-->
+    <input type="hidden" name="id" th:value="${boardDetail.id}">
+    <input type="text" name="title" th:value="${boardDetail.title}" disabled>
+    <input type="text" name="writer.name" th:value="${boardDetail.writer.name}" disabled>
 
-<!--    </div>-->
-<!--    <div th:if="${boardDetail.checkStar == 'false'}">-->
-<!--        <img id="imageF" onclick="changeImage()" src="resources/image/unchecked.svg">-->
-<!--    </div>-->
-
-    <span th:if="${boardDetail.checkStar == false}">
-        <img id="image" onclick="changeImage()" th:src="@{/image/unchecked.svg}"/>
-    </span>
-
-<!--    <span th:if="${boardDetail.checkStar == true}">-->
-<!--        <img id="image" onclick="changeImage()" th:src="@{/image/checked.svg}"/>-->
-<!--    </span>-->
-
-<!--    <img id="image" onclick="changeImage()" src="resources/image/unchecked.svg">-->
+    <img id="image" src="" onclick="changeImage()"/>
     <input type="text" id="check" name="checkStar" th:value="${boardDetail.checkStar}" disabled><br>
 
-    <h4>작성일자 : [[${boardDetail.regDate}]]</h4>
-    <h4>계획 달성 일자: [[${boardDetail.updateDate}]]</h4><br>
+    작성일자 : <input type="text" name="writer.name" th:value="${boardDetail.regDate}" disabled>
+    계획 달성 일자: <input type="text" name="writer.name" th:value="${boardDetail.updateDate}" disabled><br>
 
-    <textarea name="content" readonly="readonly">[[${boardDetail.content}]]</textarea><br>
+    <textarea name="content" readonly="readonly" th:value="${boardDetail.content}" ></textarea><br>
 
     <div sec:authorize="hasAnyRole('ROLE_USER','ROLE_ADMIN')" class="nav-item">
-        <button type="submit">저장</button>
+<!--        <a th:href="@{'/update/' + ${boardDetail.id}}">-->
+<!--            <button>수정</button>-->
+<!--        </a>-->
+        <button type="submit">수정</button>
     </div>
     <button type="button" class="navyBtn" onclick="location.href='/main'">이전으로</button>
 
-</form>
+<!--</form>-->
 </body>
 </html>
 
 <script type="text/javascript">
     state = document.getElementById('check').value;
+    if (state === 'false') {
+        document.getElementById('image').src = '/image/unchecked.svg';
+    } else {
+        document.getElementById('image').src = '/image/checked.svg';
+    }
 
+    //여기에 있는 거를 따로 수정하는 페이지로 넘어가서 수정할 수 있게 하가~!
     function changeImage() {
-        if (state === false) {
-            state = true;
-            document.checkStarForm.checkStar.value = state;
-            document.getElementById('image').src = "/image/checked.svg";
+        let e = document.getElementById('check').value;
+        console.log(e);
+        if (e === 'false') {
+            document.getElementById('check').value = 'true';
+            document.getElementById('image').src = '/image/checked.svg';
         } else {
-            state = false;
-            document.checkStarForm.checkStar.value = state;
-            document.getElementById('image').src = "/image/unchecked.svg";
+            document.getElementById('check').value = 'false';
+            document.getElementById('image').src = '/image/unchecked.svg';
         }
     }
+
 </script>
