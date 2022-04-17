@@ -38,18 +38,18 @@ class ScheduleerApplicationTests {
 
     @Test
     void insertBoard() {
-        BoardInfo boardInfo = new BoardInfo("test1", "test111", false, new MemberInfo("osk", "osk@naver.com", "osk", "admin"));
+//        BoardInfo boardInfo = new BoardInfo("test1", "test111", false, new MemberInfo("osk", "osk@naver.com", "osk", "admin"));
 //        boardRepository.save(boardInfo);
     }
 
     @Test
     void updateBoard() {
-        BoardInfo boardInfo = boardRepository.findBoardInfoById(1L);
+//        BoardInfo boardInfo = boardRepository.findBoardInfoById(1L);
 
-        System.out.println(boardInfo.getCheckStar());
-        boardInfo.setCheckStar(true);
-        System.out.println(boardInfo.getCheckStar());
-
-        boardRepository.save(boardInfo);
+//        System.out.println(boardInfo.getCheckStar());
+//        boardInfo.setCheckStar(true);
+//        System.out.println(boardInfo.getCheckStar());
+//
+//        boardRepository.save(boardInfo);
     }
 }

@@ -31,7 +31,8 @@ public class BoardInfo extends BaseTimeEntity {
     private MemberInfo writer;
 
     @Builder
-    public BoardInfo(String title, String content, Boolean checkStar, MemberInfo writer) {
+    public BoardInfo(Long id, String title, String content, Boolean checkStar, MemberInfo writer) {
+        this.id = id;
         this.title = title;
         this.content = content;
         this.checkStar = checkStar;

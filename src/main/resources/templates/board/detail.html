@@ -7,10 +7,9 @@
     <title>Detail</title>
 </head>
 <body>
-<img id="img" src="">
-<button onclick="change()">클릭</button>
-<input th:id="test" value="">
-
+<!--<img id="img" src="">-->
+<!--<button onclick="change()">클릭</button>-->
+<!--<input th:id="test" value="">-->
 
 <form th:action="@{'/update/' + ${boardDetail.id}}" method="POST" name="checkStarForm">
     <input type="hidden" name="_method" value="put"/>
@@ -25,31 +24,32 @@
     작성일자 : <input type="text" name="writer.name" th:value="${boardDetail.regDate}" disabled>
     계획 달성 일자: <input type="text" name="writer.name" th:value="${boardDetail.updateDate}" disabled><br>
 
-    <textarea name="content" readonly="readonly" th:text="${boardDetail.content}" ></textarea><br>
+    <textarea name="content" readonly="readonly" th:value="${boardDetail.content}" ></textarea><br>
 
     <div sec:authorize="hasAnyRole('ROLE_USER','ROLE_ADMIN')" class="nav-item">
-        <button type="submit">저장</button>
+<!--        <a th:href="@{'/update/' + ${boardDetail.id}}">-->
+<!--            <button>수정</button>-->
+<!--        </a>-->
+        <button type="submit">수정</button>
     </div>
     <button type="button" class="navyBtn" onclick="location.href='/main'">이전으로</button>
 
-</form>
+<!--</form>-->
 </body>
 </html>
 
 <script type="text/javascript">
     state = document.getElementById('check').value;
-    console.log(state);
     if (state === 'false') {
         document.getElementById('image').src = '/image/unchecked.svg';
     } else {
         document.getElementById('image').src = '/image/checked.svg';
     }
 
-    // function change() {
-    //     document.getElementById('test').value = document.getElementById('check').value;
-    // }
+    //여기에 있는 거를 따로 수정하는 페이지로 넘어가서 수정할 수 있게 하가~!
     function changeImage() {
         let e = document.getElementById('check').value;
+        console.log(e);
         if (e === 'false') {
             document.getElementById('check').value = 'true';
             document.getElementById('image').src = '/image/checked.svg';

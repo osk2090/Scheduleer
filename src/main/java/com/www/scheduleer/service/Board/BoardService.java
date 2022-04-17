@@ -19,18 +19,19 @@ public class BoardService {
     @Transactional
     public Long save(BoardInfo boardInfo, MemberInfo writer) {
         return boardRepository.save(BoardInfo.builder()
+                .id(boardInfo.getId())
                 .title(boardInfo.getTitle())
                 .content(boardInfo.getContent())
                 .writer(writer)
                 .checkStar(boardInfo.getCheckStar()).build()).getId();
     }
 
-    @Transactional
-    public void update(Long id, Boolean yn) {
-        BoardInfo boardInfo = findBoardById(id);
-        boardInfo.setCheckStar(yn);
-        boardRepository.save(boardInfo);
-    }
+//    @Transactional
+//    public void update(Long id, Boolean yn) {
+//        BoardInfo boardInfo = findBoardById(id);
+//        boardInfo.setCheckStar(yn);
+//        boardRepository.save(boardInfo);
+//    }
 
     public List<BoardInfo> getBoardList() {
         return boardRepository.findAll();
@@ -41,6 +42,6 @@ public class BoardService {
     }
 
     public BoardInfo findBoardById(Long boardId) {
-        return boardRepository.findBoardInfoById(boardId);
+        return boardRepository.findBoardInfoById(boardId).orElseThrow(() -> new IllegalArgumentException("해당 글이 없습니다. boardId=" + boardId));
     }
 }
