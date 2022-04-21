@@ -30,21 +30,22 @@ public class BoardController {
         return "/main";
     }
 
-    @GetMapping("/detail/{id}")
+    @GetMapping("/board/detail/{id}")
     public String detail(Model model, @PathVariable("id") Long boardId) {
         model.addAttribute("boardDetail", boardService.findBoardById(boardId));
         return "/board/detail";
     }
 
-//    @GetMapping("/update/{id}")
-//    public String edit(@PathVariable("id") Long boardId, Model model) {
-//        BoardInfo boardInfo = boardService.findBoardById(boardId);
-//    }
+    @GetMapping("/board/update/{id}")
+    public String edit(Model model, @PathVariable("id") Long boardId) {
+        model.addAttribute("board", boardService.findBoardById(boardId));
+        return "/board/update";
+    }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/board/update/{id}")
     public String update(BoardInfo boardInfo, @AuthenticationPrincipal MemberInfo memberInfo) {
         boardService.save(boardInfo, memberInfo);
-        return "redirect:/main";
+        return "/main";
     }
 
 }

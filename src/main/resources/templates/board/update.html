@@ -8,23 +8,21 @@
 </head>
 <body>
 
-<form th:action="@{'/update/' + ${boardDetail.id}}" method="POST" name="checkStarForm">
-<input type="hidden" name="_method" value="put"/>
+<form th:action="@{'/board/update/' + ${board.id}}" method="POST" name="checkStarForm">
+    <input type="hidden" name="_method" value="put"/>
 
-<input type="hidden" name="id" th:value="${boardDetail.id}">
-제목 : <input type="text" name="title" th:value="${boardDetail.title}">
-<input type="text" name="writer.name" th:value="${boardDetail.writer.name}" hidden>
+    <input type="hidden" name="id" th:value="${board.id}">
+    <input type="text" name="title" th:value="${board.title}" disabled>
+    <input type="text" name="writer.name" th:value="${board.writer.name}" disabled>
 
-<img id="image" src="" onclick="changeImage()"/>
-<input type="text" id="check" name="checkStar" th:value="${boardDetail.checkStar}" disabled><br>
+    <img id="image" src="" onclick="changeImage()"/>
+    <input type="text" id="check" name="checkStar" th:value="${board.checkStar}" disabled><br>
 
-작성일자 : <input type="text" name="writer.name" th:value="${boardDetail.regDate}" disabled>
-<!--계획 달성 일자: <input type="text" name="writer.name" th:value="${boardDetail.updateDate}" disabled><br>-->
+    작성일자 : <input type="text" name="writer.name" th:value="${board.regDate}" disabled>
+    계획 달성 일자: <input type="text" name="writer.name" th:value="${board.updateDate}" disabled><br>
 
-내용 : <textarea name="content" th:text="${boardDetail.content}" ></textarea><br>
-    <input type="submit" value="수정">
-<button type="button" class="navyBtn" onclick="location.href='/main'">메인으로</button>
-
+    <textarea name="content" readonly="readonly" th:value="${board.content}" ></textarea><br>
+<input type="submit" value="저장">
 </form>
 </body>
 </html>
@@ -37,7 +35,6 @@
         document.getElementById('image').src = '/image/checked.svg';
     }
 
-    //여기에 있는 거를 따로 수정하는 페이지로 넘어가서 수정할 수 있게 하가~!
     function changeImage() {
         let e = document.getElementById('check').value;
         console.log(e);
