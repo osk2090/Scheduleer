@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Optional;
+
 @SpringBootTest
 @Log4j2
 class ScheduleerApplicationTests {
@@ -38,18 +40,19 @@ class ScheduleerApplicationTests {
 
     @Test
     void insertBoard() {
-//        BoardInfo boardInfo = new BoardInfo("test1", "test111", false, new MemberInfo("osk", "osk@naver.com", "osk", "admin"));
-//        boardRepository.save(boardInfo);
+        BoardInfo boardInfo = new BoardInfo(1L, "test1", "test111", false, new MemberInfo("osk", "osk@naver.com", "osk", "admin"));
+        boardRepository.save(boardInfo);
     }
 
     @Test
     void updateBoard() {
-//        BoardInfo boardInfo = boardRepository.findBoardInfoById(1L);
+        BoardInfo b1 = boardRepository.findBoardInfoById(1L);
+        System.out.println(b1.getCheckStar().booleanValue());
 
-//        System.out.println(boardInfo.getCheckStar());
-//        boardInfo.setCheckStar(true);
-//        System.out.println(boardInfo.getCheckStar());
-//
-//        boardRepository.save(boardInfo);
+        b1.setCheckStar(false);
+        boardRepository.save(b1);
+
+        BoardInfo b2 = boardRepository.findBoardInfoById(1L);
+        System.out.println(b2.getCheckStar().booleanValue());
     }
 }

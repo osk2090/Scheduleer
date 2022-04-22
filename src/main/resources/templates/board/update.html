@@ -21,8 +21,10 @@
     작성일자 : <input type="text" name="writer.name" th:value="${board.regDate}" disabled>
     계획 달성 일자: <input type="text" name="writer.name" th:value="${board.updateDate}" disabled><br>
 
-    <textarea name="content" readonly="readonly" th:value="${board.content}" ></textarea><br>
-<input type="submit" value="저장">
+<!--    <textarea name="content" readonly="readonly" th:value="${board.content}" ></textarea><br>-->
+    <input type="text" name="content" th:value="${board.content}" disabled>
+
+    <input type="submit" value="저장">
 </form>
 </body>
 </html>

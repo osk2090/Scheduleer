@@ -43,9 +43,9 @@ public class BoardController {
     }
 
     @PutMapping("/board/update/{id}")
-    public String update(BoardInfo boardInfo, @AuthenticationPrincipal MemberInfo memberInfo) {
+    public String update(@PathVariable("id") Long boardId, BoardInfo boardInfo, @AuthenticationPrincipal MemberInfo memberInfo) {
         boardService.save(boardInfo, memberInfo);
-        return "/main";
+        return "redirect:/main";
     }
 
 }

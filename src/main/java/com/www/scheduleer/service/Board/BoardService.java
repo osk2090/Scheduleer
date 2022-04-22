@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,10 +27,13 @@ public class BoardService {
     }
 
 //    @Transactional
-//    public void update(Long id, Boolean yn) {
-//        BoardInfo boardInfo = findBoardById(id);
-//        boardInfo.setCheckStar(yn);
-//        boardRepository.save(boardInfo);
+//    public void update(Long id, BoardInfo boardInfo) {
+//        BoardInfo b = boardRepository.findBoardInfoById(id);
+//        b.setTitle(boardInfo.getTitle());
+//        b.setContent(boardInfo.getContent());
+//        b.setCheckStar(boardInfo.getCheckStar());
+//        System.out.println("저장됨!");
+//        boardRepository.save(b);
 //    }
 
     public List<BoardInfo> getBoardList() {
@@ -41,6 +45,6 @@ public class BoardService {
     }
 
     public BoardInfo findBoardById(Long boardId) {
-        return boardRepository.findBoardInfoById(boardId).orElseThrow(() -> new IllegalArgumentException("해당 글이 없습니다. boardId=" + boardId));
+        return boardRepository.findBoardInfoById(boardId);
     }
 }

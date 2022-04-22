@@ -3,7 +3,6 @@ package com.www.scheduleer.VO;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
