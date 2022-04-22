@@ -1,6 +1,7 @@
 package com.www.scheduleer.controller;
 
 import com.www.scheduleer.VO.BoardInfo;
+import com.www.scheduleer.VO.BoardSaveRequestDto;
 import com.www.scheduleer.VO.MemberInfo;
 import com.www.scheduleer.service.Board.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,8 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping("/board")
-    public String addBoard(BoardInfo boardInfo, @AuthenticationPrincipal MemberInfo memberInfo) {
-        boardService.save(boardInfo, memberInfo);
+    public String addBoard(BoardSaveRequestDto boardSaveRequestDto, @AuthenticationPrincipal MemberInfo memberInfo) {
+        boardService.save(boardSaveRequestDto, memberInfo);
         return "redirect:/main";
     }
 
@@ -43,8 +44,8 @@ public class BoardController {
     }
 
     @PutMapping("/board/update/{id}")
-    public String update(@PathVariable("id") Long boardId, BoardInfo boardInfo, @AuthenticationPrincipal MemberInfo memberInfo) {
-        boardService.save(boardInfo, memberInfo);
+    public String update(BoardSaveRequestDto boardSaveRequestDto, @AuthenticationPrincipal MemberInfo memberInfo) {
+        boardService.save(boardSaveRequestDto, memberInfo);
         return "redirect:/main";
     }
 

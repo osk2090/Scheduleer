@@ -2,6 +2,7 @@ package com.www.scheduleer.service.Board;
 
 import com.www.scheduleer.Repository.BoardRepository;
 import com.www.scheduleer.VO.BoardInfo;
+import com.www.scheduleer.VO.BoardSaveRequestDto;
 import com.www.scheduleer.VO.MemberInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,15 +18,18 @@ public class BoardService {
     private final BoardRepository boardRepository;
 
     @Transactional
-    public Long save(BoardInfo boardInfo, MemberInfo writer) {
-        return boardRepository.save(BoardInfo.builder()
-                .id(boardInfo.getId())
-                .title(boardInfo.getTitle())
-                .content(boardInfo.getContent())
-                .writer(writer)
-                .checkStar(boardInfo.getCheckStar()).build()).getId();
-    }
+    public Long save(BoardSaveRequestDto boardSaveRequestDto, MemberInfo writer) {
+        boardSaveRequestDto.setMemberInfo(writer);
+        return boardRepository.save(boardSaveRequestDto.toEntity()).getId();
+//        return boardRepository.save(
+//                BoardInfo.builder()
+//                .id(boardInfo.getId())
+//                .title(boardInfo.getTitle())
+//                .content(boardInfo.getContent())
+//                .writer(writer)
+//                .checkStar(boardInfo.getCheckStar()).build()).getId();
 
+    }
 //    @Transactional
 //    public void update(Long id, BoardInfo boardInfo) {
 //        BoardInfo b = boardRepository.findBoardInfoById(id);

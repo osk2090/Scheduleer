@@ -12,17 +12,17 @@
     <input type="hidden" name="_method" value="put"/>
 
     <input type="hidden" name="id" th:value="${board.id}">
-    <input type="text" name="title" th:value="${board.title}" disabled>
-    <input type="text" name="writer.name" th:value="${board.writer.name}" disabled>
+    <input type="text" name="title" th:value="${board.title}">
+    <input type="text" name="name" th:value="${board.writer.name}" disabled>
 
     <img id="image" src="" onclick="changeImage()"/>
     <input type="text" id="check" name="checkStar" th:value="${board.checkStar}" disabled><br>
 
-    작성일자 : <input type="text" name="writer.name" th:value="${board.regDate}" disabled>
-    계획 달성 일자: <input type="text" name="writer.name" th:value="${board.updateDate}" disabled><br>
+    작성일자 : [[${board.regDate}]]
+    계획 달성 일자: [[${board.updateDate}]]
 
-<!--    <textarea name="content" readonly="readonly" th:value="${board.content}" ></textarea><br>-->
-    <input type="text" name="content" th:value="${board.content}" disabled>
+    <textarea name="content"th:text="${board.content}" ></textarea><br>
+<!--    <input type="text" name="content" th:value="${board.content}" disabled>-->
 
     <input type="submit" value="저장">
 </form>

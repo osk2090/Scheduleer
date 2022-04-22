@@ -4,6 +4,7 @@ import com.www.scheduleer.Repository.BoardRepository;
 import com.www.scheduleer.Repository.MemberRepository;
 import com.www.scheduleer.VO.BoardInfo;
 import com.www.scheduleer.VO.MemberInfo;
+import com.www.scheduleer.service.Board.BoardService;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ class ScheduleerApplicationTests {
 
     @Autowired
     private BoardRepository boardRepository;
+
+    @Autowired
+    private BoardService boardService;
 
     @Test
     void contextLoads() {
@@ -50,7 +54,7 @@ class ScheduleerApplicationTests {
         System.out.println(b1.getCheckStar().booleanValue());
 
         b1.setCheckStar(false);
-        boardRepository.save(b1);
+//        boardService.save(b1);
 
         BoardInfo b2 = boardRepository.findBoardInfoById(1L);
         System.out.println(b2.getCheckStar().booleanValue());
