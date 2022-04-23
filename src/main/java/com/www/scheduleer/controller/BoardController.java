@@ -1,6 +1,7 @@
 package com.www.scheduleer.controller;
 
 import com.www.scheduleer.VO.BoardInfo;
+import com.www.scheduleer.VO.BoardSaveRequestDto;
 import com.www.scheduleer.VO.MemberInfo;
 import com.www.scheduleer.service.Board.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,8 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping("/board")
-    public String addBoard(BoardInfo boardInfo, @AuthenticationPrincipal MemberInfo memberInfo) {
-        boardService.save(boardInfo, memberInfo);
+    public String addBoard(BoardSaveRequestDto boardSaveRequestDto, @AuthenticationPrincipal MemberInfo memberInfo) {
+        boardService.save(boardSaveRequestDto, memberInfo);
         return "redirect:/main";
     }
 
@@ -30,20 +31,25 @@ public class BoardController {
         return "/main";
     }
 
-    @GetMapping("/detail/{id}")
+    @GetMapping("/board/detail/{id}")
     public String detail(Model model, @PathVariable("id") Long boardId) {
         model.addAttribute("boardDetail", boardService.findBoardById(boardId));
         return "/board/detail";
     }
 
-//    @GetMapping("/update/{id}")
-//    public String edit(@PathVariable("id") Long boardId, Model model) {
-//        BoardInfo boardInfo = boardService.findBoardById(boardId);
-//    }
+    @GetMapping("/board/update/{id}")
+    public String edit(Model model, @PathVariable("id") Long boardId) {
+        model.addAttribute("board", boardService.findBoardById(boardId));
+        return "/board/update";
+    }
 
-    @PutMapping("/update/{id}")
-    public String update(BoardInfo boardInfo, @AuthenticationPrincipal MemberInfo memberInfo) {
-        boardService.save(boardInfo, memberInfo);
+    @PutMapping("/board/update/{id}")
+    public String update(BoardSaveRequestDto boardSaveRequestDto, @AuthenticationPrincipal MemberInfo memberInfo) {
+        if (boardSaveRequestDto.getCheckStar() == null) {
+            boardSaveRequestDto.setCheckStar(false);
+            System.out.println("----" + boardSaveRequestDto.getCheckStar());
+        }
+        boardService.save(boardSaveRequestDto, memberInfo);
         return "redirect:/main";
     }
 
