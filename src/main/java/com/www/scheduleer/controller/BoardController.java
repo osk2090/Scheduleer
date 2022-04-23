@@ -45,6 +45,10 @@ public class BoardController {
 
     @PutMapping("/board/update/{id}")
     public String update(BoardSaveRequestDto boardSaveRequestDto, @AuthenticationPrincipal MemberInfo memberInfo) {
+        if (boardSaveRequestDto.getCheckStar() == null) {
+            boardSaveRequestDto.setCheckStar(false);
+            System.out.println("----" + boardSaveRequestDto.getCheckStar());
+        }
         boardService.save(boardSaveRequestDto, memberInfo);
         return "redirect:/main";
     }

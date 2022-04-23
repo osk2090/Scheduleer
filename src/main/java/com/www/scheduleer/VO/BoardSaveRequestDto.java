@@ -11,14 +11,10 @@ import java.time.LocalDateTime;
 public class BoardSaveRequestDto {
 
     private Long id;
-
     private String title;
     private String content;
-
     private MemberInfo memberInfo;
-
     private Boolean checkStar;
-
     private LocalDateTime regDate;
     private LocalDateTime updatedDate;
 

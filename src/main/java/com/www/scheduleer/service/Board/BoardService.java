@@ -30,15 +30,6 @@ public class BoardService {
 //                .checkStar(boardInfo.getCheckStar()).build()).getId();
 
     }
-//    @Transactional
-//    public void update(Long id, BoardInfo boardInfo) {
-//        BoardInfo b = boardRepository.findBoardInfoById(id);
-//        b.setTitle(boardInfo.getTitle());
-//        b.setContent(boardInfo.getContent());
-//        b.setCheckStar(boardInfo.getCheckStar());
-//        System.out.println("저장됨!");
-//        boardRepository.save(b);
-//    }
 
     public List<BoardInfo> getBoardList() {
         return boardRepository.findAll();

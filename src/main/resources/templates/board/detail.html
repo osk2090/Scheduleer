@@ -18,14 +18,14 @@
     <input type="text" name="title" th:value="${boardDetail.title}" disabled>
     <input type="text" name="writer.name" th:value="${boardDetail.writer.name}" disabled>
 
-    <img id="image" src="" onclick="changeImage()"/>
+    <img id="image" src=""/>
     <input type="text" id="check" name="checkStar" th:value="${boardDetail.checkStar}" disabled><br>
 
     작성일자 : <input type="text" name="writer.name" th:value="${boardDetail.regDate}" disabled>
     계획 달성 일자: <input type="text" name="writer.name" th:value="${boardDetail.updateDate}" disabled><br>
 
 <!--    <textarea name="content" readonly="readonly" th:value="${boardDetail.content}" ></textarea><br>-->
-    <input type="text" name="content" th:value="${boardDetail.content}" disabled>
+<!--    <input type="text" name="content" th:value="${boardDetail.content}" disabled>-->
 
     <div sec:authorize="hasAnyRole('ROLE_USER','ROLE_ADMIN')" class="nav-item">
 <!--        <button type="button" class="navyBtn" th:href="@{/board/update/{id}(id=${boardDetail.id})}">수정하기</button>-->

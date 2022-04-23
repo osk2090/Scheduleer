@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
       xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta charset="UTF-8">
@@ -15,14 +14,14 @@
     <input type="text" name="title" th:value="${board.title}">
     <input type="text" name="name" th:value="${board.writer.name}" disabled>
 
+    star : [[${board.checkStar}]]
     <img id="image" src="" onclick="changeImage()"/>
-    <input type="text" id="check" name="checkStar" th:value="${board.checkStar}" disabled><br>
+    <input type="checkbox" id="check" name="checkStar" th:field="${board.checkStar}"><br>
 
     작성일자 : [[${board.regDate}]]
     계획 달성 일자: [[${board.updateDate}]]
 
-    <textarea name="content"th:text="${board.content}" ></textarea><br>
-<!--    <input type="text" name="content" th:value="${board.content}" disabled>-->
+    <textarea name="content" th:text="${board.content}" ></textarea><br>
 
     <input type="submit" value="저장">
 </form>
@@ -30,23 +29,29 @@
 </html>
 
 <script type="text/javascript">
-    state = document.getElementById('check').value;
-    if (state === 'false') {
+    const check = document.getElementById('check');
+    const is_checked = check.checked;
+
+    console.log('11: ' + typeof is_checked + " : " + is_checked);
+
+    if (is_checked === false) {
         document.getElementById('image').src = '/image/unchecked.svg';
     } else {
         document.getElementById('image').src = '/image/checked.svg';
     }
 
     function changeImage() {
-        let e = document.getElementById('check').value;
-        console.log(e);
-        if (e === 'false') {
-            document.getElementById('check').value = 'true';
+        const e = document.getElementById('check');
+        const is_checked = e.checked;
+
+        if (is_checked === false) {
+            document.getElementById('check').checked = true;
             document.getElementById('image').src = '/image/checked.svg';
+            console.log('1: ' + typeof is_checked + " : " + is_checked);
         } else {
-            document.getElementById('check').value = 'false';
+            document.getElementById('check').checked = false;
             document.getElementById('image').src = '/image/unchecked.svg';
+            console.log('2: ' + typeof is_checked + " : " + is_checked);
         }
     }
-
 </script>
