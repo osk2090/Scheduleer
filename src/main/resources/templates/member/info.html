@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -8,30 +8,17 @@
     <title>회원찾기</title>
 </head>
 <body>
-<table>
-    <thead>
-    <tr>
-        <th class="one wide">번호</th>
-        <th class="ten wide">이름</th>
-        <th class="two wide">이메일</th>
-        <th class="two wide">가입일</th>
-    </tr>
-    </thead>
 
-    <tbody>
-        <td>
-            <span th:text="${memberInfo.id}"></span>
-        </td>
-        <td>
-            <span th:text="${memberInfo.name}"></span>
-        </td>
-        <td>
-            <span th:text="${memberInfo.email}"></span>
-        </td>
-        <td>
-            <span th:text="${memberInfo.regDate}"></span>
-        </td>
-    </tbody>
-</table>
+    <input type="hidden" name="id" th:value="${memberInfo.id}">
+    이름 : <input type="text" name="name" th:value="${memberInfo.name}" disabled><br>
+    이메일 : <input type="text" name="email" th:value="${memberInfo.email}"><br>
+    가입일 : <input type="text" name="regDate" th:value="${memberInfo.regDate}"><br>
+
+<div sec:authorize="hasAnyRole('ROLE_USER')" class="nav-item">
+    <a th:href="@{/member/update/{id}(id=${memberInfo.id})}">
+        <button>개인정보 수정</button>
+    </a>
+</div>
+
 </body>
 </html>

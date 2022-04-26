@@ -24,6 +24,8 @@
 
 
 <div sec:authorize="hasAnyRole('ROLE_USER','ROLE_ADMIN')" class="nav-item">
+<!--    로그인된 유저의 정보 확인-->
+    <button type="button" class="navyBtn" onclick="location.href='/info'">내 정보</button>
     <button type="button" class="navyBtn" onclick="location.href='/addBoard'">계획 작성</button>
 </div>
 

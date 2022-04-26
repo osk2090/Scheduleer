@@ -17,7 +17,7 @@
     작성일자 : <input type="text" name="writer.name" th:value="${boardDetail.regDate}" disabled>
     계획 달성 일자: <input type="text" name="writer.name" th:value="${boardDetail.updateDate}" disabled><br>
 
-    <div sec:authorize="hasAnyRole('ROLE_USER','ROLE_ADMIN')" class="nav-item">
+    <div sec:authorize="hasAnyRole('ROLE_USER')" class="nav-item">
         <a th:href="@{/board/update/{id}(id=${boardDetail.id})}">
             <button>수정</button>
         </a>
@@ -32,18 +32,6 @@
         document.getElementById('image').src = '/image/unchecked.svg';
     } else {
         document.getElementById('image').src = '/image/checked.svg';
-    }
-
-    function changeImage() {
-        let e = document.getElementById('check').value;
-        console.log(e);
-        if (e === 'false') {
-            document.getElementById('check').value = 'true';
-            document.getElementById('image').src = '/image/checked.svg';
-        } else {
-            document.getElementById('check').value = 'false';
-            document.getElementById('image').src = '/image/unchecked.svg';
-        }
     }
 
 </script>
