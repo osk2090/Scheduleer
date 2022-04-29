@@ -14,6 +14,8 @@
     이메일 : <input type="text" name="email" th:value="${memberInfo.email}"><br>
     가입일 : <input type="text" name="regDate" th:value="${memberInfo.regDate}"><br>
 
+
+
 <div sec:authorize="hasAnyRole('ROLE_USER')" class="nav-item">
     <a th:href="@{/member/update/{id}(id=${memberInfo.id})}">
         <button>개인정보 수정</button>

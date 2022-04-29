@@ -9,8 +9,13 @@ import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
+import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @SpringBootTest
 @Log4j2
@@ -58,5 +63,16 @@ class ScheduleerApplicationTests {
 
         BoardInfo b2 = boardRepository.findBoardInfoById(1L);
         System.out.println(b2.getCheckStar().booleanValue());
+    }
+
+    @Test
+    @Transactional
+    void findBoardByWriter() {
+        Optional<MemberInfo> memberInfo = memberRepository.findByEmail("osk@naver.com");
+
+        List<BoardInfo> boardInfos = boardService.findBoardInfoByWriter(memberInfo);
+        for (BoardInfo boardInfo : boardInfos) {
+            System.out.println(boardInfo.getTitle());
+        }
     }
 }

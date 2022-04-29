@@ -35,8 +35,9 @@ public class BoardService {
         return boardRepository.findAll();
     }
 
-    public List<BoardInfo> findBoardByWriter(String writer) {
-        return boardRepository.findBoardInfoByWriter(writer);
+    @Transactional
+    public List<BoardInfo> findBoardInfoByWriter(Optional<MemberInfo> memberInfo) {
+        return boardRepository.findBoardInfoByWriter(memberInfo);
     }
 
     public BoardInfo findBoardById(Long boardId) {
