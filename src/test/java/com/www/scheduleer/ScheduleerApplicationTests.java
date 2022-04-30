@@ -5,6 +5,7 @@ import com.www.scheduleer.Repository.MemberRepository;
 import com.www.scheduleer.VO.BoardInfo;
 import com.www.scheduleer.VO.MemberInfo;
 import com.www.scheduleer.service.Board.BoardService;
+import com.www.scheduleer.service.Member.MemberService;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ class ScheduleerApplicationTests {
 
     @Autowired
     private BoardService boardService;
+
+    @Autowired
+    private MemberService memberService;
 
     @Test
     void contextLoads() {
@@ -70,9 +74,18 @@ class ScheduleerApplicationTests {
     void findBoardByWriter() {
         Optional<MemberInfo> memberInfo = memberRepository.findByEmail("osk@naver.com");
 
-        List<BoardInfo> boardInfos = boardService.findBoardInfoByWriter(memberInfo);
-        for (BoardInfo boardInfo : boardInfos) {
-            System.out.println(boardInfo.getTitle());
+//        List<BoardInfo> boardInfos = boardService.findBoardInfoByWriter(memberInfo);
+//        for (BoardInfo boardInfo : boardInfos) {
+//            System.out.println(boardInfo.getTitle());
+//        }
+    }
+
+    @Transactional
+    @Test
+    void findMemberAndBoards() {
+        List<MemberInfo> members = memberService.findMembers("osk@naver.com");
+        for (MemberInfo memberInfo : members) {
+            System.out.println(memberInfo.getName());
         }
     }
 }

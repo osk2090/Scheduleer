@@ -5,12 +5,14 @@ import com.www.scheduleer.VO.BoardSaveRequestDto;
 import com.www.scheduleer.VO.MemberInfo;
 import com.www.scheduleer.service.Board.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.apache.kafka.common.network.Mode;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -53,4 +55,9 @@ public class BoardController {
         return "redirect:/main";
     }
 
+//    @GetMapping("/board/list")
+//    public String myBoardList(@RequestBody MemberInfo memberInfo, Model model) {
+//        model.addAttribute("boardList", boardService.findBoardInfoByWriter(memberInfo));
+//        return "/member/info";
+//    }
 }

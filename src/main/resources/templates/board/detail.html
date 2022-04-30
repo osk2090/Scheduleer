@@ -17,7 +17,8 @@
     작성일자 : <input type="text" name="writer.name" th:value="${boardDetail.regDate}" disabled>
     계획 달성 일자: <input type="text" name="writer.name" th:value="${boardDetail.updateDate}" disabled><br>
 
-    <div sec:authorize="hasAnyRole('ROLE_USER')" class="nav-item">
+<!--    <div sec:authorize="hasAnyRole('ROLE_USER')" class="nav-item">-->
+    <div th:if="${#authentication.principal.email} == ${boardDetail.writer.email}" class="nav-item">
         <a th:href="@{/board/update/{id}(id=${boardDetail.id})}">
             <button>수정</button>
         </a>
