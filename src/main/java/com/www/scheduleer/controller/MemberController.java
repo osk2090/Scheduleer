@@ -2,26 +2,29 @@ package com.www.scheduleer.controller;
 
 import com.www.scheduleer.VO.MemberInfo;
 import com.www.scheduleer.VO.security.MemberInfoDto;
+import com.www.scheduleer.service.Board.BoardService;
 import com.www.scheduleer.service.Member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
+
+    private final BoardService boardService;
 
     @GetMapping("/login")
     public String login(@RequestParam(value = "error", required = false) String error, @RequestParam(value = "exception", required = false) String exception, Model model) {
@@ -46,20 +49,22 @@ public class MemberController {
     //현재 로그인된 멤버의 정보
     @GetMapping("/info")
     public String memberInfo(@AuthenticationPrincipal MemberInfo memberInfo, Model model) {
-        model.addAttribute("memberInfo", memberInfo);
+        Optional<MemberInfo> member = memberService.getMember(memberInfo.getEmail());
+        model.addAttribute("member", member.get());
+        model.addAttribute("boardList", boardService.findBoardInfoByWriter(memberInfo));
         return "/member/info";
     }
 
     @GetMapping("/list")
-    public String list(Model model) {
-        List<MemberInfo> memberList = memberService.getMemberList();
-        model.addAttribute("memberList", memberList);
+    @Transactional
+    public String list(Model model, @AuthenticationPrincipal MemberInfo memberInfo) {
+        model.addAttribute("memberList", memberService.getMemberList());
         return "/member/list";
     }
 
     @GetMapping("/find")
     public String findMember(@RequestParam(value = "email") String email, Model model) {
-        List<MemberInfo> memberList = memberService.findMember(email);
+        List<MemberInfo> memberList = memberService.findMembers(email);
         model.addAttribute("memberList", memberList);
         return "/member/list";
     }

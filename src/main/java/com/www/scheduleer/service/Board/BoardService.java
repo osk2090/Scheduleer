@@ -21,25 +21,18 @@ public class BoardService {
     public Long save(BoardSaveRequestDto boardSaveRequestDto, MemberInfo writer) {
         boardSaveRequestDto.setMemberInfo(writer);
         return boardRepository.save(boardSaveRequestDto.toEntity()).getId();
-//        return boardRepository.save(
-//                BoardInfo.builder()
-//                .id(boardInfo.getId())
-//                .title(boardInfo.getTitle())
-//                .content(boardInfo.getContent())
-//                .writer(writer)
-//                .checkStar(boardInfo.getCheckStar()).build()).getId();
-
     }
 
     public List<BoardInfo> getBoardList() {
         return boardRepository.findAll();
     }
 
-    public List<BoardInfo> findBoardByWriter(String writer) {
-        return boardRepository.findBoardInfoByWriter(writer);
+    @Transactional
+    public List<Optional<BoardInfo>> findBoardInfoByWriter(MemberInfo memberInfo) {
+        return boardRepository.findBoardInfoByWriter(memberInfo);
     }
 
-    public BoardInfo findBoardById(Long boardId) {
+    public Optional<BoardInfo> findBoardById(Long boardId) {
         return boardRepository.findBoardInfoById(boardId);
     }
 }
