@@ -36,7 +36,11 @@ public class MemberService implements UserDetailsService {
         return memberRepository.findAll();
     }
 
-    public List<MemberInfo> findMember(String email) {
+    public Optional<MemberInfo> getMember(String email) {
+        return memberRepository.findByEmail(email);
+    }
+
+    public List<MemberInfo> findMembers(String email) {
         List<MemberInfo> members = memberRepository.findByEmailContaining(email);
         List<MemberInfo> m = new ArrayList<>();
         for (MemberInfo member : members) {
