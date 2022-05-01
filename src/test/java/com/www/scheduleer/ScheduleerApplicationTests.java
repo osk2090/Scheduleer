@@ -59,14 +59,14 @@ class ScheduleerApplicationTests {
 
     @Test
     void updateBoard() {
-        BoardInfo b1 = boardRepository.findBoardInfoById(1L);
-        System.out.println(b1.getCheckStar().booleanValue());
+//        BoardInfo b1 = boardRepository.findBoardInfoById(1L);
+//        System.out.println(b1.getCheckStar().booleanValue());
 
-        b1.setCheckStar(false);
+//        b1.setCheckStar(false);
 //        boardService.save(b1);
 
-        BoardInfo b2 = boardRepository.findBoardInfoById(1L);
-        System.out.println(b2.getCheckStar().booleanValue());
+//        BoardInfo b2 = boardRepository.findBoardInfoById(1L);
+//        System.out.println(b2.getCheckStar().booleanValue());
     }
 
     @Test

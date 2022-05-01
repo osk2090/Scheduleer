@@ -28,11 +28,11 @@ public class BoardService {
     }
 
     @Transactional
-    public List<BoardInfo> findBoardInfoByWriter(MemberInfo memberInfo) {
+    public List<Optional<BoardInfo>> findBoardInfoByWriter(MemberInfo memberInfo) {
         return boardRepository.findBoardInfoByWriter(memberInfo);
     }
 
-    public BoardInfo findBoardById(Long boardId) {
+    public Optional<BoardInfo> findBoardById(Long boardId) {
         return boardRepository.findBoardInfoById(boardId);
     }
 }

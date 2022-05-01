@@ -35,13 +35,13 @@ public class BoardController {
 
     @GetMapping("/board/detail/{id}")
     public String detail(Model model, @PathVariable("id") Long boardId) {
-        model.addAttribute("boardDetail", boardService.findBoardById(boardId));
+        model.addAttribute("boardDetail", boardService.findBoardById(boardId).get());
         return "/board/detail";
     }
 
     @GetMapping("/board/update/{id}")
     public String edit(Model model, @PathVariable("id") Long boardId) {
-        model.addAttribute("board", boardService.findBoardById(boardId));
+        model.addAttribute("board", boardService.findBoardById(boardId).get());
         return "/board/update";
     }
 
