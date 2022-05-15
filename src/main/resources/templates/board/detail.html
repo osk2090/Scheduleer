@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta charset="UTF-8">
@@ -16,11 +17,14 @@
     작성일자 : <input type="text" name="writer.name" th:value="${boardDetail.regDate}" disabled>
     계획 달성 일자: <input type="text" name="writer.name" th:value="${boardDetail.updateDate}" disabled><br>
 
+    <div sec:authorize="isFullyAuthenticated()">
     <div th:if="${#authentication.principal.email} == ${boardDetail.writer.email}" class="nav-item">
         <a th:href="@{/board/update/{id}(id=${boardDetail.id})}">
             <button>수정</button>
         </a>
     </div>
+    </div>
+
     <button type="button" class="navyBtn" onclick="location.href='/main'">이전으로</button>
 </body>
 </html>

@@ -3,6 +3,7 @@ package com.www.scheduleer.controller;
 import com.www.scheduleer.VO.BoardInfo;
 import com.www.scheduleer.VO.BoardSaveRequestDto;
 import com.www.scheduleer.VO.MemberInfo;
+import com.www.scheduleer.VO.security.MemberInfoDto;
 import com.www.scheduleer.service.Board.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.common.network.Mode;
