@@ -28,7 +28,7 @@ public class BoardService {
     }
 
     @Transactional
-    public List<Optional<BoardInfo>> findBoardInfoByWriter(MemberInfo memberInfo) {
+    public Optional<BoardInfo> findBoardInfoByWriter(MemberInfo memberInfo) {
         return boardRepository.findBoardInfoByWriter(memberInfo);
     }
 
