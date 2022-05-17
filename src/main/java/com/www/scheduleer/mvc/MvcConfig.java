@@ -12,7 +12,8 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addViewController("/main").setViewName("main");//전체글이 나오는 실제메인 위에 있는 메인은 수정/삭제 예정
         registry.addViewController("/login").setViewName("login");
         registry.addViewController("/admin").setViewName("/admin/admin");
-        registry.addViewController("/signup").setViewName("/member/signup");
+//        registry.addViewController("/signup").setViewName("/member/signup");
+        registry.addViewController("/signup1").setViewName("/member/agree");
         registry.addViewController("/list").setViewName("/member/list");
         registry.addViewController("/find").setViewName("/member/list");
         registry.addViewController("/info").setViewName("/member/info");
