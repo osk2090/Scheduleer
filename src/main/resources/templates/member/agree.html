@@ -11,11 +11,11 @@
 <img id="image1" src="" onclick="changeImage()"/>전체 동의
 <input type="checkbox" id="check1" disabled><br>
 
-<img id="image2" src="" onclick="checking1()"/>전체 동의
+<img id="image2" src="" onclick="checking1()"/>스케쥴러 이용약관
 <input type="checkbox" id="check2" disabled><br>
 
-<!--<input type="checkbox" id="check2" >스케쥴러 이용약관<br>-->
-<!--<input type="checkbox" id="check3" >개인정보 수집 및 이용<br>-->
+<img id="image3" src="" onclick="checking1()"/>개인정보 수집 및 이용
+<input type="checkbox" id="check3" disabled><br>
 
 </body>
 </html>
@@ -55,18 +55,24 @@
         const check = document.getElementById('check1');
         const is_checked = check.checked;
 
+        const check1 = document.getElementById('check2');
+        const is_checked1 = check1.checked;
+
         if (is_checked === false) {
-            document.getElementById('check1').checked = true;
+            if (is_checked1 === true) {
+                document.getElementById('check2').checked = false;
+                document.getElementById('image2').src = '/image/small_unchecked.svg';
+                return;
+            }
             document.getElementById('check2').checked = true;
-            document.getElementById('image1').src = '/image/allchecked.svg';
             document.getElementById('image2').src = '/image/small_checked.svg';
-            console.log(is_checked)
+            console.log('1' + is_checked);
         } else {
             document.getElementById('check1').checked = false;
             document.getElementById('check2').checked = false;
             document.getElementById('image1').src = '/image/allunchecked.svg';
             document.getElementById('image2').src = '/image/small_unchecked.svg';
-            console.log(is_checked)
+            console.log('2' + is_checked);
         }
     }
 </script>
