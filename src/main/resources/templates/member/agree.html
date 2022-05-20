@@ -10,8 +10,12 @@
 
 <img id="image1" src="" onclick="changeImage()"/>전체 동의
 <input type="checkbox" id="check1" disabled><br>
-<input type="checkbox" id="check2" >스케쥴러 이용약관<br>
-<input type="checkbox" id="check3" >개인정보 수집 및 이용<br>
+
+<img id="image2" src="" onclick="checking1()"/>전체 동의
+<input type="checkbox" id="check2" disabled><br>
+
+<!--<input type="checkbox" id="check2" >스케쥴러 이용약관<br>-->
+<!--<input type="checkbox" id="check3" >개인정보 수집 및 이용<br>-->
 
 </body>
 </html>
@@ -22,8 +26,10 @@
 
     if (is_checked === false) {
         document.getElementById('image1').src = '/image/allunchecked.svg';
+        document.getElementById('image2').src = '/image/small_unchecked.svg';
     } else {
         document.getElementById('image1').src = '/image/allchecked.svg';
+        document.getElementById('image2').src = '/image/small_checked.svg';
     }
 
     function changeImage() {
@@ -33,15 +39,62 @@
         if (is_checked === false) {
             document.getElementById('check1').checked = true;
             document.getElementById('check2').checked = true;
-            document.getElementById('check3').checked = true;
             document.getElementById('image1').src = '/image/allchecked.svg';
+            document.getElementById('image2').src = '/image/small_checked.svg';
             console.log('1: ' + typeof is_checked + " : " + is_checked);
         } else {
             document.getElementById('check1').checked = false;
             document.getElementById('check2').checked = false;
-            document.getElementById('check3').checked = false;
             document.getElementById('image1').src = '/image/allunchecked.svg';
+            document.getElementById('image2').src = '/image/small_unchecked.svg';
             console.log('2: ' + typeof is_checked + " : " + is_checked);
         }
     }
+
+    function checking1() {
+        const check = document.getElementById('check1');
+        const is_checked = check.checked;
+
+        if (is_checked === false) {
+            document.getElementById('check1').check = true;
+            document.getElementById('check2').check = true;
+            document.getElementById('image1').src = '/image/allchecked.svg';
+            document.getElementById('image2').src = '/image/small_checked.svg';
+            console.log(is_checked)
+        } else {
+            document.getElementById('check1').check = false;
+            document.getElementById('check2').check = false;
+            document.getElementById('image1').src = '/image/allunchecked.svg';
+            document.getElementById('image2').src = '/image/small_unchecked.svg';
+            console.log(is_checked)
+        }
+    }
 </script>
+
+
+<script type="text/javascript">
+
+    function check(form) {
+        var flag = true;
+        for(var i=0;i<form.length;i++) {
+            if(form[i].type === "checkbox") {
+                if(form[i].checked===false) flag = false;
+            }
+        }
+        if(flag===false)
+            alert("이용약관에 동의 하셔야 합니다.");
+
+        return flag;
+    }
+
+</script>
+
+
+
+<form onsubmit="return check(this)" action="**********.asp">
+
+    <input type="checkbox" />약관동의
+
+    <input type="image" src="../**************.gif" />
+
+</form>
