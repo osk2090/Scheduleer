@@ -64,6 +64,9 @@
         const check1 = document.getElementById('check2');
         const is_checked1 = check1.checked;
 
+        const check2 = document.getElementById('check3');
+        const is_checked2 = check2.checked;
+
         if (is_checked === false) {
             if (is_checked1 === true) {
                 document.getElementById('check2').checked = false;
@@ -72,13 +75,16 @@
             }
             document.getElementById('check2').checked = true;
             document.getElementById('image2').src = '/image/small_checked.svg';
-            console.log('1' + is_checked);
+            if (is_checked2 === true) {
+                document.getElementById('check1').checked = true;
+                document.getElementById('image1').src = '/image/allchecked.svg';
+                return;
+            }
         } else {
             document.getElementById('check1').checked = false;
             document.getElementById('check2').checked = false;
             document.getElementById('image1').src = '/image/allunchecked.svg';
             document.getElementById('image2').src = '/image/small_unchecked.svg';
-            console.log('2' + is_checked);
         }
     }
 
@@ -86,24 +92,30 @@
         const check = document.getElementById('check1');
         const is_checked = check.checked;
 
-        const check1 = document.getElementById('check3');
+        const check1 = document.getElementById('check2');
         const is_checked1 = check1.checked;
 
+        const check2 = document.getElementById('check3');
+        const is_checked2 = check2.checked;
+
         if (is_checked === false) {
-            if (is_checked1 === true) {
+            if (is_checked2 === true) {
                 document.getElementById('check3').checked = false;
                 document.getElementById('image3').src = '/image/small_unchecked.svg';
                 return;
             }
             document.getElementById('check3').checked = true;
             document.getElementById('image3').src = '/image/small_checked.svg';
-            console.log('1' + is_checked);
+            if (is_checked1 === true) {
+                document.getElementById('check1').checked = true;
+                document.getElementById('image1').src = '/image/allchecked.svg';
+                return;
+            }
         } else {
             document.getElementById('check1').checked = false;
             document.getElementById('check3').checked = false;
             document.getElementById('image1').src = '/image/allunchecked.svg';
             document.getElementById('image3').src = '/image/small_unchecked.svg';
-            console.log('2' + is_checked);
         }
     }
 </script>
