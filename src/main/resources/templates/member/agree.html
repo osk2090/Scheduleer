@@ -17,6 +17,9 @@
 <img id="image3" src="" onclick="checking2()"/>개인정보 수집 및 이용
 <input type="checkbox" id="check3" disabled><br>
 
+<img id="image4" src=""/>
+<input type="checkbox" id="check4" disabled><br>
+
 </body>
 </html>
 
@@ -28,10 +31,12 @@
         document.getElementById('image1').src = '/image/allunchecked.svg';
         document.getElementById('image2').src = '/image/small_unchecked.svg';
         document.getElementById('image3').src = '/image/small_unchecked.svg';
+        document.getElementById('image4').src = '/image/agree_next_no.svg';
     } else {
         document.getElementById('image1').src = '/image/allchecked.svg';
         document.getElementById('image2').src = '/image/small_checked.svg';
         document.getElementById('image3').src = '/image/small_checked.svg';
+        document.getElementById('image4').src = '/image/agree_next_yes.svg';
     }
 
     function changeImage() {
@@ -42,17 +47,21 @@
             document.getElementById('check1').checked = true;
             document.getElementById('check2').checked = true;
             document.getElementById('check3').checked = true;
+            document.getElementById('check4').checked = true;
             document.getElementById('image1').src = '/image/allchecked.svg';
             document.getElementById('image2').src = '/image/small_checked.svg';
             document.getElementById('image3').src = '/image/small_checked.svg';
+            document.getElementById('image4').src = '/image/agree_next_yes.svg';
             console.log('1: ' + typeof is_checked + " : " + is_checked);
         } else {
             document.getElementById('check1').checked = false;
             document.getElementById('check2').checked = false;
             document.getElementById('check3').checked = false;
+            document.getElementById('check4').checked = false;
             document.getElementById('image1').src = '/image/allunchecked.svg';
             document.getElementById('image2').src = '/image/small_unchecked.svg';
             document.getElementById('image3').src = '/image/small_unchecked.svg';
+            document.getElementById('image4').src = '/image/agree_next_no.svg';
             console.log('2: ' + typeof is_checked + " : " + is_checked);
         }
     }
@@ -77,14 +86,18 @@
             document.getElementById('image2').src = '/image/small_checked.svg';
             if (is_checked2 === true) {
                 document.getElementById('check1').checked = true;
+                document.getElementById('check4').checked = true;
                 document.getElementById('image1').src = '/image/allchecked.svg';
+                document.getElementById('image4').src = '/image/agree_next_yes.svg';
                 return;
             }
         } else {
             document.getElementById('check1').checked = false;
             document.getElementById('check2').checked = false;
+            document.getElementById('check4').checked = false;
             document.getElementById('image1').src = '/image/allunchecked.svg';
             document.getElementById('image2').src = '/image/small_unchecked.svg';
+            document.getElementById('image4').src = '/image/agree_next_no.svg';
         }
     }
 
@@ -108,14 +121,18 @@
             document.getElementById('image3').src = '/image/small_checked.svg';
             if (is_checked1 === true) {
                 document.getElementById('check1').checked = true;
+                document.getElementById('check4').checked = true;
                 document.getElementById('image1').src = '/image/allchecked.svg';
+                document.getElementById('image4').src = '/image/agree_next_yes.svg';
                 return;
             }
         } else {
             document.getElementById('check1').checked = false;
             document.getElementById('check3').checked = false;
+            document.getElementById('check4').checked = false;
             document.getElementById('image1').src = '/image/allunchecked.svg';
             document.getElementById('image3').src = '/image/small_unchecked.svg';
+            document.getElementById('image4').src = '/image/agree_next_no.svg';
         }
     }
 </script>
