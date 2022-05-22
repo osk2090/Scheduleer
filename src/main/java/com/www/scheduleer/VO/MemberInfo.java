@@ -1,20 +1,20 @@
 package com.www.scheduleer.VO;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.*;
+import javax.validation.constraints.NotBlank;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
+@Setter
 public class MemberInfo extends BaseTimeEntity implements UserDetails {
 
     @Id
@@ -23,20 +23,16 @@ public class MemberInfo extends BaseTimeEntity implements UserDetails {
 
     @Column(name = "name")
     @NotBlank(message = "이름은 필수값입니다.")
-    @NotNull
     private String name;
 
     @Column(unique = true, name = "email")
     @NotBlank(message = "이메일은 필수값입니다.")
-    @NotNull
     private String email;
 
     @Column(name = "password")
     @NotBlank(message = "비밀번호는 필수값입니다.")
-    @NotNull
     private String password;
 
-    @NotNull
     private String auth;
 
     @Builder

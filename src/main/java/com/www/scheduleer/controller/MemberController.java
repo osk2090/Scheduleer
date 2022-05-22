@@ -51,7 +51,7 @@ public class MemberController {
     public String memberInfo(@AuthenticationPrincipal MemberInfo memberInfo, Model model) {
         Optional<MemberInfo> member = memberService.getMember(memberInfo.getEmail());
         model.addAttribute("member", member.get());
-        model.addAttribute("boardList", boardService.findBoardInfoByWriter(memberInfo));
+        model.addAttribute("boardList", boardService.findBoardInfoByWriter(memberInfo).get());
         return "/member/info";
     }
 
