@@ -29,3 +29,5 @@ spring:
       hibernate:
         format_sql: true
         check_nullability: true
+  session:
+    store-type: jdbc
