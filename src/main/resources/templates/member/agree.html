@@ -23,6 +23,7 @@
 </body>
 </html>
 
+<script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script type="text/javascript">
     const check = document.getElementById('check1');
     const is_checked = check.checked;
@@ -37,7 +38,7 @@
         document.getElementById('image2').src = '/image/small_checked.svg';
         document.getElementById('image3').src = '/image/small_checked.svg';
         document.getElementById('image4').src = '/image/agree_next_yes.svg';
-        document.getElementById('image4').location.href = '/signup.html';
+        document.getElementById('image4').setAttribute('href', '/signup');
     }
 
     function changeImage() {
@@ -53,7 +54,7 @@
             document.getElementById('image2').src = '/image/small_checked.svg';
             document.getElementById('image3').src = '/image/small_checked.svg';
             document.getElementById('image4').src = '/image/agree_next_yes.svg';
-            document.getElementById('image4').location.href = '/signup';
+            document.getElementById('image4').setAttribute('href', '/signup');
             console.log('1: ' + typeof is_checked + " : " + is_checked);
         } else {
             document.getElementById('check1').checked = false;
@@ -91,7 +92,7 @@
                 document.getElementById('check4').checked = true;
                 document.getElementById('image1').src = '/image/allchecked.svg';
                 document.getElementById('image4').src = '/image/agree_next_yes.svg';
-                document.getElementById('image4').location.href = '/signup';
+                document.getElementById('image4').setAttribute('href', '/signup');
                 return;
             }
         } else {
@@ -127,7 +128,7 @@
                 document.getElementById('check4').checked = true;
                 document.getElementById('image1').src = '/image/allchecked.svg';
                 document.getElementById('image4').src = '/image/agree_next_yes.svg';
-                document.getElementById('image4').location.href = '/signup.html';
+                document.getElementById('image4').setAttribute('href', '/signup');
                 return;
             }
         } else {
