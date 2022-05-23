@@ -17,7 +17,7 @@
 <img id="image3" src="" onclick="checking2()"/>개인정보 수집 및 이용
 <input type="checkbox" id="check3" disabled><br>
 
-<img id="image4" src="" href=""/>
+<img id="image4" src="" onclick=""/>
 <input type="checkbox" id="check4" disabled><br>
 
 </body>
@@ -38,7 +38,7 @@
         document.getElementById('image2').src = '/image/small_checked.svg';
         document.getElementById('image3').src = '/image/small_checked.svg';
         document.getElementById('image4').src = '/image/agree_next_yes.svg';
-        document.getElementById('image4').setAttribute('href', '/signup');
+        document.getElementById('image4').setAttribute('onclick', 'location.href=\'/signup\'');
     }
 
     function changeImage() {
@@ -54,7 +54,7 @@
             document.getElementById('image2').src = '/image/small_checked.svg';
             document.getElementById('image3').src = '/image/small_checked.svg';
             document.getElementById('image4').src = '/image/agree_next_yes.svg';
-            document.getElementById('image4').setAttribute('href', '/signup');
+            document.getElementById('image4').setAttribute('onclick', 'location.href=\'/signup\'');
             console.log('1: ' + typeof is_checked + " : " + is_checked);
         } else {
             document.getElementById('check1').checked = false;
@@ -92,7 +92,7 @@
                 document.getElementById('check4').checked = true;
                 document.getElementById('image1').src = '/image/allchecked.svg';
                 document.getElementById('image4').src = '/image/agree_next_yes.svg';
-                document.getElementById('image4').setAttribute('href', '/signup');
+                document.getElementById('image4').setAttribute('onclick', 'location.href=\'/signup\'');
                 return;
             }
         } else {
@@ -128,7 +128,7 @@
                 document.getElementById('check4').checked = true;
                 document.getElementById('image1').src = '/image/allchecked.svg';
                 document.getElementById('image4').src = '/image/agree_next_yes.svg';
-                document.getElementById('image4').setAttribute('href', '/signup');
+                document.getElementById('image4').setAttribute('onclick', 'location.href=\'/signup\'');
                 return;
             }
         } else {
