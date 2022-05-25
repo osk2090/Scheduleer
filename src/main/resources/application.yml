@@ -31,3 +31,6 @@ spring:
         check_nullability: true
   session:
     store-type: jdbc
+
+  profiles:
+    include: oauth
