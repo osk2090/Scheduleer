@@ -21,6 +21,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final AuthenticationFailureHandler authenticationFailureHandler;//로그인 실패 핸들러 의존성 주입
 
+    private final CustomOAuth2UserService customOAuth2UserService;
     @Override
     public void configure(WebSecurity web) {
         web.ignoring().antMatchers("/css/**", "/js/**", "/image/**");
@@ -45,6 +46,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout() // 8
                 .logoutSuccessUrl("/main") // 로그아웃 성공시 리다이렉트 주소
                 .invalidateHttpSession(true) // 세션 날리기
+                .and()
+                //구글로그인 구현
+                .oauth2Login()
+                .userInfoEndpoint()
+                .userService(customOAuth2UserService)
         ;
     }
 
