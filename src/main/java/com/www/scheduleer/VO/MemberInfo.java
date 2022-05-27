@@ -30,7 +30,7 @@ public class MemberInfo extends BaseTimeEntity implements UserDetails {
     private String email;
 
     @Column(name = "password")
-    @NotBlank(message = "비밀번호는 필수값입니다.")
+//    @NotBlank(message = "비밀번호는 필수값입니다.")
     private String password;
 
     @Column(name = "picture")
