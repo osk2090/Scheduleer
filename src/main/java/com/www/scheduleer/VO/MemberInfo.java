@@ -33,13 +33,17 @@ public class MemberInfo extends BaseTimeEntity implements UserDetails {
     @NotBlank(message = "비밀번호는 필수값입니다.")
     private String password;
 
+    @Column(name = "picture")
+    private String picture;
+
     private String auth;
 
     @Builder
-    public MemberInfo(String name, String email, String password, String auth) {
+    public MemberInfo(String name, String email, String password, String picture, String auth) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.picture = picture;
         this.auth = auth;
     }
 
