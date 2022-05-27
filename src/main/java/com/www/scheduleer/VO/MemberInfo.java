@@ -97,4 +97,10 @@ public class MemberInfo extends BaseTimeEntity implements UserDetails {
         // 계정이 사용 가능한지 확인하는 로직
         return true; // true -> 사용 가능
     }
+
+    public MemberInfo update(String name, String picture) {
+        this.name = name;
+        this.picture = picture;
+        return this;
+    }
 }

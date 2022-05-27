@@ -29,6 +29,7 @@ public class MemberService implements UserDetailsService {
                 .name(infoDto.getName())
                 .email(infoDto.getEmail())
                 .auth(infoDto.getAuth())
+                .picture(infoDto.getPicture())
                 .password(infoDto.getPassword()).build()).getId();
     }
 

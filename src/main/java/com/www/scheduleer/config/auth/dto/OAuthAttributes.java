@@ -23,6 +23,10 @@ public class OAuthAttributes {
         this.picture = picture;
     }
 
+    public static OAuthAttributes of(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
+        return ofGoogle(userNameAttributeName, attributes);
+    }
+
     public static OAuthAttributes ofGoogle(String userNameAttributeName, Map<String, Object> attributes) {
         return OAuthAttributes.builder().name((String) attributes.get("name"))
                 .email((String) attributes.get("email"))
@@ -36,9 +40,8 @@ public class OAuthAttributes {
         return MemberInfo.builder()
                 .name(name)
                 .email(email)
+                .picture(picture)
                 .auth("ROLE_USER")
                 .build();
     }
-
-
 }
