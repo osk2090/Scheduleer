@@ -15,7 +15,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 
 @RequiredArgsConstructor
 @EnableWebSecurity // 1
-@Configuration
+//@Configuration
 //@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -53,6 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 //구글로그인 구현
                 .oauth2Login()
+                .loginPage("/login")//구현한 로그인페이지 이용
                 .defaultSuccessUrl("/main")
                 .userInfoEndpoint()
                 .userService(customOAuth2UserService)
