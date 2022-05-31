@@ -62,4 +62,8 @@ public class MemberService implements UserDetailsService {
             throw new IllegalStateException("이미 가입된 회원입니다.");
         }
     }
+
+    public List<MemberInfo> findAllDesc() {
+        return memberRepository.findAllDesc();
+    }
 }

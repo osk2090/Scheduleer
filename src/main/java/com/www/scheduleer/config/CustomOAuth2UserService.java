@@ -38,7 +38,9 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
         MemberInfo memberInfo = saveOrUpdate(attributes);
+
         httpSession.setAttribute("member", new MemberInfoDto(memberInfo));
+
         return new DefaultOAuth2User(
                 Collections.singleton(
                 new SimpleGrantedAuthority(memberInfo.getAuth())),
