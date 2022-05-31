@@ -37,4 +37,4 @@ out/
 .vscode/
 persistence.xml
 application.yml
-application-aouth.properties
+application-oauth.yml
