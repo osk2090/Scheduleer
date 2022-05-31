@@ -30,15 +30,19 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
 
+        //나중에 다른 로그인 api쓸때 구분용
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
+        //pk값과 같은 의미
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
                 .getUserInfoEndpoint().getUserNameAttributeName();
 
+        //로그인된 정보를 가져오는 것
         OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
-
         MemberInfo memberInfo = saveOrUpdate(attributes);
+
         httpSession.setAttribute("member", new MemberInfoDto(memberInfo));
+
         return new DefaultOAuth2User(
                 Collections.singleton(
                 new SimpleGrantedAuthority(memberInfo.getAuth())),
