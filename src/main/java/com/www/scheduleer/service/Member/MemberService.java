@@ -64,6 +64,6 @@ public class MemberService implements UserDetailsService {
     }
 
     public List<MemberInfo> findAllDesc() {
-        return memberRepository.findAllDesc();
+        return memberRepository.findAll();
     }
 }

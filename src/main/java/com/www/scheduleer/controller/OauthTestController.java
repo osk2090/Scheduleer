@@ -31,14 +31,13 @@ public class OauthTestController {
 
     @GetMapping("/index")
     public String index(Model model) {
-        model.addAttribute("members", memberService.findAllDesc());
 
-        MemberInfoDto user = (MemberInfoDto) httpSession.getAttribute("user");
+        MemberInfoDto user = (MemberInfoDto) httpSession.getAttribute("member");
 
         if (user != null) {
             model.addAttribute("userName", user.getName());
         }
 
-        return "/index";
+        return "/admin/index";
     }
 }
