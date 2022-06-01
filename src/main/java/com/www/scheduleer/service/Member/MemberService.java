@@ -4,12 +4,15 @@ import com.www.scheduleer.Repository.MemberRepository;
 import com.www.scheduleer.VO.MemberInfo;
 import com.www.scheduleer.VO.security.MemberInfoDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +23,8 @@ import java.util.Optional;
 public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
+
+    private final HttpSession httpSession;
 
     public Long save(MemberInfoDto infoDto) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -66,4 +71,17 @@ public class MemberService implements UserDetailsService {
     public List<MemberInfo> findAllDesc() {
         return memberRepository.findAll();
     }
+
+//    public void returnLoginMember(@AuthenticationPrincipal MemberInfo memberInfo, Model model) {
+//        MemberInfoDto loginGoogle = (MemberInfoDto) httpSession.getAttribute("member");
+//
+//        if (memberInfo == null) {
+//            if (loginGoogle != null) {
+//                model.addAttribute("memberName", loginGoogle);
+//            }
+//        } else {
+//            System.out.println(memberInfo.getName() + "!!!");
+//            model.addAttribute("memberName", memberInfo);
+//        }
+//    }
 }

@@ -12,7 +12,6 @@ public class OAuthAttributes {
     private String nameAttributeKey;
     private String name;
     private String email;
-
     private String picture;
 
     @Builder

@@ -18,6 +18,8 @@
     계획 달성 일자: <input type="text" name="writer.name" th:value="${boardDetail.updateDate}" disabled><br>
 
     <div sec:authorize="isFullyAuthenticated()">
+<!--        현재 여기서 구글로그인을 하면 여기서 이메일을 못가져와서 에러가 난다.
+아마 백엔드에서 로그인된 정보를 넘겨줘야할 것같다.-->
     <div th:if="${#authentication.principal.email} == ${boardDetail.writer.email}" class="nav-item">
         <a th:href="@{/board/update/{id}(id=${boardDetail.id})}">
             <button>수정</button>
