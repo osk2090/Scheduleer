@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,24 +29,35 @@ public class BoardController {
 
     private final HttpSession httpSession;
 
+    public void loginInfo(@AuthenticationPrincipal MemberInfo memberInfo, Model model) {
+        MemberInfoDto loginGoogle = (MemberInfoDto) httpSession.getAttribute("member");
+        if (memberInfo == null) {
+            if (loginGoogle != null) {
+                model.addAttribute("memberName", loginGoogle);
+            }
+        } else {
+            model.addAttribute("memberName", memberInfo);
+        }
+    }
+
     @PostMapping("/board")
     public String addBoard(BoardSaveRequestDto boardSaveRequestDto, @AuthenticationPrincipal MemberInfo memberInfo) {
-        boardService.save(boardSaveRequestDto, memberInfo);
+        MemberInfoDto loginGoogle = (MemberInfoDto) httpSession.getAttribute("member");
+        Optional<MemberInfo> loginGoogleInfo = memberService.findMemberInfoFromMemberInfoDTO(loginGoogle.getEmail());
+        
+        if (memberInfo == null) {
+            if (loginGoogle != null) {
+                boardService.save(boardSaveRequestDto, loginGoogleInfo.get());
+            }
+        } else {
+            boardService.save(boardSaveRequestDto, memberInfo);
+        }
         return "redirect:/main";
     }
 
     @GetMapping("/main")
     public String list(Model model, @AuthenticationPrincipal MemberInfo memberInfoDto) {
-        MemberInfoDto loginGoogle = (MemberInfoDto) httpSession.getAttribute("member");
-        if (memberInfoDto == null) {
-            if (loginGoogle != null) {
-                model.addAttribute("memberName", loginGoogle);
-            }
-        } else {
-            System.out.println(memberInfoDto.getName() + "!!!");
-            model.addAttribute("memberName", memberInfoDto);
-        }
-
+        loginInfo(memberInfoDto, model);
         List<BoardInfo> boardInfoList = boardService.getBoardList();
         model.addAttribute("boardList", boardInfoList);
 
@@ -53,7 +65,8 @@ public class BoardController {
     }
 
     @GetMapping("/board/detail/{id}")
-    public String detail(Model model, @PathVariable("id") Long boardId) {
+    public String detail(Model model, @PathVariable("id") Long boardId, @AuthenticationPrincipal MemberInfo memberInfo) {
+        loginInfo(memberInfo, model);
         model.addAttribute("boardDetail", boardService.findBoardById(boardId).get());
         return "/board/detail";
     }

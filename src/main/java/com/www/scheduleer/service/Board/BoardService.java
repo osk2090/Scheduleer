@@ -4,6 +4,7 @@ import com.www.scheduleer.Repository.BoardRepository;
 import com.www.scheduleer.VO.BoardInfo;
 import com.www.scheduleer.VO.BoardSaveRequestDto;
 import com.www.scheduleer.VO.MemberInfo;
+import com.www.scheduleer.VO.security.MemberInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,12 @@ public class BoardService {
         boardSaveRequestDto.setMemberInfo(writer);
         return boardRepository.save(boardSaveRequestDto.toEntity()).getId();
     }
+
+//    @Transactional
+//    public Long saveG(BoardSaveRequestDto boardSaveRequestDto, MemberInfoDto writer) {
+//        boardSaveRequestDto.setMemberInfoDto(writer);
+//        return boardRepository.save(boardSaveRequestDto.toEntity()).getId();
+//    }
 
     public List<BoardInfo> getBoardList() {
         return boardRepository.findAll();

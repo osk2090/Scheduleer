@@ -31,7 +31,6 @@ public class OauthTestController {
 
     @GetMapping("/index")
     public String index(Model model) {
-
         MemberInfoDto user = (MemberInfoDto) httpSession.getAttribute("member");
 
         if (user != null) {

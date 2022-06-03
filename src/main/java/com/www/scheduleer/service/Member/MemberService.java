@@ -72,6 +72,10 @@ public class MemberService implements UserDetailsService {
         return memberRepository.findAll();
     }
 
+    public Optional<MemberInfo> findMemberInfoFromMemberInfoDTO(String email) {
+        return memberRepository.findByEmail(email);
+    }
+
 //    public void returnLoginMember(@AuthenticationPrincipal MemberInfo memberInfo, Model model) {
 //        MemberInfoDto loginGoogle = (MemberInfoDto) httpSession.getAttribute("member");
 //

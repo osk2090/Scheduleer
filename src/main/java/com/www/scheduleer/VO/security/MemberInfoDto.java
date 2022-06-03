@@ -1,6 +1,7 @@
 package com.www.scheduleer.VO.security;
 
 import com.www.scheduleer.VO.MemberInfo;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
