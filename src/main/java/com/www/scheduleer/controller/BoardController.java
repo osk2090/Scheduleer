@@ -7,6 +7,7 @@ import com.www.scheduleer.VO.security.MemberInfoDto;
 import com.www.scheduleer.service.Board.BoardService;
 import com.www.scheduleer.service.Member.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,11 +30,14 @@ public class BoardController {
 
     private final HttpSession httpSession;
 
+    public MemberInfoDto getLoginGoogle() {
+        return (MemberInfoDto) httpSession.getAttribute("member");
+    }
+
     public void loginInfo(@AuthenticationPrincipal MemberInfo memberInfo, Model model) {
-        MemberInfoDto loginGoogle = (MemberInfoDto) httpSession.getAttribute("member");
         if (memberInfo == null) {
-            if (loginGoogle != null) {
-                model.addAttribute("memberName", loginGoogle);
+            if (getLoginGoogle() != null) {
+                model.addAttribute("memberName", getLoginGoogle());
             }
         } else {
             model.addAttribute("memberName", memberInfo);
@@ -42,16 +46,14 @@ public class BoardController {
 
     @PostMapping("/board")
     public String addBoard(BoardSaveRequestDto boardSaveRequestDto, @AuthenticationPrincipal MemberInfo memberInfo) {
-        MemberInfoDto loginGoogle = (MemberInfoDto) httpSession.getAttribute("member");
-        Optional<MemberInfo> loginGoogleInfo = memberService.findMemberInfoFromMemberInfoDTO(loginGoogle.getEmail());
-        
-        if (memberInfo == null) {
-            if (loginGoogle != null) {
-                boardService.save(boardSaveRequestDto, loginGoogleInfo.get());
-            }
-        } else {
+        Optional<MemberInfo> loginGoogleInfo = memberService.findMemberInfoFromMemberInfoDTO(getLoginGoogle().getEmail());
+
+        if (memberInfo != null) {
             boardService.save(boardSaveRequestDto, memberInfo);
+        } else {
+            boardService.save(boardSaveRequestDto, loginGoogleInfo.get());
         }
+
         return "redirect:/main";
     }
 
