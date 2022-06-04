@@ -50,9 +50,24 @@ public class MemberController {
     //현재 로그인된 멤버의 정보
     @GetMapping("/info")
     public String memberInfo(@AuthenticationPrincipal MemberInfo memberInfo, Model model) {
-        Optional<MemberInfo> member = memberService.getMember(memberInfo.getEmail());
-        model.addAttribute("member", member.get());
-        model.addAttribute("boardList", boardService.findBoardInfoByWriter(memberInfo).get());
+        if (memberInfo == null) {
+            Optional<MemberInfo> loginGoogleInfo = memberService.findMemberInfoFromMemberInfoDTO(boardService.getLoginGoogle().getEmail());
+            if (loginGoogleInfo.isPresent()) {
+                model.addAttribute("member", loginGoogleInfo.get());
+                if (boardService.findBoardInfoByWriter(loginGoogleInfo.get()).isPresent()) {
+                    model.addAttribute("boardList", boardService.findBoardInfoByWriter(loginGoogleInfo.get()).get());
+                }
+            }
+        } else {
+            Optional<MemberInfo> member = memberService.getMember(memberInfo.getEmail());
+            if (member.isPresent()) {
+                model.addAttribute("member", member.get());
+                if (boardService.findBoardInfoByWriter(memberInfo).isPresent()) {
+                    model.addAttribute("boardList", boardService.findBoardInfoByWriter(memberInfo).get());
+                }
+            }
+        }
+
         return "/member/info";
     }
 

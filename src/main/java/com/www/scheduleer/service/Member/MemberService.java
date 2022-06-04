@@ -24,8 +24,6 @@ public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
-    private final HttpSession httpSession;
-
     public Long save(MemberInfoDto infoDto) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         infoDto.setPassword(encoder.encode(infoDto.getPassword()));
@@ -63,7 +61,7 @@ public class MemberService implements UserDetailsService {
 
     private void validateDuplicateMember(MemberInfo memberInfo) {
         Optional<MemberInfo> findMember = memberRepository.findByEmail(memberInfo.getEmail());
-        if (findMember != null) {
+        if (findMember.isPresent()) {
             throw new IllegalStateException("이미 가입된 회원입니다.");
         }
     }
@@ -76,16 +74,4 @@ public class MemberService implements UserDetailsService {
         return memberRepository.findByEmail(email);
     }
 
-//    public void returnLoginMember(@AuthenticationPrincipal MemberInfo memberInfo, Model model) {
-//        MemberInfoDto loginGoogle = (MemberInfoDto) httpSession.getAttribute("member");
-//
-//        if (memberInfo == null) {
-//            if (loginGoogle != null) {
-//                model.addAttribute("memberName", loginGoogle);
-//            }
-//        } else {
-//            System.out.println(memberInfo.getName() + "!!!");
-//            model.addAttribute("memberName", memberInfo);
-//        }
-//    }
 }
