@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,47 +29,23 @@ public class BoardController {
 
     private final MemberService memberService;
 
-    private final HttpSession httpSession;
-
-    public MemberInfoDto getLoginGoogle() {
-        return (MemberInfoDto) httpSession.getAttribute("member");
-    }
-
-    public void loginInfo(@AuthenticationPrincipal MemberInfo memberInfo, Model model) {
-        if (memberInfo == null) {
-            if (getLoginGoogle() != null) {
-                model.addAttribute("memberName", getLoginGoogle());
-            }
-        } else {
-            model.addAttribute("memberName", memberInfo);
-        }
-    }
-
     @PostMapping("/board")
     public String addBoard(BoardSaveRequestDto boardSaveRequestDto, @AuthenticationPrincipal MemberInfo memberInfo) {
-        Optional<MemberInfo> loginGoogleInfo = memberService.findMemberInfoFromMemberInfoDTO(getLoginGoogle().getEmail());
-
-        if (memberInfo != null) {
-            boardService.save(boardSaveRequestDto, memberInfo);
-        } else {
-            boardService.save(boardSaveRequestDto, loginGoogleInfo.get());
-        }
-
+        boardService.saveAlgorithm(memberInfo, memberService, boardService, boardSaveRequestDto);
         return "redirect:/main";
     }
 
     @GetMapping("/main")
-    public String list(Model model, @AuthenticationPrincipal MemberInfo memberInfoDto) {
-        loginInfo(memberInfoDto, model);
+    public String list(Model model, @AuthenticationPrincipal MemberInfo memberInfo) {
+        boardService.loginInfo(memberInfo, model);
         List<BoardInfo> boardInfoList = boardService.getBoardList();
         model.addAttribute("boardList", boardInfoList);
-
         return "/main";
     }
 
     @GetMapping("/board/detail/{id}")
     public String detail(Model model, @PathVariable("id") Long boardId, @AuthenticationPrincipal MemberInfo memberInfo) {
-        loginInfo(memberInfo, model);
+        boardService.loginInfo(memberInfo, model);
         model.addAttribute("boardDetail", boardService.findBoardById(boardId).get());
         return "/board/detail";
     }
@@ -80,12 +57,9 @@ public class BoardController {
     }
 
     @PutMapping("/board/update/{id}")
+    @Transactional
     public String update(BoardSaveRequestDto boardSaveRequestDto, @AuthenticationPrincipal MemberInfo memberInfo) {
-        if (boardSaveRequestDto.getCheckStar() == null) {
-            boardSaveRequestDto.setCheckStar(false);
-            System.out.println("----" + boardSaveRequestDto.getCheckStar());
-        }
-        boardService.save(boardSaveRequestDto, memberInfo);
+        boardService.saveAlgorithm(memberInfo, memberService, boardService, boardSaveRequestDto);
         return "redirect:/main";
     }
 
