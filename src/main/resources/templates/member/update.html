@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>비밀번호 확인</title>
+</head>
+<body>
+
+<form th:action="@{'/member/update/' + ${member.id}}" method="POST">
+    <input type="hidden" name="id" th:value="${member.id}">
+    <input type="text" name="memberpw">
+    <input type="submit" value="저장">
+</form>
+</body>
+</html>
+
+<script type="text/javascript">
+
+</script>

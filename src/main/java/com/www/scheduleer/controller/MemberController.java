@@ -5,19 +5,24 @@ import com.www.scheduleer.VO.security.MemberInfoDto;
 import com.www.scheduleer.service.Board.BoardService;
 import com.www.scheduleer.service.Member.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Controller
 @RequiredArgsConstructor
@@ -36,7 +41,7 @@ public class MemberController {
 
     @GetMapping("/logout")
     public String logoutPage(HttpServletRequest request, HttpServletResponse response) {
-        new SecurityContextLogoutHandler().logout(request,response, SecurityContextHolder
+        new SecurityContextLogoutHandler().logout(request, response, SecurityContextHolder
                 .getContext().getAuthentication());
         return "/main";
     }
@@ -67,7 +72,6 @@ public class MemberController {
                 }
             }
         }
-
         return "/member/info";
     }
 
@@ -83,5 +87,23 @@ public class MemberController {
         List<MemberInfo> memberList = memberService.findMembers(email);
         model.addAttribute("memberList", memberList);
         return "/member/list";
+    }
+
+    @GetMapping("/member/update/{id}")
+    public String edit(Model model, @PathVariable("id") Long memberId) {
+        model.addAttribute("member", memberService.findMember(memberId).get());
+        return "/member/update";
+    }
+
+    @PostMapping("/member/update/{id}")
+    public String checkPw(Authentication auth, @RequestParam("memberpw") String password, RedirectAttributes rttr) {
+        MemberInfo memberInfo = (MemberInfo) auth.getPrincipal();
+        String memberpw = memberInfo.getPassword();
+        if (memberService.bc().matches(password, memberpw)) {
+            return "/member/update";
+        } else {
+            rttr.addFlashAttribute("msg", "비밀번호 다시 확인해주세요.");
+            return "redirect:/";
+        }
     }
 }

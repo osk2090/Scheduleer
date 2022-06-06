@@ -24,8 +24,9 @@ public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
+    private BCryptPasswordEncoder encoder;
+
     public Long save(MemberInfoDto infoDto) {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         infoDto.setPassword(encoder.encode(infoDto.getPassword()));
 
         return memberRepository.save(MemberInfo.builder()
@@ -72,6 +73,14 @@ public class MemberService implements UserDetailsService {
 
     public Optional<MemberInfo> findMemberInfoFromMemberInfoDTO(String email) {
         return memberRepository.findByEmail(email);
+    }
+
+    public Optional<MemberInfo> findMember(Long memberId) {
+        return memberRepository.findMemberInfoById(memberId);
+    }
+
+    public BCryptPasswordEncoder bc() {
+        return encoder = new BCryptPasswordEncoder();
     }
 
 }

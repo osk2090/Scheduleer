@@ -10,6 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,6 +87,23 @@ class ScheduleerApplicationTests {
         List<MemberInfo> members = memberService.findMembers("osk@naver.com");
         for (MemberInfo memberInfo : members) {
             System.out.println(memberInfo.getName());
+        }
+    }
+
+    @Test
+    void findMemberById() {
+        Optional<MemberInfo> member = memberService.findMember(2L);
+        if (member.isPresent()) {
+            System.out.println(member.get().getEmail());
+        }
+    }
+
+    @Test
+    void checkPW() {
+        if (memberService.bc().matches("osk", "$2a$10$F2Q6mYi768Val4x18B0/tOVlNXxSZ6ko908j5e/9cou1p05kxfTwW")) {
+            System.out.println("y");
+        } else {
+            System.out.println("n");
         }
     }
 }

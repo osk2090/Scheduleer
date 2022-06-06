@@ -30,12 +30,6 @@ public class BoardService {
         return boardRepository.save(boardSaveRequestDto.toEntity()).getId();
     }
 
-//    @Transactional
-//    public Long saveG(BoardSaveRequestDto boardSaveRequestDto, MemberInfoDto writer) {
-//        boardSaveRequestDto.setMemberInfoDto(writer);
-//        return boardRepository.save(boardSaveRequestDto.toEntity()).getId();
-//    }
-
     public List<BoardInfo> getBoardList() {
         return boardRepository.findAll();
     }
