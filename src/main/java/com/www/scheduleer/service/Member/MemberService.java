@@ -4,12 +4,15 @@ import com.www.scheduleer.Repository.MemberRepository;
 import com.www.scheduleer.VO.MemberInfo;
 import com.www.scheduleer.VO.security.MemberInfoDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +32,7 @@ public class MemberService implements UserDetailsService {
                 .name(infoDto.getName())
                 .email(infoDto.getEmail())
                 .auth(infoDto.getAuth())
+                .picture(infoDto.getPicture())
                 .password(infoDto.getPassword()).build()).getId();
     }
 
@@ -57,8 +61,17 @@ public class MemberService implements UserDetailsService {
 
     private void validateDuplicateMember(MemberInfo memberInfo) {
         Optional<MemberInfo> findMember = memberRepository.findByEmail(memberInfo.getEmail());
-        if (findMember != null) {
+        if (findMember.isPresent()) {
             throw new IllegalStateException("이미 가입된 회원입니다.");
         }
     }
+
+    public List<MemberInfo> findAllDesc() {
+        return memberRepository.findAll();
+    }
+
+    public Optional<MemberInfo> findMemberInfoFromMemberInfoDTO(String email) {
+        return memberRepository.findByEmail(email);
+    }
+
 }
