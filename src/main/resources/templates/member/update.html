@@ -9,7 +9,7 @@
 
 <form th:action="@{'/member/update/' + ${member.id}}" method="POST">
     <input type="hidden" name="id" th:value="${member.id}">
-    이전 비밀번호 입력: <input type="password" id="pw" name="pw"><br>
+    이전 비밀번호 입력: <input type="password" name="pw"><br>
     <input type="submit" value="저장">
 
 <!--    새 비밀번호 입력: <input type="text" id="newpw1" name="newpw1"><br>-->

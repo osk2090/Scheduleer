@@ -97,7 +97,7 @@ public class MemberController {
     }
 
     @PostMapping("/member/update/{id}")
-    public String checkPw(@RequestBody String pw, @AuthenticationPrincipal MemberInfo memberInfo) {
+    public String checkPw(String pw, @AuthenticationPrincipal MemberInfo memberInfo) {
         System.out.println("비밀번호 확인 요청 발생");
 
         String result = null;
