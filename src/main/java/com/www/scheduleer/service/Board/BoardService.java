@@ -47,13 +47,13 @@ public class BoardService {
         return (MemberInfoDto) httpSession.getAttribute("member");
     }
 
-    public void loginInfo(@AuthenticationPrincipal MemberInfo memberInfo, Model model) {
+    public void loginInfo(MemberInfo memberInfo, Model model) {
         if (memberInfo == null) {
             if (getLoginGoogle() != null) {
-                model.addAttribute("memberName", getLoginGoogle());
+                model.addAttribute("member", getLoginGoogle());
             }
         } else {
-            model.addAttribute("memberName", memberInfo);
+            model.addAttribute("member", memberInfo);
         }
     }
 

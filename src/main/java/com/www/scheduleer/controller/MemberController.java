@@ -12,14 +12,12 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -31,6 +29,8 @@ public class MemberController {
     private final MemberService memberService;
 
     private final BoardService boardService;
+
+    private final HttpSession httpSession;
 
     @GetMapping("/login")
     public String login(@RequestParam(value = "error", required = false) String error, @RequestParam(value = "exception", required = false) String exception, Model model) {
@@ -92,18 +92,42 @@ public class MemberController {
     @GetMapping("/member/update/{id}")
     public String edit(Model model, @PathVariable("id") Long memberId) {
         model.addAttribute("member", memberService.findMember(memberId).get());
+        System.out.println("비밀번호 변경페이지로 이동!!!");
         return "/member/update";
     }
 
     @PostMapping("/member/update/{id}")
-    public String checkPw(Authentication auth, @RequestParam("memberpw") String password, RedirectAttributes rttr) {
-        MemberInfo memberInfo = (MemberInfo) auth.getPrincipal();
-        String memberpw = memberInfo.getPassword();
-        if (memberService.bc().matches(password, memberpw)) {
-            return "/member/update";
+    public String checkPw(@RequestBody String pw, @AuthenticationPrincipal MemberInfo memberInfo) {
+        System.out.println("비밀번호 확인 요청 발생");
+
+        String result = null;
+        MemberInfo member = null;
+
+        if (memberInfo == null) {
+            if (boardService.getLoginGoogle() != null) {
+                member = memberService.findMemberInfoFromMemberInfoDTO(boardService.getLoginGoogle().getEmail()).get();
+            }
         } else {
-            rttr.addFlashAttribute("msg", "비밀번호 다시 확인해주세요.");
-            return "redirect:/";
+            member = memberInfo;
         }
+        System.out.println("DB 회원의 비밀번호 : " + member.getPassword());
+        System.out.println("폼에서 받아온 비밀번호 : " + pw);
+
+        if (memberService.bc().matches(pw, member.getPassword())) {
+            result = "pwConfirmOK";
+        } else {
+            result = "pwConfirmNO";
+
+        }
+//        return result;
+        System.out.println(result);
+        return "redirect:/";
+    }
+
+    @PostMapping("/pw-change")
+    public String pwChange(@RequestBody MemberInfoDto memberInfoDto) {
+        System.out.println("비밀번호 변경 요청 발생!!!");
+        memberService.modifyPw(memberInfoDto);
+        return "changeSuccess";
     }
 }

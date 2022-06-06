@@ -3,14 +3,17 @@
       xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>비밀번호 확인</title>
+    <title>비밀번호 변경</title>
 </head>
 <body>
 
 <form th:action="@{'/member/update/' + ${member.id}}" method="POST">
     <input type="hidden" name="id" th:value="${member.id}">
-    <input type="text" name="memberpw">
+    이전 비밀번호 입력: <input type="password" id="pw" name="pw"><br>
     <input type="submit" value="저장">
+
+<!--    새 비밀번호 입력: <input type="text" id="newpw1" name="newpw1"><br>-->
+<!--    새 비밀번호 확인: <input type="text" id="newpw2" name="newpw2"><br>-->
 </form>
 </body>
 </html>
