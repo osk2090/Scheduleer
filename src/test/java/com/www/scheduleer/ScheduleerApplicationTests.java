@@ -53,7 +53,7 @@ class ScheduleerApplicationTests {
 
     @Test
     void insertBoard() {
-        BoardInfo boardInfo = new BoardInfo(1L, "test1", "test111", false, new MemberInfo("osk", "osk@naver.com", "osk", "admin"));
+        BoardInfo boardInfo = new BoardInfo(1L, "test1", "test111", false, new MemberInfo("osk", "osk@naver.com", "osk", null, "admin"));
         boardRepository.save(boardInfo);
     }
 

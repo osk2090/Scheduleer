@@ -24,8 +24,8 @@ public class DefaultInsertData {
     @Transactional
     public void insert() {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();//암호화
-        MemberInfo memberInfo = new MemberInfo("osk", "osk@naver.com", encoder.encode("osk"), "ROLE_USER");
-        MemberInfo memberInfo1 = new MemberInfo("osk1", "osk1@naver.com", encoder.encode("osk1"), "ROLE_USER");
+        MemberInfo memberInfo = new MemberInfo("osk", "osk@naver.com", encoder.encode("osk"), null, "ROLE_USER");
+        MemberInfo memberInfo1 = new MemberInfo("osk1", "osk1@naver.com", encoder.encode("osk1"), null, "ROLE_USER");
 
         memberRepository.save(memberInfo);
         memberRepository.save(memberInfo1);
