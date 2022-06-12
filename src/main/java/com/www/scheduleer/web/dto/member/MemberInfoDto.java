@@ -1,7 +1,6 @@
-package com.www.scheduleer.VO.security;
+package com.www.scheduleer.web.dto.member;
 
-import com.www.scheduleer.VO.MemberInfo;
-import lombok.Builder;
+import com.www.scheduleer.web.domain.MemberInfo;
 import lombok.Getter;
 import lombok.Setter;
 

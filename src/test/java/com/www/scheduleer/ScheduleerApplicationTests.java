@@ -2,22 +2,18 @@ package com.www.scheduleer;
 
 import com.www.scheduleer.Repository.BoardRepository;
 import com.www.scheduleer.Repository.MemberRepository;
-import com.www.scheduleer.VO.BoardInfo;
-import com.www.scheduleer.VO.MemberInfo;
+import com.www.scheduleer.web.domain.BoardInfo;
+import com.www.scheduleer.web.domain.MemberInfo;
 import com.www.scheduleer.service.Board.BoardService;
 import com.www.scheduleer.service.Member.MemberService;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 @SpringBootTest
 @Log4j2

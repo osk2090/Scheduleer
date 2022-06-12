@@ -1,11 +1,10 @@
 package com.www.scheduleer.controller;
 
-import com.www.scheduleer.VO.MemberInfo;
-import com.www.scheduleer.VO.security.MemberInfoDto;
+import com.www.scheduleer.web.domain.MemberInfo;
+import com.www.scheduleer.web.dto.member.MemberInfoDto;
 import com.www.scheduleer.service.Board.BoardService;
 import com.www.scheduleer.service.Member.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -13,14 +12,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 @Controller
 @RequiredArgsConstructor
@@ -97,7 +94,7 @@ public class MemberController {
     }
 
     @PostMapping("/member/update/{id}")
-    public String checkPw(String pw, @AuthenticationPrincipal MemberInfo memberInfo) {
+    public String checkPw(String pw, @AuthenticationPrincipal MemberInfo memberInfo, Model model) {
         System.out.println("비밀번호 확인 요청 발생");
 
         String result = null;
@@ -119,9 +116,9 @@ public class MemberController {
             result = "pwConfirmNO";
 
         }
-//        return result;
+        model.addAttribute("result", result);
         System.out.println(result);
-        return "redirect:/";
+        return "/main";
     }
 
     @PostMapping("/pw-change")
