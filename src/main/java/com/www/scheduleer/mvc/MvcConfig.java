@@ -1,7 +1,6 @@
 package com.www.scheduleer.mvc;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -17,7 +16,7 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addViewController("/list").setViewName("/member/list");
         registry.addViewController("/find").setViewName("/member/list");
         registry.addViewController("/info").setViewName("/member/info");
-        registry.addViewController("/update").setViewName("/member/update");
+        registry.addViewController("/member/password").setViewName("/member/password");
 
         registry.addViewController("/addBoard").setViewName("/board/write");
         registry.addViewController("/board/detail").setViewName("/board/detail");

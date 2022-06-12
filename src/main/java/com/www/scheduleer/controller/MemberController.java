@@ -90,7 +90,7 @@ public class MemberController {
     public String edit(Model model, @PathVariable("id") Long memberId) {
         model.addAttribute("member", memberService.findMember(memberId).get());
         System.out.println("비밀번호 변경페이지로 이동!!!");
-        return "/member/update";
+        return "password";
     }
 
     @PostMapping("/member/update/{id}")
@@ -124,7 +124,7 @@ public class MemberController {
     @PostMapping("/pw-change")
     public String pwChange(@RequestBody MemberInfoDto memberInfoDto) {
         System.out.println("비밀번호 변경 요청 발생!!!");
-        memberService.modifyPw(memberInfoDto);
+//        memberService.modifyPw(memberInfoDto);
         return "changeSuccess";
     }
 }

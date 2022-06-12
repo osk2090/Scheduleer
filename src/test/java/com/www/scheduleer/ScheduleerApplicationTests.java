@@ -96,7 +96,7 @@ class ScheduleerApplicationTests {
 
     @Test
     void checkPW() {
-        if (memberService.bc().matches("osk", "$2a$10$F2Q6mYi768Val4x18B0/tOVlNXxSZ6ko908j5e/9cou1p05kxfTwW")) {
+        if (memberService.bc().matches("dh985622", memberService.getMember("osk@naver.com").get().getPassword())) {
             System.out.println("y");
         } else {
             System.out.println("n");
