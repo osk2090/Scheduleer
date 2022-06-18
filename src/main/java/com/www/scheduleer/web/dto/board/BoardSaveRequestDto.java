@@ -1,4 +1,4 @@
-package com.www.scheduleer.web.dto.member;
+package com.www.scheduleer.web.dto.board;
 
 import com.www.scheduleer.web.domain.BoardInfo;
 import com.www.scheduleer.web.domain.MemberInfo;

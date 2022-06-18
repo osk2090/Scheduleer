@@ -6,7 +6,6 @@ import com.www.scheduleer.service.Member.PasswordFormValidator;
 import com.www.scheduleer.web.domain.MemberInfo;
 import com.www.scheduleer.web.dto.member.PasswordFormDto;
 import lombok.RequiredArgsConstructor;
-import org.apache.kafka.common.network.Mode;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

@@ -2,7 +2,7 @@ package com.www.scheduleer.service.Board;
 
 import com.www.scheduleer.Repository.BoardRepository;
 import com.www.scheduleer.web.domain.BoardInfo;
-import com.www.scheduleer.web.dto.member.BoardSaveRequestDto;
+import com.www.scheduleer.web.dto.board.BoardSaveRequestDto;
 import com.www.scheduleer.web.domain.MemberInfo;
 import com.www.scheduleer.web.dto.member.MemberInfoDto;
 import com.www.scheduleer.service.Member.MemberService;

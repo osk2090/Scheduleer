@@ -3,7 +3,6 @@ package com.www.scheduleer.service.Member;
 import com.www.scheduleer.web.dto.member.PasswordFormDto;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import org.springframework.validation.annotation.Validated;
 
 public class PasswordFormValidator implements Validator {
 

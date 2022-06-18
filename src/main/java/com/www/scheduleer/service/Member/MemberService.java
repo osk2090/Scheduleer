@@ -80,13 +80,6 @@ public class MemberService implements UserDetailsService {
         return encoder = new BCryptPasswordEncoder();
     }
 
-//    public void modifyPw(MemberInfoDto memberInfoDto) {
-//        System.out.println("암호화 전 비밀번호 : " + memberInfoDto.getPassword());
-//        memberInfoDto.setPassword(bc().encode(memberInfoDto.getPassword()));
-//        System.out.println("암호화 후 비밀번호 : " + memberInfoDto.getPassword());
-//        save(memberInfoDto);
-//    }
-
     public void updatePassword(MemberInfo memberInfo, String newPassword) {
         System.out.println("새로운 비밀번호 : " + newPassword);
         memberInfo.setPassword(bc().encode(newPassword));
