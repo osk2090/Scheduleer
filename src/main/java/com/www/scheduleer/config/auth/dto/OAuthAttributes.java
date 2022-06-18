@@ -1,6 +1,6 @@
 package com.www.scheduleer.config.auth.dto;
 
-import com.www.scheduleer.VO.MemberInfo;
+import com.www.scheduleer.web.domain.MemberInfo;
 import lombok.Builder;
 import lombok.Getter;
 

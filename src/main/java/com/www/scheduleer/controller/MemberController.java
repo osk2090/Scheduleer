@@ -1,7 +1,7 @@
 package com.www.scheduleer.controller;
 
-import com.www.scheduleer.VO.MemberInfo;
-import com.www.scheduleer.VO.security.MemberInfoDto;
+import com.www.scheduleer.web.domain.MemberInfo;
+import com.www.scheduleer.web.dto.member.MemberInfoDto;
 import com.www.scheduleer.service.Board.BoardService;
 import com.www.scheduleer.service.Member.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +27,8 @@ public class MemberController {
 
     private final BoardService boardService;
 
+    private final HttpSession httpSession;
+
     @GetMapping("/login")
     public String login(@RequestParam(value = "error", required = false) String error, @RequestParam(value = "exception", required = false) String exception, Model model) {
         model.addAttribute("error", error);
@@ -36,7 +38,7 @@ public class MemberController {
 
     @GetMapping("/logout")
     public String logoutPage(HttpServletRequest request, HttpServletResponse response) {
-        new SecurityContextLogoutHandler().logout(request,response, SecurityContextHolder
+        new SecurityContextLogoutHandler().logout(request, response, SecurityContextHolder
                 .getContext().getAuthentication());
         return "/main";
     }
@@ -67,7 +69,6 @@ public class MemberController {
                 }
             }
         }
-
         return "/member/info";
     }
 
@@ -83,5 +84,47 @@ public class MemberController {
         List<MemberInfo> memberList = memberService.findMembers(email);
         model.addAttribute("memberList", memberList);
         return "/member/list";
+    }
+
+    @GetMapping("/member/update/{id}")
+    public String edit(Model model, @PathVariable("id") Long memberId) {
+        model.addAttribute("member", memberService.findMember(memberId).get());
+        System.out.println("비밀번호 변경페이지로 이동!!!");
+        return "password";
+    }
+
+    @PostMapping("/member/update/{id}")
+    public String checkPw(String pw, @AuthenticationPrincipal MemberInfo memberInfo, Model model) {
+        System.out.println("비밀번호 확인 요청 발생");
+
+        String result = null;
+        MemberInfo member = null;
+
+        if (memberInfo == null) {
+            if (boardService.getLoginGoogle() != null) {
+                member = memberService.findMemberInfoFromMemberInfoDTO(boardService.getLoginGoogle().getEmail()).get();
+            }
+        } else {
+            member = memberInfo;
+        }
+        System.out.println("DB 회원의 비밀번호 : " + member.getPassword());
+        System.out.println("폼에서 받아온 비밀번호 : " + pw);
+
+        if (memberService.bc().matches(pw, member.getPassword())) {
+            result = "pwConfirmOK";
+        } else {
+            result = "pwConfirmNO";
+
+        }
+        model.addAttribute("result", result);
+        System.out.println(result);
+        return "/main";
+    }
+
+    @PostMapping("/pw-change")
+    public String pwChange(@RequestBody MemberInfoDto memberInfoDto) {
+        System.out.println("비밀번호 변경 요청 발생!!!");
+//        memberService.modifyPw(memberInfoDto);
+        return "changeSuccess";
     }
 }

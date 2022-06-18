@@ -15,10 +15,15 @@
     가입일 : <input type="text" name="regDate" th:value="${member.regDate}" disabled><br>
 
 <div sec:authorize="hasAnyRole('ROLE_USER')" class="nav-item">
-    <a th:href="@{/member/update/{id}(id=${member.id})}">
-        <button>개인정보 수정</button>
-    </a>
+<!--    <a th:href="@{/member/update/{id}(id=${member.id})}">-->
+<!--        <button>개인정보 수정</button>-->
+<!--    </a>-->
+
+    <button type="button" class="navyBtn" onclick="location.href='/member/password'">비밀번호 변경</button>
+
+<!--    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'password'}? active" href="#" th:href="@{/member/password}">패스워드</a>-->
 </div>
+
 
     <table>
         <thead>
