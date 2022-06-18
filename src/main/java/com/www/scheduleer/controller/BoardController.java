@@ -1,13 +1,11 @@
 package com.www.scheduleer.controller;
 
-import com.www.scheduleer.VO.BoardInfo;
-import com.www.scheduleer.VO.BoardSaveRequestDto;
-import com.www.scheduleer.VO.MemberInfo;
-import com.www.scheduleer.VO.security.MemberInfoDto;
+import com.www.scheduleer.web.domain.BoardInfo;
+import com.www.scheduleer.web.dto.board.BoardSaveRequestDto;
+import com.www.scheduleer.web.domain.MemberInfo;
 import com.www.scheduleer.service.Board.BoardService;
 import com.www.scheduleer.service.Member.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,9 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor

@@ -1,13 +1,12 @@
 package com.www.scheduleer.service.Board;
 
 import com.www.scheduleer.Repository.BoardRepository;
-import com.www.scheduleer.VO.BoardInfo;
-import com.www.scheduleer.VO.BoardSaveRequestDto;
-import com.www.scheduleer.VO.MemberInfo;
-import com.www.scheduleer.VO.security.MemberInfoDto;
+import com.www.scheduleer.web.domain.BoardInfo;
+import com.www.scheduleer.web.dto.board.BoardSaveRequestDto;
+import com.www.scheduleer.web.domain.MemberInfo;
+import com.www.scheduleer.web.dto.member.MemberInfoDto;
 import com.www.scheduleer.service.Member.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -30,12 +29,6 @@ public class BoardService {
         return boardRepository.save(boardSaveRequestDto.toEntity()).getId();
     }
 
-//    @Transactional
-//    public Long saveG(BoardSaveRequestDto boardSaveRequestDto, MemberInfoDto writer) {
-//        boardSaveRequestDto.setMemberInfoDto(writer);
-//        return boardRepository.save(boardSaveRequestDto.toEntity()).getId();
-//    }
-
     public List<BoardInfo> getBoardList() {
         return boardRepository.findAll();
     }
@@ -53,13 +46,13 @@ public class BoardService {
         return (MemberInfoDto) httpSession.getAttribute("member");
     }
 
-    public void loginInfo(@AuthenticationPrincipal MemberInfo memberInfo, Model model) {
+    public void loginInfo(MemberInfo memberInfo, Model model) {
         if (memberInfo == null) {
             if (getLoginGoogle() != null) {
-                model.addAttribute("memberName", getLoginGoogle());
+                model.addAttribute("member", getLoginGoogle());
             }
         } else {
-            model.addAttribute("memberName", memberInfo);
+            model.addAttribute("member", memberInfo);
         }
     }
 

@@ -1,18 +1,15 @@
 package com.www.scheduleer.service.Member;
 
 import com.www.scheduleer.Repository.MemberRepository;
-import com.www.scheduleer.VO.MemberInfo;
-import com.www.scheduleer.VO.security.MemberInfoDto;
+import com.www.scheduleer.web.domain.MemberInfo;
+import com.www.scheduleer.web.dto.member.MemberInfoDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,8 +21,9 @@ public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
+    private BCryptPasswordEncoder encoder;
+
     public Long save(MemberInfoDto infoDto) {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         infoDto.setPassword(encoder.encode(infoDto.getPassword()));
 
         return memberRepository.save(MemberInfo.builder()
@@ -74,4 +72,17 @@ public class MemberService implements UserDetailsService {
         return memberRepository.findByEmail(email);
     }
 
+    public Optional<MemberInfo> findMember(Long memberId) {
+        return memberRepository.findMemberInfoById(memberId);
+    }
+
+    public BCryptPasswordEncoder bc() {
+        return encoder = new BCryptPasswordEncoder();
+    }
+
+    public void updatePassword(MemberInfo memberInfo, String newPassword) {
+        System.out.println("새로운 비밀번호 : " + newPassword);
+        memberInfo.setPassword(bc().encode(newPassword));
+        memberRepository.save(memberInfo);
+    }
 }

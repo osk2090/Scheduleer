@@ -1,4 +1,4 @@
-package com.www.scheduleer.VO;
+package com.www.scheduleer.web.dto;
 
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;

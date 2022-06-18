@@ -1,5 +1,7 @@
-package com.www.scheduleer.VO;
+package com.www.scheduleer.web.dto.board;
 
+import com.www.scheduleer.web.domain.BoardInfo;
+import com.www.scheduleer.web.domain.MemberInfo;
 import lombok.*;
 
 import java.time.LocalDateTime;

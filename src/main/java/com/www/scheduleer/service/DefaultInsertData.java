@@ -2,8 +2,8 @@ package com.www.scheduleer.service;
 
 import com.www.scheduleer.Repository.BoardRepository;
 import com.www.scheduleer.Repository.MemberRepository;
-import com.www.scheduleer.VO.BoardInfo;
-import com.www.scheduleer.VO.MemberInfo;
+import com.www.scheduleer.web.domain.BoardInfo;
+import com.www.scheduleer.web.domain.MemberInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

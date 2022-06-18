@@ -1,10 +1,9 @@
 package com.www.scheduleer.Repository;
 
-import com.www.scheduleer.VO.BoardInfo;
-import com.www.scheduleer.VO.MemberInfo;
+import com.www.scheduleer.web.domain.BoardInfo;
+import com.www.scheduleer.web.domain.MemberInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface BoardRepository extends JpaRepository<BoardInfo, Long> {
