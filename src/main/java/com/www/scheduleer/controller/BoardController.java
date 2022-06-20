@@ -1,10 +1,12 @@
 package com.www.scheduleer.controller;
 
+import com.www.scheduleer.config.auth.LoginUser;
 import com.www.scheduleer.web.domain.BoardInfo;
 import com.www.scheduleer.web.dto.board.BoardSaveRequestDto;
 import com.www.scheduleer.web.domain.MemberInfo;
 import com.www.scheduleer.service.Board.BoardService;
 import com.www.scheduleer.service.Member.MemberService;
+import com.www.scheduleer.web.dto.member.MemberInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -32,16 +34,16 @@ public class BoardController {
     }
 
     @GetMapping("/main")
-    public String list(Model model, @AuthenticationPrincipal MemberInfo memberInfo) {
-        boardService.loginInfo(memberInfo, model);
+    public String list(Model model,  @LoginUser MemberInfoDto memberInfoDto) {
+        boardService.loginInfo(memberInfoDto, model);
         List<BoardInfo> boardInfoList = boardService.getBoardList();
         model.addAttribute("boardList", boardInfoList);
         return "/main";
     }
 
     @GetMapping("/board/detail/{id}")
-    public String detail(Model model, @PathVariable("id") Long boardId, @AuthenticationPrincipal MemberInfo memberInfo) {
-        boardService.loginInfo(memberInfo, model);
+    public String detail(Model model, @PathVariable("id") Long boardId, @LoginUser MemberInfoDto memberInfoDto) {
+        boardService.loginInfo(memberInfoDto, model);
         model.addAttribute("boardDetail", boardService.findBoardById(boardId).get());
         return "/board/detail";
     }

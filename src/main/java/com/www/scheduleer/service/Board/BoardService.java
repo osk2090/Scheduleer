@@ -1,6 +1,7 @@
 package com.www.scheduleer.service.Board;
 
 import com.www.scheduleer.Repository.BoardRepository;
+import com.www.scheduleer.config.auth.LoginUser;
 import com.www.scheduleer.web.domain.BoardInfo;
 import com.www.scheduleer.web.dto.board.BoardSaveRequestDto;
 import com.www.scheduleer.web.domain.MemberInfo;
@@ -46,13 +47,13 @@ public class BoardService {
         return (MemberInfoDto) httpSession.getAttribute("member");
     }
 
-    public void loginInfo(MemberInfo memberInfo, Model model) {
-        if (memberInfo == null) {
+    public void loginInfo(@LoginUser MemberInfoDto memberInfoDto, Model model) {
+        if (memberInfoDto == null) {
             if (getLoginGoogle() != null) {
                 model.addAttribute("member", getLoginGoogle());
             }
         } else {
-            model.addAttribute("member", memberInfo);
+            model.addAttribute("member", memberInfoDto);
         }
     }
 

@@ -1,5 +1,6 @@
 package com.www.scheduleer.config.auth;
 
+import com.www.scheduleer.web.domain.MemberInfo;
 import com.www.scheduleer.web.dto.member.MemberInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;

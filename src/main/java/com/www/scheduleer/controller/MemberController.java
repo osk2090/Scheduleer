@@ -1,5 +1,6 @@
 package com.www.scheduleer.controller;
 
+import com.www.scheduleer.config.auth.LoginUser;
 import com.www.scheduleer.web.domain.MemberInfo;
 import com.www.scheduleer.web.dto.member.MemberInfoDto;
 import com.www.scheduleer.service.Board.BoardService;
@@ -51,7 +52,7 @@ public class MemberController {
 
     //현재 로그인된 멤버의 정보
     @GetMapping("/info")
-    public String memberInfo(@AuthenticationPrincipal MemberInfo memberInfo, Model model) {
+    public String memberInfo(@LoginUser MemberInfo memberInfo, Model model) {
         if (memberInfo == null) {
             Optional<MemberInfo> loginGoogleInfo = memberService.findMemberInfoFromMemberInfoDTO(boardService.getLoginGoogle().getEmail());
             if (loginGoogleInfo.isPresent()) {
