@@ -31,9 +31,7 @@ public class MemberController {
     private final HttpSession httpSession;
 
     @GetMapping("/login")
-    public String login(@RequestParam(value = "error", required = false) String error, @RequestParam(value = "exception", required = false) String exception, Model model) {
-        model.addAttribute("error", error);
-        model.addAttribute("exception", exception);
+    public String login() {
         return "/login";
     }
 

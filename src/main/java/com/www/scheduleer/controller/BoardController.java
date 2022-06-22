@@ -34,7 +34,7 @@ public class BoardController {
     }
 
     @GetMapping("/main")
-    public String list(Model model,  @LoginUser MemberInfoDto memberInfoDto) {
+    public String list(Model model,  @AuthenticationPrincipal MemberInfoDto memberInfoDto) {
         boardService.loginInfo(memberInfoDto, model);
         List<BoardInfo> boardInfoList = boardService.getBoardList();
         model.addAttribute("boardList", boardInfoList);
@@ -42,7 +42,7 @@ public class BoardController {
     }
 
     @GetMapping("/board/detail/{id}")
-    public String detail(Model model, @PathVariable("id") Long boardId, @LoginUser MemberInfoDto memberInfoDto) {
+    public String detail(Model model, @PathVariable("id") Long boardId, @AuthenticationPrincipal MemberInfoDto memberInfoDto) {
         boardService.loginInfo(memberInfoDto, model);
         model.addAttribute("boardDetail", boardService.findBoardById(boardId).get());
         return "/board/detail";

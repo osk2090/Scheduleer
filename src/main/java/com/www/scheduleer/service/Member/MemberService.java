@@ -4,6 +4,7 @@ import com.www.scheduleer.Repository.MemberRepository;
 import com.www.scheduleer.web.domain.MemberInfo;
 import com.www.scheduleer.web.dto.member.MemberInfoDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -34,18 +35,18 @@ public class MemberService implements UserDetailsService {
                 .password(infoDto.getPassword()).build()).getId();
     }
 
-    public List<MemberInfo> getMemberList() {
+    public List<MemberInfoDto> getMemberList() {
         return memberRepository.findAll();
     }
 
-    public Optional<MemberInfo> getMember(String email) {
+    public Optional<MemberInfoDto> getMember(String email) {
         return memberRepository.findByEmail(email);
     }
 
-    public List<MemberInfo> findMembers(String email) {
-        List<MemberInfo> members = memberRepository.findByEmailContaining(email);
-        List<MemberInfo> m = new ArrayList<>();
-        for (MemberInfo member : members) {
+    public List<MemberInfoDto> findMembers(String email) {
+        List<MemberInfoDto> members = memberRepository.findByEmailContaining(email);
+        List<MemberInfoDto> m = new ArrayList<>();
+        for (MemberInfoDto member : members) {
             m.add(member);
         }
 
@@ -54,7 +55,14 @@ public class MemberService implements UserDetailsService {
 
     @Override
     public MemberInfo loadUserByUsername(String email) throws UsernameNotFoundException {
-        return memberRepository.findByEmail(email).orElseThrow (() -> new UsernameNotFoundException(email));
+        Optional<MemberInfoDto> _memberInfoDto = this.memberRepository.findByEmail(email);
+        if (_siteUser.isEmpty()) {
+            throw new UsernameNotFoundException("사용자를 찾을수 없습니다.");
+        }
+        MemberInfoDto memberInfoDto = _memberInfoDto.get();
+        List<GrantedAuthority> authorities = new ArrayList<>();
+
+        return new MemberInfo(memberInfoDto.getEmail(), memberInfoDto.getPassword(), authorities);
     }
 
     private void validateDuplicateMember(MemberInfo memberInfo) {
