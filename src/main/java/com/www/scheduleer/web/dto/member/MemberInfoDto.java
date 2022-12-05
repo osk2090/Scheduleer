@@ -1,6 +1,7 @@
 package com.www.scheduleer.web.dto.member;
 
 import com.www.scheduleer.web.domain.MemberInfo;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,11 +16,14 @@ public class MemberInfoDto implements Serializable {
     private String picture;
     private String auth;
 
+    private String type;
+
     public MemberInfoDto(MemberInfo memberInfo) {
         this.name = memberInfo.getName();
         this.email = memberInfo.getEmail();
         this.password = memberInfo.getPassword();
         this.picture = memberInfo.getPicture();
         this.auth = memberInfo.getAuth();
+        this.type = memberInfo.getType();
     }
 }

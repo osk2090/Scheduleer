@@ -6,6 +6,8 @@ import com.www.scheduleer.web.dto.member.MemberInfoDto;
 import com.www.scheduleer.service.Board.BoardService;
 import com.www.scheduleer.service.Member.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -20,7 +22,8 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
 
-@Controller
+@RestController()
+@RequestMapping("/member")
 @RequiredArgsConstructor
 public class MemberController {
 
@@ -30,8 +33,9 @@ public class MemberController {
 
     private final HttpSession httpSession;
 
-    @GetMapping("/login")
-    public String login() {
+    @PostMapping("/login")
+    public String login(String email, String password) {
+        System.out.println(email + ":" + password);
         return "/login";
     }
 
@@ -42,10 +46,14 @@ public class MemberController {
         return "/main";
     }
 
-    @PostMapping("/member")
-    public String signup(MemberInfoDto infoDto) {
+    @PostMapping("/signup")
+    public ResponseEntity signup(MemberInfoDto infoDto) {
+        Optional<MemberInfo> m = memberService.getMember(infoDto.getEmail());
+        if (m.isPresent()) {
+            return ResponseEntity.badRequest().body("해당 계정은 중복됩니다.");
+        }
         memberService.save(infoDto);
-        return "/main";
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     //현재 로그인된 멤버의 정보

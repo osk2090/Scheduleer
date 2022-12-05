@@ -10,6 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -37,6 +38,9 @@ public class MemberInfo extends BaseTimeEntity implements UserDetails {
     @Column(name = "picture")
     private String picture;
 
+    @Column(name = "type")
+    private String type;
+
     private String auth;
 
     @Builder
@@ -46,6 +50,10 @@ public class MemberInfo extends BaseTimeEntity implements UserDetails {
         this.password = password;
         this.picture = picture;
         this.auth = auth;
+    }
+
+    public MemberInfo(String email, String password, List<GrantedAuthority> authorities) {
+        super();
     }
 
     //    사용자의 권한을 콜렉션 형태로 반환

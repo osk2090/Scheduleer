@@ -35,18 +35,18 @@ public class MemberService implements UserDetailsService {
                 .password(infoDto.getPassword()).build()).getId();
     }
 
-    public List<MemberInfoDto> getMemberList() {
+    public List<MemberInfo> getMemberList() {
         return memberRepository.findAll();
     }
 
-    public Optional<MemberInfoDto> getMember(String email) {
+    public Optional<MemberInfo> getMember(String email) {
         return memberRepository.findByEmail(email);
     }
 
-    public List<MemberInfoDto> findMembers(String email) {
-        List<MemberInfoDto> members = memberRepository.findByEmailContaining(email);
-        List<MemberInfoDto> m = new ArrayList<>();
-        for (MemberInfoDto member : members) {
+    public List<MemberInfo> findMembers(String email) {
+        List<MemberInfo> members = memberRepository.findByEmailContaining(email);
+        List<MemberInfo> m = new ArrayList<>();
+        for (MemberInfo member : members) {
             m.add(member);
         }
 
@@ -55,11 +55,12 @@ public class MemberService implements UserDetailsService {
 
     @Override
     public MemberInfo loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<MemberInfoDto> _memberInfoDto = this.memberRepository.findByEmail(email);
-        if (_siteUser.isEmpty()) {
+
+        Optional<MemberInfo> memberInfo = this.memberRepository.findByEmail(email);
+        if (memberInfo.isEmpty()) {
             throw new UsernameNotFoundException("사용자를 찾을수 없습니다.");
         }
-        MemberInfoDto memberInfoDto = _memberInfoDto.get();
+        MemberInfo memberInfoDto = memberInfo.get();
         List<GrantedAuthority> authorities = new ArrayList<>();
 
         return new MemberInfo(memberInfoDto.getEmail(), memberInfoDto.getPassword(), authorities);
