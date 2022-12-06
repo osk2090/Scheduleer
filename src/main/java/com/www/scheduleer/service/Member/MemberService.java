@@ -4,19 +4,17 @@ import com.www.scheduleer.Repository.MemberRepository;
 import com.www.scheduleer.web.domain.MemberInfo;
 import com.www.scheduleer.web.dto.member.MemberInfoDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class MemberService implements UserDetailsService {
 
@@ -25,14 +23,13 @@ public class MemberService implements UserDetailsService {
     private BCryptPasswordEncoder encoder;
 
     public Long save(MemberInfoDto infoDto) {
-        infoDto.setPassword(encoder.encode(infoDto.getPassword()));
-
+        System.out.println(encoder);
         return memberRepository.save(MemberInfo.builder()
                 .name(infoDto.getName())
                 .email(infoDto.getEmail())
                 .auth(infoDto.getAuth())
                 .picture(infoDto.getPicture())
-                .password(infoDto.getPassword()).build()).getId();
+                .password(encoder.encode(infoDto.getPassword())).build()).getId();
     }
 
     public List<MemberInfo> getMemberList() {
@@ -54,16 +51,14 @@ public class MemberService implements UserDetailsService {
     }
 
     @Override
-    public MemberInfo loadUserByUsername(String email) throws UsernameNotFoundException {
-
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<MemberInfo> memberInfo = this.memberRepository.findByEmail(email);
         if (memberInfo.isEmpty()) {
             throw new UsernameNotFoundException("사용자를 찾을수 없습니다.");
         }
         MemberInfo memberInfoDto = memberInfo.get();
-        List<GrantedAuthority> authorities = new ArrayList<>();
 
-        return new MemberInfo(memberInfoDto.getEmail(), memberInfoDto.getPassword(), authorities);
+        return (UserDetails) MemberInfo.builder().email(memberInfoDto.getEmail()).password(memberInfoDto.getPassword()).build();
     }
 
     private void validateDuplicateMember(MemberInfo memberInfo) {

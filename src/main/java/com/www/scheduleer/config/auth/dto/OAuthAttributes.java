@@ -1,5 +1,6 @@
 package com.www.scheduleer.config.auth.dto;
 
+import com.www.scheduleer.web.domain.Auth;
 import com.www.scheduleer.web.domain.MemberInfo;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,7 +42,7 @@ public class OAuthAttributes {
                 .name(name)
                 .email(email)
                 .picture(picture)
-                .auth("ROLE_USER")//기본권한
+                .auth(Auth.USER)//기본권한
                 .build();
     }
 }

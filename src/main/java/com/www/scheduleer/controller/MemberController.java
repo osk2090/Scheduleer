@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,8 +36,7 @@ public class MemberController {
 
     @PostMapping("/login")
     public String login(String email, String password) {
-        System.out.println(email + ":" + password);
-        return "/login";
+        return email;
     }
 
     @GetMapping("/logout")
@@ -47,7 +47,9 @@ public class MemberController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity signup(MemberInfoDto infoDto) {
+    public ResponseEntity signup(@RequestBody MemberInfoDto infoDto) {
+        System.out.println(infoDto.getEmail());
+        System.out.println(infoDto.getPassword());
         Optional<MemberInfo> m = memberService.getMember(infoDto.getEmail());
         if (m.isPresent()) {
             return ResponseEntity.badRequest().body("해당 계정은 중복됩니다.");
@@ -59,24 +61,9 @@ public class MemberController {
     //현재 로그인된 멤버의 정보
     @GetMapping("/info")
     public String memberInfo(@LoginUser MemberInfo memberInfo, Model model) {
-        if (memberInfo == null) {
-            Optional<MemberInfo> loginGoogleInfo = memberService.findMemberInfoFromMemberInfoDTO(boardService.getLoginGoogle().getEmail());
-            if (loginGoogleInfo.isPresent()) {
-                model.addAttribute("member", loginGoogleInfo.get());
-                if (boardService.findBoardInfoByWriter(loginGoogleInfo.get()).isPresent()) {
-                    model.addAttribute("boardList", boardService.findBoardInfoByWriter(loginGoogleInfo.get()).get());
-                }
-            }
-        } else {
-            Optional<MemberInfo> member = memberService.getMember(memberInfo.getEmail());
-            if (member.isPresent()) {
-                model.addAttribute("member", member.get());
-                if (boardService.findBoardInfoByWriter(memberInfo).isPresent()) {
-                    model.addAttribute("boardList", boardService.findBoardInfoByWriter(memberInfo).get());
-                }
-            }
-        }
-        return "/member/info";
+        System.out.println(memberInfo.getEmail());
+
+        return memberInfo.getName();
     }
 
     @GetMapping("/list")

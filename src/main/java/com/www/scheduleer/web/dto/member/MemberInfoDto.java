@@ -1,22 +1,24 @@
 package com.www.scheduleer.web.dto.member;
 
+import com.www.scheduleer.web.domain.Auth;
 import com.www.scheduleer.web.domain.MemberInfo;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import com.www.scheduleer.web.domain.Type;
+import lombok.*;
 
 import java.io.Serializable;
 
-@Getter
-@Setter
-public class MemberInfoDto implements Serializable {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class MemberInfoDto {
     private String name;
     private String email;
     private String password;
     private String picture;
-    private String auth;
+    private Auth auth;
 
-    private String type;
+    private Type type;
 
     public MemberInfoDto(MemberInfo memberInfo) {
         this.name = memberInfo.getName();

@@ -2,8 +2,10 @@ package com.www.scheduleer.service;
 
 import com.www.scheduleer.Repository.BoardRepository;
 import com.www.scheduleer.Repository.MemberRepository;
+import com.www.scheduleer.web.domain.Auth;
 import com.www.scheduleer.web.domain.BoardInfo;
 import com.www.scheduleer.web.domain.MemberInfo;
+import com.www.scheduleer.web.domain.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,8 +26,8 @@ public class DefaultInsertData {
     @Transactional
     public void insert() {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();//암호화
-        MemberInfo memberInfo = new MemberInfo("osk", "osk@naver.com", encoder.encode("osk"), null, "ROLE_USER");
-        MemberInfo memberInfo1 = new MemberInfo("osk1", "osk1@naver.com", encoder.encode("osk1"), null, "ROLE_USER");
+        MemberInfo memberInfo = new MemberInfo("osk", "osk@naver.com", encoder.encode("osk"), null, Type.GENERAL, Auth.USER);
+        MemberInfo memberInfo1 = new MemberInfo("osk1", "osk1@naver.com", encoder.encode("osk1"), null, Type.GENERAL, Auth.USER);
 
         memberRepository.save(memberInfo);
         memberRepository.save(memberInfo1);
