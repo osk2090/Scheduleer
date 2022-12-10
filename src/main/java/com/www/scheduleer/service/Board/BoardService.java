@@ -2,10 +2,10 @@ package com.www.scheduleer.service.Board;
 
 import com.www.scheduleer.Repository.BoardRepository;
 import com.www.scheduleer.config.auth.LoginUser;
-import com.www.scheduleer.web.domain.BoardInfo;
+import com.www.scheduleer.web.domain.Board;
 import com.www.scheduleer.web.dto.board.BoardSaveRequestDto;
-import com.www.scheduleer.web.domain.MemberInfo;
-import com.www.scheduleer.web.dto.member.MemberInfoDto;
+import com.www.scheduleer.web.domain.Member;
+import com.www.scheduleer.web.dto.member.MemberDto;
 import com.www.scheduleer.service.Member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,46 +25,46 @@ public class BoardService {
     private final HttpSession httpSession;
 
     @Transactional
-    public Long save(BoardSaveRequestDto boardSaveRequestDto, MemberInfo writer) {
-        boardSaveRequestDto.setMemberInfo(writer);
+    public Long save(BoardSaveRequestDto boardSaveRequestDto, Member writer) {
+        boardSaveRequestDto.setMember(writer);
         return boardRepository.save(boardSaveRequestDto.toEntity()).getId();
     }
 
-    public List<BoardInfo> getBoardList() {
+    public List<Board> getBoardList() {
         return boardRepository.findAll();
     }
 
     @Transactional
-    public Optional<BoardInfo> findBoardInfoByWriter(MemberInfo memberInfo) {
-        return boardRepository.findBoardInfoByWriter(memberInfo);
+    public Optional<Board> findBoardInfoByWriter(Member member) {
+        return boardRepository.findBoardInfoByWriter(member);
     }
 
-    public Optional<BoardInfo> findBoardById(Long boardId) {
+    public Optional<Board> findBoardById(Long boardId) {
         return boardRepository.findBoardInfoById(boardId);
     }
 
-    public MemberInfoDto getLoginGoogle() {
-        return (MemberInfoDto) httpSession.getAttribute("member");
+    public MemberDto getLoginGoogle() {
+        return (MemberDto) httpSession.getAttribute("member");
     }
 
-    public void loginInfo(@LoginUser MemberInfoDto memberInfoDto, Model model) {
-        if (memberInfoDto == null) {
+    public void loginInfo(@LoginUser MemberDto memberDto, Model model) {
+        if (memberDto == null) {
             if (getLoginGoogle() != null) {
                 model.addAttribute("member", getLoginGoogle());
             }
         } else {
-            model.addAttribute("member", memberInfoDto);
+            model.addAttribute("member", memberDto);
         }
     }
 
-    public void saveAlgorithm(MemberInfo memberInfo, MemberService memberService, BoardService boardService, BoardSaveRequestDto boardSaveRequestDto) {
-        if (memberInfo == null) {
-            Optional<MemberInfo> loginGoogleInfo = memberService.findMemberInfoFromMemberInfoDTO(boardService.getLoginGoogle().getEmail());
+    public void saveAlgorithm(Member member, MemberService memberService, BoardService boardService, BoardSaveRequestDto boardSaveRequestDto) {
+        if (member == null) {
+            Optional<Member> loginGoogleInfo = memberService.findMemberInfoFromMemberInfoDTO(boardService.getLoginGoogle().getEmail());
             if (loginGoogleInfo.isPresent()) {
                 boardService.save(boardSaveRequestDto, loginGoogleInfo.get());
             }
         } else {
-            boardService.save(boardSaveRequestDto, memberInfo);
+            boardService.save(boardSaveRequestDto, member);
         }
     }
 }

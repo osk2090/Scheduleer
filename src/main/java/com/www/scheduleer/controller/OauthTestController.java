@@ -1,11 +1,9 @@
 package com.www.scheduleer.controller;
 
-import com.www.scheduleer.config.auth.LoginUser;
-import com.www.scheduleer.web.dto.member.MemberInfoDto;
+import com.www.scheduleer.web.dto.member.MemberDto;
 import com.www.scheduleer.service.Member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,10 +21,10 @@ public class OauthTestController {
     private final HttpSession httpSession;
 
     @GetMapping("/index")
-    public String index(Model model, @AuthenticationPrincipal MemberInfoDto memberInfoDto) {
+    public String index(Model model, @AuthenticationPrincipal MemberDto memberDto) {
 
-        if (memberInfoDto != null) {
-            model.addAttribute("userName", memberInfoDto.getName());
+        if (memberDto != null) {
+            model.addAttribute("userName", memberDto.getName());
         }
 
         return "/admin/index";

@@ -1,8 +1,8 @@
 package com.www.scheduleer.config;
 
 import com.www.scheduleer.Repository.MemberRepository;
-import com.www.scheduleer.web.domain.MemberInfo;
-import com.www.scheduleer.web.dto.member.MemberInfoDto;
+import com.www.scheduleer.web.domain.Member;
+import com.www.scheduleer.web.dto.member.MemberDto;
 import com.www.scheduleer.config.auth.dto.OAuthAttributes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -36,23 +36,23 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
-        MemberInfo memberInfo = saveOrUpdate(attributes);
+        Member member = saveOrUpdate(attributes);
 
-        httpSession.setAttribute("member", new MemberInfoDto(memberInfo));
+        httpSession.setAttribute("member", member);
 
         return new DefaultOAuth2User(
                 Collections.singleton(
-                new SimpleGrantedAuthority(memberInfo.getAuth().toString())),
+                new SimpleGrantedAuthority(member.getAuth().toString())),
                 attributes.getAttributes(),
                 attributes.getNameAttributeKey()
         );
 }
 
-    private MemberInfo saveOrUpdate(OAuthAttributes attributes) {
-        MemberInfo memberInfo = memberRepository.findByEmail(attributes.getEmail())
+    private Member saveOrUpdate(OAuthAttributes attributes) {
+        Member member = memberRepository.findByEmail(attributes.getEmail())
                 .map(entity -> entity.update(attributes.getName(), attributes.getPicture()))
                 .orElse(attributes.toEntity());
-        return memberRepository.save(memberInfo);
+        return memberRepository.save(member);
     }
 
 }

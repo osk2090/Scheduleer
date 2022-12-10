@@ -1,7 +1,7 @@
 package com.www.scheduleer.config.auth.dto;
 
 import com.www.scheduleer.web.domain.Auth;
-import com.www.scheduleer.web.domain.MemberInfo;
+import com.www.scheduleer.web.domain.Member;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -37,8 +37,8 @@ public class OAuthAttributes {
                 .build();
     }
 
-    public MemberInfo toEntity() {
-        return MemberInfo.builder()
+    public Member toEntity() {
+        return Member.builder()
                 .name(name)
                 .email(email)
                 .picture(picture)

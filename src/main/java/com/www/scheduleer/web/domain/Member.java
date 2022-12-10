@@ -7,10 +7,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity
 @Getter
-@Setter
-public class MemberInfo extends BaseTimeEntity {
+@Entity(name = "member")
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,9 +36,8 @@ public class MemberInfo extends BaseTimeEntity {
     @Column(name = "auth")
     @Enumerated(EnumType.STRING)
     private Auth auth;
-
     @Builder
-    public MemberInfo(String name, String email, String password, String picture, Type type, Auth auth) {
+    public Member(String name, String email, String password, String picture, Type type, Auth auth) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -48,7 +46,7 @@ public class MemberInfo extends BaseTimeEntity {
         this.auth = auth;
     }
 
-    public MemberInfo update(String name, String picture) {
+    public Member update(String name, String picture) {
         this.name = name;
         this.picture = picture;
         return this;

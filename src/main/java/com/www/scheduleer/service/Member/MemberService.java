@@ -1,9 +1,13 @@
 package com.www.scheduleer.service.Member;
 
 import com.www.scheduleer.Repository.MemberRepository;
-import com.www.scheduleer.web.domain.MemberInfo;
-import com.www.scheduleer.web.dto.member.MemberInfoDto;
+import com.www.scheduleer.web.domain.Auth;
+import com.www.scheduleer.web.domain.Member;
+import com.www.scheduleer.web.domain.Type;
+import com.www.scheduleer.web.dto.member.MemberDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,73 +24,67 @@ public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
-    private BCryptPasswordEncoder encoder;
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<Member> memberInfo = this.memberRepository.findByEmail(email);
+        Member memberDto = memberInfo.orElse(null);
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(memberDto.getAuth().toString()));
+        System.out.println(email);
 
-    public Long save(MemberInfoDto infoDto) {
-        System.out.println(encoder);
-        return memberRepository.save(MemberInfo.builder()
-                .name(infoDto.getName())
-                .email(infoDto.getEmail())
-                .auth(infoDto.getAuth())
-                .picture(infoDto.getPicture())
-                .password(encoder.encode(infoDto.getPassword())).build()).getId();
+        return (UserDetails) Member.builder().email(memberDto.getEmail()).password(memberDto.getPassword()).build();
     }
 
-    public List<MemberInfo> getMemberList() {
+    public Member save(MemberDto infoDto) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        infoDto.setPassword(passwordEncoder.encode(infoDto.getPassword()));
+        return memberRepository.save(infoDto.toEntity());
+    }
+
+    public List<Member> getMemberList() {
         return memberRepository.findAll();
     }
 
-    public Optional<MemberInfo> getMember(String email) {
+    public Optional<Member> getMember(String email) {
         return memberRepository.findByEmail(email);
     }
 
-    public List<MemberInfo> findMembers(String email) {
-        List<MemberInfo> members = memberRepository.findByEmailContaining(email);
-        List<MemberInfo> m = new ArrayList<>();
-        for (MemberInfo member : members) {
+    public List<Member> findMembers(String email) {
+        List<Member> members = memberRepository.findByEmailContaining(email);
+        List<Member> m = new ArrayList<>();
+        for (Member member : members) {
             m.add(member);
         }
 
         return m;
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<MemberInfo> memberInfo = this.memberRepository.findByEmail(email);
-        if (memberInfo.isEmpty()) {
-            throw new UsernameNotFoundException("사용자를 찾을수 없습니다.");
-        }
-        MemberInfo memberInfoDto = memberInfo.get();
-
-        return (UserDetails) MemberInfo.builder().email(memberInfoDto.getEmail()).password(memberInfoDto.getPassword()).build();
-    }
-
-    private void validateDuplicateMember(MemberInfo memberInfo) {
-        Optional<MemberInfo> findMember = memberRepository.findByEmail(memberInfo.getEmail());
+    private void validateDuplicateMember(Member member) {
+        Optional<Member> findMember = memberRepository.findByEmail(member.getEmail());
         if (findMember.isPresent()) {
             throw new IllegalStateException("이미 가입된 회원입니다.");
         }
     }
 
-    public List<MemberInfo> findAllDesc() {
+    public List<Member> findAllDesc() {
         return memberRepository.findAll();
     }
 
-    public Optional<MemberInfo> findMemberInfoFromMemberInfoDTO(String email) {
+    public Optional<Member> findMemberInfoFromMemberInfoDTO(String email) {
         return memberRepository.findByEmail(email);
     }
 
-    public Optional<MemberInfo> findMember(Long memberId) {
+    public Optional<Member> findMember(Long memberId) {
         return memberRepository.findMemberInfoById(memberId);
     }
 
-    public BCryptPasswordEncoder bc() {
-        return encoder = new BCryptPasswordEncoder();
-    }
-
-    public void updatePassword(MemberInfo memberInfo, String newPassword) {
-        System.out.println("새로운 비밀번호 : " + newPassword);
-        memberInfo.setPassword(bc().encode(newPassword));
-        memberRepository.save(memberInfo);
-    }
+//    public BCryptPasswordEncoder bc() {
+//        return encoder = new BCryptPasswordEncoder();
+//    }
+//
+//    public void updatePassword(Member member, String newPassword) {
+//        System.out.println("새로운 비밀번호 : " + newPassword);
+//        member.setPassword(bc().encode(newPassword));
+//        memberRepository.save(member);
+//    }
 }

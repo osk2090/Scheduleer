@@ -1,7 +1,6 @@
 package com.www.scheduleer.config.auth;
 
-import com.www.scheduleer.web.domain.MemberInfo;
-import com.www.scheduleer.web.dto.member.MemberInfoDto;
+import com.www.scheduleer.web.dto.member.MemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -21,7 +20,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         boolean isLoginUserAnnotation = parameter.getParameterAnnotation(LoginUser.class) != null;
-        boolean isUserClass = MemberInfoDto.class.equals(parameter.getParameterType());
+        boolean isUserClass = MemberDto.class.equals(parameter.getParameterType());
         return isLoginUserAnnotation && isUserClass;
     }
 

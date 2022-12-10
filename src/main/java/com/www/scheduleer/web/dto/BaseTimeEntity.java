@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -17,8 +18,8 @@ public abstract class BaseTimeEntity {
 
     @CreationTimestamp
     @Column(updatable = false)
-    private Date regDate;//생성 날짜
+    private LocalDateTime regDate;//생성 날짜
 
     @UpdateTimestamp
-    private Date updateDate;//업데이트 날짜
+    private LocalDateTime updateDate;//업데이트 날짜
 }

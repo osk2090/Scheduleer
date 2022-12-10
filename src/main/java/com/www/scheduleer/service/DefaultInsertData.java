@@ -3,8 +3,8 @@ package com.www.scheduleer.service;
 import com.www.scheduleer.Repository.BoardRepository;
 import com.www.scheduleer.Repository.MemberRepository;
 import com.www.scheduleer.web.domain.Auth;
-import com.www.scheduleer.web.domain.BoardInfo;
-import com.www.scheduleer.web.domain.MemberInfo;
+import com.www.scheduleer.web.domain.Board;
+import com.www.scheduleer.web.domain.Member;
 import com.www.scheduleer.web.domain.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,16 +22,16 @@ public class DefaultInsertData {
     @Autowired
     private BoardRepository boardRepository;
 
-    @PostConstruct
+//    @PostConstruct
     @Transactional
     public void insert() {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();//암호화
-        MemberInfo memberInfo = new MemberInfo("osk", "osk@naver.com", encoder.encode("osk"), null, Type.GENERAL, Auth.USER);
-        MemberInfo memberInfo1 = new MemberInfo("osk1", "osk1@naver.com", encoder.encode("osk1"), null, Type.GENERAL, Auth.USER);
+        Member member = new Member("osk", "osk@naver.com", encoder.encode("osk"), null, Type.GENERAL, Auth.USER);
+        Member member1 = new Member("osk1", "osk1@naver.com", encoder.encode("osk1"), null, Type.GENERAL, Auth.USER);
 
-        memberRepository.save(memberInfo);
-        memberRepository.save(memberInfo1);
-        boardRepository.save(new BoardInfo(1L, "test title", "test content", true, memberInfo));
-        boardRepository.save(new BoardInfo(2L, "test1 title", "test1 content", true, memberInfo1));
+        memberRepository.save(member);
+        memberRepository.save(member1);
+        boardRepository.save(new Board(1L, "test title", "test content", true, member));
+        boardRepository.save(new Board(2L, "test1 title", "test1 content", true, member1));
     }
 }

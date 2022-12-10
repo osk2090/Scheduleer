@@ -3,7 +3,7 @@ package com.www.scheduleer.controller;
 import com.www.scheduleer.service.Board.BoardService;
 import com.www.scheduleer.service.Member.MemberService;
 import com.www.scheduleer.service.Member.PasswordFormValidator;
-import com.www.scheduleer.web.domain.MemberInfo;
+import com.www.scheduleer.web.domain.Member;
 import com.www.scheduleer.web.dto.member.PasswordFormDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -34,8 +34,8 @@ public class SettingController {
     static final String SETTING_PROFILE_URL = "/member/password";
 
     @GetMapping(SETTING_PROFILE_URL)
-    public String updatePasswordForm(@AuthenticationPrincipal MemberInfo memberInfo, Model model) {
-        MemberInfo member = null;
+    public String updatePasswordForm(@AuthenticationPrincipal Member memberInfo, Model model) {
+        Member member = null;
         if (memberInfo == null) {
             if (boardService.getLoginGoogle() != null) {
                 member = memberService.findMemberInfoFromMemberInfoDTO(boardService.getLoginGoogle().getEmail()).get();
@@ -49,27 +49,27 @@ public class SettingController {
         return SETTING_PROFILE_VIEW_NAME;
     }
 
-    @PostMapping(SETTING_PROFILE_URL)
-    public String updatedPassword(@AuthenticationPrincipal MemberInfo memberInfo, @Valid PasswordFormDto passwordFormDto, Errors errors,
-                                  Model model, RedirectAttributes attributes) {
-        MemberInfo member = null;
-        if (memberInfo == null) {
-            if (boardService.getLoginGoogle() != null) {
-                member = memberService.findMemberInfoFromMemberInfoDTO(boardService.getLoginGoogle().getEmail()).get();
-            }
-        } else {
-            member = memberInfo;
-        }
-
-        //에러
-        if (errors.hasErrors()) {
-            model.addAttribute(member);
-            return SETTING_PROFILE_VIEW_NAME;
-        }
-
-        //변경완료
-        memberService.updatePassword(member, passwordFormDto.getNewPassword());
-        attributes.addFlashAttribute("message", "패스워드를 변경했습니다.");
-        return "redirect:" + SETTING_PROFILE_URL;
-    }
+//    @PostMapping(SETTING_PROFILE_URL)
+//    public String updatedPassword(@AuthenticationPrincipal Member memberInfo, @Valid PasswordFormDto passwordFormDto, Errors errors,
+//                                  Model model, RedirectAttributes attributes) {
+//        Member member = null;
+//        if (memberInfo == null) {
+//            if (boardService.getLoginGoogle() != null) {
+//                member = memberService.findMemberInfoFromMemberInfoDTO(boardService.getLoginGoogle().getEmail()).get();
+//            }
+//        } else {
+//            member = memberInfo;
+//        }
+//
+//        //에러
+//        if (errors.hasErrors()) {
+//            model.addAttribute(member);
+//            return SETTING_PROFILE_VIEW_NAME;
+//        }
+//
+//        //변경완료
+//        memberService.updatePassword(member, passwordFormDto.getNewPassword());
+//        attributes.addFlashAttribute("message", "패스워드를 변경했습니다.");
+//        return "redirect:" + SETTING_PROFILE_URL;
+//    }
 }

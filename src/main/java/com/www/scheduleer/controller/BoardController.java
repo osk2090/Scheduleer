@@ -1,15 +1,13 @@
 package com.www.scheduleer.controller;
 
-import com.www.scheduleer.config.auth.LoginUser;
-import com.www.scheduleer.web.domain.BoardInfo;
+import com.www.scheduleer.web.domain.Board;
 import com.www.scheduleer.web.dto.board.BoardSaveRequestDto;
-import com.www.scheduleer.web.domain.MemberInfo;
+import com.www.scheduleer.web.domain.Member;
 import com.www.scheduleer.service.Board.BoardService;
 import com.www.scheduleer.service.Member.MemberService;
-import com.www.scheduleer.web.dto.member.MemberInfoDto;
+import com.www.scheduleer.web.dto.member.MemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,22 +24,22 @@ public class BoardController {
     private final MemberService memberService;
 
     @PostMapping("/board")
-    public String addBoard(BoardSaveRequestDto boardSaveRequestDto, @AuthenticationPrincipal MemberInfo memberInfo) {
-        boardService.saveAlgorithm(memberInfo, memberService, boardService, boardSaveRequestDto);
+    public String addBoard(BoardSaveRequestDto boardSaveRequestDto, @AuthenticationPrincipal Member member) {
+        boardService.saveAlgorithm(member, memberService, boardService, boardSaveRequestDto);
         return "redirect:/main";
     }
 
     @GetMapping("/main")
-    public String list(Model model,  @AuthenticationPrincipal MemberInfoDto memberInfoDto) {
-        boardService.loginInfo(memberInfoDto, model);
-        List<BoardInfo> boardInfoList = boardService.getBoardList();
-        model.addAttribute("boardList", boardInfoList);
+    public String list(Model model,  @AuthenticationPrincipal MemberDto memberDto) {
+        boardService.loginInfo(memberDto, model);
+        List<Board> boardList = boardService.getBoardList();
+        model.addAttribute("boardList", boardList);
         return "/main";
     }
 
     @GetMapping("/board/detail/{id}")
-    public String detail(Model model, @PathVariable("id") Long boardId, @AuthenticationPrincipal MemberInfoDto memberInfoDto) {
-        boardService.loginInfo(memberInfoDto, model);
+    public String detail(Model model, @PathVariable("id") Long boardId, @AuthenticationPrincipal MemberDto memberDto) {
+        boardService.loginInfo(memberDto, model);
         model.addAttribute("boardDetail", boardService.findBoardById(boardId).get());
         return "/board/detail";
     }
@@ -54,8 +52,8 @@ public class BoardController {
 
     @PutMapping("/board/update/{id}")
     @Transactional
-    public String update(BoardSaveRequestDto boardSaveRequestDto, @AuthenticationPrincipal MemberInfo memberInfo) {
-        boardService.saveAlgorithm(memberInfo, memberService, boardService, boardSaveRequestDto);
+    public String update(BoardSaveRequestDto boardSaveRequestDto, @AuthenticationPrincipal Member member) {
+        boardService.saveAlgorithm(member, memberService, boardService, boardSaveRequestDto);
         return "redirect:/main";
     }
 

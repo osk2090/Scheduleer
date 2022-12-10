@@ -2,10 +2,12 @@ package com.www.scheduleer;
 
 import com.www.scheduleer.Repository.BoardRepository;
 import com.www.scheduleer.Repository.MemberRepository;
-import com.www.scheduleer.web.domain.BoardInfo;
-import com.www.scheduleer.web.domain.MemberInfo;
+import com.www.scheduleer.web.domain.Auth;
+import com.www.scheduleer.web.domain.Board;
+import com.www.scheduleer.web.domain.Member;
 import com.www.scheduleer.service.Board.BoardService;
 import com.www.scheduleer.service.Member.MemberService;
+import com.www.scheduleer.web.domain.Type;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,8 +52,8 @@ class ScheduleerApplicationTests {
 
     @Test
     void insertBoard() {
-        BoardInfo boardInfo = new BoardInfo(1L, "test1", "test111", false, new MemberInfo("osk", "osk@naver.com", "osk", null, "admin"));
-        boardRepository.save(boardInfo);
+        Board board = new Board(1L, "test1", "test111", false, new Member(1L, "osk", "osk@naver.com", "osk", null, Type.GENERAL, Auth.USER));
+        boardRepository.save(board);
     }
 
     @Test
@@ -69,7 +71,7 @@ class ScheduleerApplicationTests {
     @Test
     @Transactional
     void findBoardByWriter() {
-        Optional<MemberInfo> memberInfo = memberRepository.findByEmail("osk@naver.com");
+        Optional<Member> memberInfo = memberRepository.findByEmail("osk@naver.com");
 
 //        List<BoardInfo> boardInfos = boardService.findBoardInfoByWriter(memberInfo);
 //        for (BoardInfo boardInfo : boardInfos) {
@@ -80,15 +82,15 @@ class ScheduleerApplicationTests {
     @Transactional
     @Test
     void findMemberAndBoards() {
-        List<MemberInfo> members = memberService.findMembers("osk@naver.com");
-        for (MemberInfo memberInfo : members) {
-            System.out.println(memberInfo.getName());
+        List<Member> members = memberService.findMembers("osk@naver.com");
+        for (Member member : members) {
+            System.out.println(member.getName());
         }
     }
 
     @Test
     void findMemberById() {
-        Optional<MemberInfo> member = memberService.findMember(2L);
+        Optional<Member> member = memberService.findMember(2L);
         if (member.isPresent()) {
             System.out.println(member.get().getEmail());
         }
@@ -96,10 +98,10 @@ class ScheduleerApplicationTests {
 
     @Test
     void checkPW() {
-        if (memberService.bc().matches("dh985622", memberService.getMember("osk@naver.com").get().getPassword())) {
-            System.out.println("y");
-        } else {
-            System.out.println("n");
-        }
+//        if (memberService.bc().matches("dh985622", memberService.getMember("osk@naver.com").get().getPassword())) {
+//            System.out.println("y");
+//        } else {
+//            System.out.println("n");
+//        }
     }
 }
