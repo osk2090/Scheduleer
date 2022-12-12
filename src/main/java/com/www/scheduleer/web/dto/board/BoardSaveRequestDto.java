@@ -1,5 +1,7 @@
-package com.www.scheduleer.VO;
+package com.www.scheduleer.web.dto.board;
 
+import com.www.scheduleer.web.domain.Board;
+import com.www.scheduleer.web.domain.Member;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -13,26 +15,26 @@ public class BoardSaveRequestDto {
     private Long id;
     private String title;
     private String content;
-    private MemberInfo memberInfo;
+    private Member member;
     private Boolean checkStar;
     private LocalDateTime regDate;
     private LocalDateTime updatedDate;
 
-    public BoardInfo toEntity() {
-        return BoardInfo.builder()
+    public Board toEntity() {
+        return Board.builder()
                 .id(id)
                 .title(title)
                 .content(content)
-                .writer(memberInfo)
+                .writer(member)
                 .checkStar(checkStar).build();
     }
 
     @Builder
-    public BoardSaveRequestDto(Long id, String title, String content, MemberInfo memberInfo, Boolean checkStar, LocalDateTime regDate, LocalDateTime updatedDate) {
+    public BoardSaveRequestDto(Long id, String title, String content, Member member, Boolean checkStar, LocalDateTime regDate, LocalDateTime updatedDate) {
         this.id = id;
         this.title = title;
         this.content = content;
-        this.memberInfo = memberInfo;
+        this.member = member;
         this.checkStar = checkStar;
         this.regDate = regDate;
         this.updatedDate = updatedDate;

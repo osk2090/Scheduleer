@@ -1,5 +1,6 @@
-package com.www.scheduleer.VO;
+package com.www.scheduleer.web.domain;
 
+import com.www.scheduleer.web.dto.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -8,7 +9,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BoardInfo extends BaseTimeEntity {
+public class Board extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,10 +28,10 @@ public class BoardInfo extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_info_id")
 //    @NotNull
-    private MemberInfo writer;
+    private Member writer;
 
     @Builder
-    public BoardInfo(Long id, String title, String content, Boolean checkStar, MemberInfo writer) {
+    public Board(Long id, String title, String content, Boolean checkStar, Member writer) {
         this.id = id;
         this.title = title;
         this.content = content;

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta charset="UTF-8">
@@ -17,11 +17,24 @@
     작성일자 : <input type="text" name="writer.name" th:value="${boardDetail.regDate}" disabled>
     계획 달성 일자: <input type="text" name="writer.name" th:value="${boardDetail.updateDate}" disabled><br>
 
-    <div sec:authorize="hasAnyRole('ROLE_USER','ROLE_ADMIN')" class="nav-item">
+    <div sec:authorize="isFullyAuthenticated()">
+    <div th:if="${memberName.email} == ${boardDetail.writer.email}" class="nav-item">
         <a th:href="@{/board/update/{id}(id=${boardDetail.id})}">
             <button>수정</button>
         </a>
     </div>
+    </div>
+
+<!--    <div sec:authorize="isFullyAuthenticated()">-->
+<!--        &lt;!&ndash;        현재 여기서 구글로그인을 하면 여기서 이메일을 못가져와서 에러가 난다.-->
+<!--        아마 백엔드에서 로그인된 정보를 넘겨줘야할 것같다.&ndash;&gt;-->
+<!--        <div th:if="${#authentication.principal.email} == ${boardDetail.writer.email}" class="nav-item">-->
+<!--            <a th:href="@{/board/update/{id}(id=${boardDetail.id})}">-->
+<!--                <button>수정</button>-->
+<!--            </a>-->
+<!--        </div>-->
+<!--    </div>-->
+
     <button type="button" class="navyBtn" onclick="location.href='/main'">이전으로</button>
 </body>
 </html>
@@ -33,17 +46,4 @@
     } else {
         document.getElementById('image').src = '/image/checked.svg';
     }
-
-    function changeImage() {
-        let e = document.getElementById('check').value;
-        console.log(e);
-        if (e === 'false') {
-            document.getElementById('check').value = 'true';
-            document.getElementById('image').src = '/image/checked.svg';
-        } else {
-            document.getElementById('check').value = 'false';
-            document.getElementById('image').src = '/image/unchecked.svg';
-        }
-    }
-
 </script>
