@@ -52,7 +52,7 @@ class ScheduleerApplicationTests {
 
     @Test
     void insertBoard() {
-        Board board = new Board(1L, "test1", "test111", false, new Member(1L, "osk", "osk@naver.com", "osk", null, Type.GENERAL, Auth.USER));
+        Board board = new Board(1L, "test1", "test111", false, new Member( "osk", "osk@naver.com", "osk", null, Type.GENERAL, Auth.USER));
         boardRepository.save(board);
     }
 

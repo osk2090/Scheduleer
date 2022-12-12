@@ -28,7 +28,7 @@ public class MemberDto {
     private LocalDateTime updateDate;
 
     public Member toEntity() {
-        return Member.builder().name(name).email(email).password(password).picture(picture).auth(Auth.USER).type(Type.GENERAL).build();
+        return Member.builder().name(name).email(email).password(password).picture(picture).auth(Auth.USER).type(type).build();
     }
 
     @Builder

@@ -26,6 +26,15 @@ public class CustomMemberDto implements SocialMemberInterface {
         this.authorities = Collections.unmodifiableSet(new LinkedHashSet<>(this.sortAuthorities(authorities)));
     }
 
+    public CustomMemberDto(Member member, Collection<? extends GrantedAuthority> authorities, Map<String, Object> attributes, String nameAttributeKey) {
+        this.defaultOAuth2User = new DefaultOAuth2User(authorities, attributes, nameAttributeKey);
+        this.customName = member.getName();
+        this.id = member.getId();
+        this.authorities = Collections.unmodifiableSet(new LinkedHashSet<>(this.sortAuthorities(authorities)));
+        this.attributes = Collections.unmodifiableMap(new LinkedHashMap<>(attributes));
+        this.nameAttributeKey = nameAttributeKey;
+    }
+
     private Set<GrantedAuthority> sortAuthorities(Collection<? extends GrantedAuthority> authorities) {
         SortedSet<GrantedAuthority> sortedAuthorities = new TreeSet<>(Comparator.comparing(GrantedAuthority::getAuthority));
         sortedAuthorities.addAll(authorities);
@@ -34,32 +43,42 @@ public class CustomMemberDto implements SocialMemberInterface {
 
     @Override
     public void eraseCredentials() {
+        this.password = null;
+    }
 
+    @Override
+    public String getPassword() {
+        return this.password;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return customName;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
     }
 
     @Override
@@ -68,7 +87,7 @@ public class CustomMemberDto implements SocialMemberInterface {
     }
 
     @Override
-    public <A> A getAttribute(String name) {
-        return SocialMemberInterface.super.getAttribute(name);
+    public Map<String, Object> getAttributes() {
+        return attributes;
     }
 }

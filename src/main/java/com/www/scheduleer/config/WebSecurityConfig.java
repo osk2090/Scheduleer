@@ -61,13 +61,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .logout() // 8
 //                .logoutSuccessUrl("/board/main") // 로그아웃 성공시 리다이렉트 주소
 //                .invalidateHttpSession(true) // 세션 날리기
-//                .and()
+                .and()
                 //구글로그인 구현
-//                .oauth2Login()
+                .oauth2Login()
 //                .loginPage("/member/login")//구현한 로그인페이지 이용
 //                .defaultSuccessUrl("/board/main")
-//                .userInfoEndpoint()
-//                .userService(customOAuth2UserService)
+                .userInfoEndpoint()
+                .userService(customOAuth2UserService)
         ;
     }
 

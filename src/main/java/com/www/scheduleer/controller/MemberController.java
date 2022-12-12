@@ -32,7 +32,7 @@ public class MemberController {
 
     private final BoardService boardService;
 
-    private final HttpSession httpSession;
+    private final HttpServletResponse response;
 
     @PostMapping("/login")
     public String login(String email, String password) {

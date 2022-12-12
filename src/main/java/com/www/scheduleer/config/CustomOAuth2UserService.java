@@ -1,9 +1,9 @@
 package com.www.scheduleer.config;
 
 import com.www.scheduleer.Repository.MemberRepository;
-import com.www.scheduleer.web.domain.Member;
-import com.www.scheduleer.web.dto.member.MemberDto;
 import com.www.scheduleer.config.auth.dto.OAuthAttributes;
+import com.www.scheduleer.web.domain.Member;
+import com.www.scheduleer.web.dto.member.CustomMemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -22,7 +22,6 @@ import java.util.Collections;
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     private final MemberRepository memberRepository;
-    private final HttpSession httpSession;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -36,18 +35,15 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
-        Member member = saveOrUpdate(attributes);
+        Member googleMember = saveOrUpdate(attributes);
 
-        httpSession.setAttribute("member", member);
-
-        return new DefaultOAuth2User(
+        return new CustomMemberDto(googleMember,
                 Collections.singleton(
-                new SimpleGrantedAuthority(member.getAuth().toString())),
+                        new SimpleGrantedAuthority(googleMember.getAuth().toString())),
                 attributes.getAttributes(),
                 attributes.getNameAttributeKey()
         );
 }
-
     private Member saveOrUpdate(OAuthAttributes attributes) {
         Member member = memberRepository.findByEmail(attributes.getEmail())
                 .map(entity -> entity.update(attributes.getName(), attributes.getPicture()))

@@ -30,7 +30,6 @@ public class MemberService implements UserDetailsService {
         Member memberDto = memberInfo.orElse(null);
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(memberDto.getAuth().toString()));
-        System.out.println(email);
 
         return (UserDetails) Member.builder().email(memberDto.getEmail()).password(memberDto.getPassword()).build();
     }
