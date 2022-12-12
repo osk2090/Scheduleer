@@ -1,13 +1,18 @@
 package com.www.scheduleer.service.Board;
 
 import com.www.scheduleer.Repository.BoardRepository;
-import com.www.scheduleer.VO.BoardInfo;
-import com.www.scheduleer.VO.BoardSaveRequestDto;
-import com.www.scheduleer.VO.MemberInfo;
+import com.www.scheduleer.config.auth.LoginUser;
+import com.www.scheduleer.web.domain.Board;
+import com.www.scheduleer.web.dto.board.BoardSaveRequestDto;
+import com.www.scheduleer.web.domain.Member;
+import com.www.scheduleer.web.dto.member.MemberDto;
+import com.www.scheduleer.service.Member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,29 +22,49 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
 
-    @Transactional
-    public Long save(BoardSaveRequestDto boardSaveRequestDto, MemberInfo writer) {
-        boardSaveRequestDto.setMemberInfo(writer);
-        return boardRepository.save(boardSaveRequestDto.toEntity()).getId();
-//        return boardRepository.save(
-//                BoardInfo.builder()
-//                .id(boardInfo.getId())
-//                .title(boardInfo.getTitle())
-//                .content(boardInfo.getContent())
-//                .writer(writer)
-//                .checkStar(boardInfo.getCheckStar()).build()).getId();
+    private final HttpSession httpSession;
 
+    @Transactional
+    public Long save(BoardSaveRequestDto boardSaveRequestDto, Member writer) {
+        boardSaveRequestDto.setMember(writer);
+        return boardRepository.save(boardSaveRequestDto.toEntity()).getId();
     }
 
-    public List<BoardInfo> getBoardList() {
+    public List<Board> getBoardList() {
         return boardRepository.findAll();
     }
 
-    public List<BoardInfo> findBoardByWriter(String writer) {
-        return boardRepository.findBoardInfoByWriter(writer);
+    @Transactional
+    public Optional<Board> findBoardInfoByWriter(Member member) {
+        return boardRepository.findBoardInfoByWriter(member);
     }
 
-    public BoardInfo findBoardById(Long boardId) {
+    public Optional<Board> findBoardById(Long boardId) {
         return boardRepository.findBoardInfoById(boardId);
+    }
+
+    public MemberDto getLoginGoogle() {
+        return (MemberDto) httpSession.getAttribute("member");
+    }
+
+    public void loginInfo(@LoginUser MemberDto memberDto, Model model) {
+        if (memberDto == null) {
+            if (getLoginGoogle() != null) {
+                model.addAttribute("member", getLoginGoogle());
+            }
+        } else {
+            model.addAttribute("member", memberDto);
+        }
+    }
+
+    public void saveAlgorithm(Member member, MemberService memberService, BoardService boardService, BoardSaveRequestDto boardSaveRequestDto) {
+        if (member == null) {
+            Optional<Member> loginGoogleInfo = memberService.findMemberInfoFromMemberInfoDTO(boardService.getLoginGoogle().getEmail());
+            if (loginGoogleInfo.isPresent()) {
+                boardService.save(boardSaveRequestDto, loginGoogleInfo.get());
+            }
+        } else {
+            boardService.save(boardSaveRequestDto, member);
+        }
     }
 }
