@@ -30,19 +30,18 @@ public class Member extends BaseTimeEntity {
     @Column(name = "picture")
     private String picture;
 
-    @Column(name = "type")
-    @Enumerated(EnumType.STRING)
-    private Type type;
+    @Column(unique = true, nullable = false)
+    private String oAuth2Id;
     @Column(name = "auth")
     @Enumerated(EnumType.STRING)
     private Auth auth;
+
     @Builder
-    public Member(String name, String email, String password, String picture, Type type, Auth auth) {
+    public Member(String name, String email, String password, String picture, Auth auth) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.picture = picture;
-        this.type = type;
         this.auth = auth;
     }
 

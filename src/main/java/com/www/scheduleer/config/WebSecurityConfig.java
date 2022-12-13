@@ -1,10 +1,14 @@
 package com.www.scheduleer.config;
 
+import com.www.scheduleer.config.token.JwtAuthFilter;
+import com.www.scheduleer.config.token.TokenService;
 import com.www.scheduleer.service.Member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,6 +19,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @RequiredArgsConstructor
 @EnableWebSecurity // 1
@@ -23,6 +28,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     MemberService memberService;
+
+    @Autowired
+    TokenService tokenService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -67,8 +75,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .loginPage("/member/login")//구현한 로그인페이지 이용
 //                .defaultSuccessUrl("/board/main")
                 .userInfoEndpoint()
-                .userService(customOAuth2UserService)
-        ;
+                .userService(customOAuth2UserService);
+        http.addFilterBefore(new JwtAuthFilter(tokenService, memberService), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
