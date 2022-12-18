@@ -1,6 +1,5 @@
 package com.www.scheduleer.controller;
 
-import com.www.scheduleer.web.dto.member.MemberDto;
 import com.www.scheduleer.service.Member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

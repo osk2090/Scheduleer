@@ -5,7 +5,6 @@ import com.www.scheduleer.config.auth.LoginUser;
 import com.www.scheduleer.web.domain.Board;
 import com.www.scheduleer.web.dto.board.BoardSaveRequestDto;
 import com.www.scheduleer.web.domain.Member;
-import com.www.scheduleer.web.dto.member.MemberDto;
 import com.www.scheduleer.service.Member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

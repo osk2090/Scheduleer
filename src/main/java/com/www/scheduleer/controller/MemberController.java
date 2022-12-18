@@ -1,10 +1,7 @@
 package com.www.scheduleer.controller;
 
 import com.www.scheduleer.config.auth.LoginUser;
-import com.www.scheduleer.web.domain.Auth;
 import com.www.scheduleer.web.domain.Member;
-import com.www.scheduleer.web.domain.Type;
-import com.www.scheduleer.web.dto.member.MemberDto;
 import com.www.scheduleer.service.Board.BoardService;
 import com.www.scheduleer.service.Member.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
 

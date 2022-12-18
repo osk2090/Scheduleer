@@ -29,9 +29,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     MemberService memberService;
 
-    @Autowired
-    TokenService tokenService;
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -76,7 +73,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .defaultSuccessUrl("/board/main")
                 .userInfoEndpoint()
                 .userService(customOAuth2UserService);
-        http.addFilterBefore(new JwtAuthFilter(tokenService, memberService), UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterBefore(new JwtAuthFilter(tokenService, memberService), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override

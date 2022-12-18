@@ -5,9 +5,13 @@ import com.www.scheduleer.web.domain.Member;
 import com.www.scheduleer.web.domain.Type;
 import lombok.*;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Column;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 
 @Data
 @Builder
@@ -15,7 +19,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class MemberDto {
 
-    private Long id;
     private String name;
     private String email;
     private String password;
@@ -32,8 +35,7 @@ public class MemberDto {
     }
 
     @Builder
-    public MemberDto(Long id, String name, String email, String password, String picture, Auth auth, Type type) {
-        this.id = id;
+    public MemberDto(String name, String email, String password, String picture, Auth auth, Type type) {
         this.name = name;
         this.email = email;
         this.password = password;
