@@ -31,8 +31,8 @@ public class JwtTokenProvider {
 
     private final AuthService authService;
 
-    private final Long expiredTime = 1000L * 60 * 60 * 24 * 365; // 임시 유효시간 1년
-    private final long refreshTokenValidTime = 1000L * 60 * 60 * 24 * 7; // 7일
+    private final long expiredTime = 60 * 30;
+    private final long refreshTokenValidTime = 60 * 60 * 24 * 30;
 
     @PostConstruct
     protected void init() {
