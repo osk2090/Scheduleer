@@ -1,145 +1,136 @@
 package com.www.scheduleer.config.jwt;
 
-import com.www.scheduleer.Repository.RefreshTokenRepository;
-import com.www.scheduleer.config.MyUserDetailsService;
-import com.www.scheduleer.domain.RefreshToken;
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.InitializingBean;
+import com.www.scheduleer.controller.dto.member.PrincipalDetails;
+import com.www.scheduleer.domain.Member;
+import com.www.scheduleer.service.Member.AuthService;
+import com.www.scheduleer.service.Member.MemberService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.security.Key;
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
-@Slf4j
-public class JwtTokenProvider implements InitializingBean {
+@RequiredArgsConstructor
+public class JwtTokenProvider {
 
-    private final MyUserDetailsService myUserDetailsService;
-    private final RefreshTokenRepository refreshTokenRepository;
+    @Value("${jwt.secret-key}")
+    private String secretKey;
 
-    private final String secretKey;
-    private final long tokenValidityInMs;
-    private final long refreshTokenValidityInMs;
+    private final AuthService authService;
 
-    public JwtTokenProvider(@Value("${jwt.secret-key}") String secretKey,
-                            @Value("${jwt.token-validity-in-sec}") long tokenValidity,
-                            @Value("${jwt.refresh-token-validity-in-sec}") long refreshTokenValidity,
-                            MyUserDetailsService myUserDetailsService,
-                            RefreshTokenRepository refreshTokenRepository){
-        this.secretKey = secretKey;
-        this.tokenValidityInMs = tokenValidity * 1000;
-        this.refreshTokenValidityInMs = refreshTokenValidity * 1000;
-        this.myUserDetailsService = myUserDetailsService;
-        this.refreshTokenRepository = refreshTokenRepository;
+    private final Long expiredTime = 1000L * 60 * 60 * 24 * 365; // 임시 유효시간 1년
+    private final long refreshTokenValidTime = 1000L * 60 * 60 * 24 * 7; // 7일
+
+    @PostConstruct
+    protected void init() {
+        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    private Key key;
-
-    @Override
-    public void afterPropertiesSet() throws Exception {  // init()
-        String encodedKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
-        key = Keys.hmacShaKeyFor(encodedKey.getBytes());
-        // https://budnamu.tistory.com/entry/JWT 참고
-    }
-
-    public String createAccessToken(Authentication authentication) {
+    /** * Member 정보를 담은 JWT 토큰을 생성한다.
+     *
+     * @param member Member 정보를 담은 객체
+     * @return String JWT 토큰 */
+    public String generateJwtToken(Member member) {
         Date now = new Date();
-        Date validity = new Date(now.getTime() + tokenValidityInMs);
+        return Jwts.builder()
+                .setSubject(member.getEmail()) // 보통 username
+                .setHeader(createHeader())
+                .setClaims(createClaims(member)) // 클레임, 토큰에 포함될 정보
+                .setExpiration(new Date(now.getTime() + expiredTime)) // 만료일
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+    }
+
+    public String createRefreshToken() {
+        Date now = new Date();
 
         return Jwts.builder()
-                .setSubject(authentication.getName())
-                .setIssuedAt(now) // 발행시간
-                .signWith(key, SignatureAlgorithm.HS512) // 암호화
-                .setExpiration(validity) // 만료
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + refreshTokenValidTime))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
+    }
+
+    private Map<String, Object> createHeader() {
+        Map<String, Object> header = new HashMap<>();
+        header.put("typ", "JWT");
+        header.put("alg", "HS256"); // 해시 256 사용하여 암호화
+        header.put("regDate", System.currentTimeMillis()); return header;
+    }
+
+    /**
+     * 클레임(Claim)을 생성한다.
+     * @param member 토큰을 생성하기 위한 계정 정보를 담은 객체
+     * @return Map<String, Object> 클레임(Claim)
+     */
+    private Map<String, Object> createClaims(Member member) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("email", member.getEmail());
+        claims.put("name", member.getName());
+        return claims;
+    }
+
+    /**
+     * Token 에서 Claim 을 가져온다.
+     * @param token JWT 토큰
+     * @return Claims 클레임
+     */
+    private Claims getClaims(String token) {
+        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+    }
+
+    /**
+     * 토큰으로 부터 username 을 가져온다.
+     * @param token JWT 토큰
+     * @return String Member 의 username
+     */
+    public String getUsernameFromToken(String token) {
+        return (String) getClaims(token).get("username");
+    }
+
+    public String getMemberEmail(String token){
+        return (String) getClaims(token).get("email");
     }
 
     public Authentication getAuthentication(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-
-        UserDetails userDetails = myUserDetailsService.loadUserByUsername(claims.getSubject());
-        return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
+        PrincipalDetails userDetails = (PrincipalDetails) authService.loadUserByUsername(getMemberEmail(token));
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-    public JwtCode validateToken(String token) {
+    /**
+     * 토큰으로 부터 인가 정보를 가져온다.
+     * @param token JWT 토큰
+     * @return String grade
+     */
+    public String getMemberRoleSetFromToken(String token) {
+        return (String) getClaims(token).get("roles");
+    }
+
+    public String resolveToken(HttpServletRequest req) {
+        return req.getHeader("X-AUTH-TOKEN");
+    }
+
+
+    public boolean validateTokenExceptExpiration(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return JwtCode.ACCESS;
-        } catch (ExpiredJwtException e){
-            // 만료된 경우에는 refresh token을 확인하기 위해
-            return JwtCode.EXPIRED;
-        } catch (JwtException | IllegalArgumentException e) {
-            log.info("jwtException : {}", e);
-        }
-        return JwtCode.DENIED;
-    }
-
-    @Transactional
-    public String reissueRefreshToken(String refreshToken) throws RuntimeException{
-        // refresh token을 디비의 그것과 비교해보기
-        Authentication authentication = getAuthentication(refreshToken);
-        RefreshToken findRefreshToken = refreshTokenRepository.findByUserId(authentication.getName())
-                .orElseThrow(() -> new UsernameNotFoundException("userId : " + authentication.getName() + " was not found"));
-
-        if(findRefreshToken.getToken().equals(refreshToken)){
-            // 새로운거 생성
-            String newRefreshToken = createRefreshToken(authentication);
-            findRefreshToken.changeToken(newRefreshToken);
-            return newRefreshToken;
-        }
-        else {
-            log.info("refresh 토큰이 일치하지 않습니다. ");
-            return null;
+            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+            return !claims.getBody().getExpiration().before(new Date());
+        } catch(Exception e) {
+            return false;
         }
     }
 
-    @Transactional
-    public String issueRefreshToken(Authentication authentication){
-        String newRefreshToken = createRefreshToken(authentication);
-
-        // 기존것이 있다면 바꿔주고, 없다면 만들어줌
-        refreshTokenRepository.findByUserId(authentication.getName())
-                .ifPresentOrElse(
-                        r-> {r.changeToken(newRefreshToken);
-                            log.info("issueRefreshToken method | change token ");
-                        },
-                        () -> {
-                            RefreshToken token = RefreshToken.createToken(authentication.getName(), newRefreshToken);
-                            log.info(" issueRefreshToken method | save tokenID : {}, token : {}", token.getUserId(), token.getToken());
-                            refreshTokenRepository.save(token);
-                        });
-
-        return newRefreshToken;
-    }
-
-    private String createRefreshToken(Authentication authentication){
-        Date now = new Date();
-        Date validity = new Date(now.getTime() + refreshTokenValidityInMs);
-
-        return Jwts.builder()
-                .setSubject(authentication.getName())
-                .setIssuedAt(now)
-                .signWith(key, SignatureAlgorithm.HS512)
-                .setExpiration(validity)
-                .compact();
-    }
-
-    public static enum JwtCode{
-        DENIED,
-        ACCESS,
-        EXPIRED;
-    }
 }

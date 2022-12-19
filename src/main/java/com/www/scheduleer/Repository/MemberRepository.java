@@ -3,6 +3,7 @@ package com.www.scheduleer.Repository;
 import com.www.scheduleer.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,4 +16,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findMemberInfoById(Long id);
 
     Optional<Member> findByEmailAndPassword(String email, String password);
+
+
+//    Member findBySessionKeyAndSessionLimitAfter(String sessionKey, LocalDateTime sessionLimit);
 }

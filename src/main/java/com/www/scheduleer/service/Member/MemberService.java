@@ -1,6 +1,10 @@
 package com.www.scheduleer.service.Member;
 
 import com.www.scheduleer.Repository.MemberRepository;
+import com.www.scheduleer.Repository.RefreshTokenRepository;
+import com.www.scheduleer.config.jwt.JwtTokenProvider;
+import com.www.scheduleer.controller.dto.member.MemberLoginResponseDto;
+import com.www.scheduleer.controller.dto.member.PrincipalDetails;
 import com.www.scheduleer.domain.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +27,9 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final JwtTokenProvider jwtTokenProvider;
+
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 //    private final JwtTokenProvider jwtTokenProvider;
@@ -61,4 +68,38 @@ public class MemberService {
     public List<Member> getMemberList() {
         return memberRepository.findAll();
     }
+
+    /*sessionKey check / 로그인 시 loginCookie 값과 m_session_key의 값을 대조 일치하는 회원의 정보를 가져온다*/
+    public Member checkMemberWithSessionKey(String sessionKey) {
+        String email = refreshTokenRepository.findByToken(sessionKey).getUserId();
+        return memberRepository.findByEmail(email).get();
+    }
+
+
+    @Transactional
+    public Long signUp(String userId, String pw) { // 회원가입
+        // 중복체크
+        validateDuplicateUser(userId);
+        String encodePw = passwordEncoder.encode(pw);
+
+        return memberRepository.save(Member.testCreate(userId, encodePw)).getId();
+    }
+
+    @Transactional()
+    public MemberLoginResponseDto signIn(Member member) {
+        String refreshToken = jwtTokenProvider.createRefreshToken();
+//        memberRepository.findByEmail(member.getEmail()).ifPresent(
+//                updateMember -> updateMember.setRefreshToken(refreshToken)
+//        );
+        return new MemberLoginResponseDto(member.getId(), jwtTokenProvider.generateJwtToken(member), refreshToken);
+    }
+
+    private void validateDuplicateUser(String email) {
+        memberRepository.findByEmail(email)
+                .ifPresent(member -> {
+                    log.debug("email : {}, 이메일 중복으로 회원가입 실패", email);
+                    throw new RuntimeException("이메일 중복");
+                });
+    }
+
 }

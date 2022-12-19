@@ -5,10 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 @Getter
@@ -38,6 +41,7 @@ public class Member extends BaseTimeEntity {
     private Type type;
     @Column(name = "auth")
     private String auth;
+
     @Builder
     public Member(String name, String email, String password, String picture, Type type, String auth) {
         this.name = name;
