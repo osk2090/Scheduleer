@@ -1,8 +1,8 @@
 package com.www.scheduleer.controller;
 
-import com.www.scheduleer.web.domain.Board;
-import com.www.scheduleer.web.dto.board.BoardSaveRequestDto;
-import com.www.scheduleer.web.domain.Member;
+import com.www.scheduleer.domain.Board;
+import com.www.scheduleer.controller.dto.board.BoardSaveRequestDto;
+import com.www.scheduleer.domain.Member;
 import com.www.scheduleer.service.Board.BoardService;
 import com.www.scheduleer.service.Member.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -28,20 +28,20 @@ public class BoardController {
         return "redirect:/main";
     }
 
-    @GetMapping("/main")
-    public String list(Model model,  @AuthenticationPrincipal MemberDto memberDto) {
-        boardService.loginInfo(memberDto, model);
-        List<Board> boardList = boardService.getBoardList();
-        model.addAttribute("boardList", boardList);
-        return "/main";
-    }
+//    @GetMapping("/main")
+//    public String list(Model model,  @AuthenticationPrincipal MemberDto memberDto) {
+//        boardService.loginInfo(memberDto, model);
+//        List<Board> boardList = boardService.getBoardList();
+//        model.addAttribute("boardList", boardList);
+//        return "/main";
+//    }
 
-    @GetMapping("/board/detail/{id}")
-    public String detail(Model model, @PathVariable("id") Long boardId, @AuthenticationPrincipal MemberDto memberDto) {
-        boardService.loginInfo(memberDto, model);
-        model.addAttribute("boardDetail", boardService.findBoardById(boardId).get());
-        return "/board/detail";
-    }
+//    @GetMapping("/board/detail/{id}")
+//    public String detail(Model model, @PathVariable("id") Long boardId, @AuthenticationPrincipal MemberDto memberDto) {
+//        boardService.loginInfo(memberDto, model);
+//        model.addAttribute("boardDetail", boardService.findBoardById(boardId).get());
+//        return "/board/detail";
+//    }
 
     @GetMapping("/board/update/{id}")
     public String edit(Model model, @PathVariable("id") Long boardId) {

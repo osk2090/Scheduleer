@@ -1,7 +1,4 @@
-app:
-  auth:
-    token-secret: scheduleer-osk-secret-key
-    token-expiration-time: 1209600000
-  oauth2:
-    authorized-redirect-uris:
-      - http://localhost:8080/auth/token
+jwt:
+  secret-key: c2NoZWR1bGVlci1vc2tzY2hlZHVsZWVyLW9za3NjaGVkdWxlZXItb3Nrc2NoZWR1bGVlci1vc2tzY2hlZHVsZWVyLW9zaw==
+  token-validity-in-sec: 10
+  refresh-token-validity-in-sec: 604800

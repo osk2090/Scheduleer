@@ -1,4 +1,4 @@
-package com.www.scheduleer.web.domain;
+package com.www.scheduleer.domain;
 
 public enum Type {
     GENERAL, GOOGLE,

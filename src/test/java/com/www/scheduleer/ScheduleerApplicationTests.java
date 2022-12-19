@@ -2,12 +2,12 @@ package com.www.scheduleer;
 
 import com.www.scheduleer.Repository.BoardRepository;
 import com.www.scheduleer.Repository.MemberRepository;
-import com.www.scheduleer.web.domain.Auth;
-import com.www.scheduleer.web.domain.Board;
-import com.www.scheduleer.web.domain.Member;
+import com.www.scheduleer.domain.Auth;
+import com.www.scheduleer.domain.Board;
+import com.www.scheduleer.domain.Member;
 import com.www.scheduleer.service.Board.BoardService;
 import com.www.scheduleer.service.Member.MemberService;
-import com.www.scheduleer.web.domain.Type;
+import com.www.scheduleer.domain.Type;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +52,7 @@ class ScheduleerApplicationTests {
 
     @Test
     void insertBoard() {
-        Board board = new Board(1L, "test1", "test111", false, new Member( "osk", "osk@naver.com", "osk", null, Type.GENERAL, Auth.USER));
+        Board board = new Board(1L, "test1", "test111", false, new Member( "osk", "osk@naver.com", "osk", null, Type.GENERAL, Auth.ROLE_USER.toString()));
         boardRepository.save(board);
     }
 

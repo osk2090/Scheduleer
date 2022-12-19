@@ -1,6 +1,6 @@
-package com.www.scheduleer.web.domain;
+package com.www.scheduleer.domain;
 
-import com.www.scheduleer.web.dto.BaseTimeEntity;
+import com.www.scheduleer.controller.dto.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;

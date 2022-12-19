@@ -1,6 +1,6 @@
 package com.www.scheduleer.Repository;
 
-import com.www.scheduleer.web.domain.Member;
+import com.www.scheduleer.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -13,4 +13,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByEmail(String email);//이메일을 통한 회원 조회 위함
 
     Optional<Member> findMemberInfoById(Long id);
+
+    Optional<Member> findByEmailAndPassword(String email, String password);
 }
