@@ -1,6 +1,7 @@
 package com.www.scheduleer.domain;
 
 import com.www.scheduleer.controller.dto.BaseTimeEntity;
+import com.www.scheduleer.controller.dto.member.SignUpDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -52,10 +53,14 @@ public class Member extends BaseTimeEntity {
         this.auth = "ROLE_USER";
     }
 
-    public static Member testCreate(String email, String pw) {
+    public static Member createEntity(SignUpDto signUpDto) {
         return Member.builder()
-                .email(email)
-                .password(pw)
+                .email(signUpDto.getEmail())
+                .password(signUpDto.getPassword())
+                .name(signUpDto.getName())
+                .picture(signUpDto.getPicture())
+                .auth(Auth.ROLE_USER.toString())
+                .type(Type.GENERAL)
                 .build();
     }
 

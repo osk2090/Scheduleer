@@ -13,7 +13,6 @@ import java.util.Collection;
 public class PrincipalDetails implements UserDetails {
 
     private Member member;
-    private String provider;
 
     public PrincipalDetails(Member member){
         super();

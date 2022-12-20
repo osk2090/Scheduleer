@@ -23,7 +23,7 @@ public class DefaultInsertData {
     @Autowired
     private BoardRepository boardRepository;
 
-    @PostConstruct
+//    @PostConstruct
     @Transactional
     public void insert() {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();//암호화
