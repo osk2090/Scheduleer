@@ -137,7 +137,7 @@ public class JwtTokenProvider implements InitializingBean {
                 .compact();
     }
 
-    public static enum JwtCode{
+    public enum JwtCode{
         DENIED,
         ACCESS,
         EXPIRED;
