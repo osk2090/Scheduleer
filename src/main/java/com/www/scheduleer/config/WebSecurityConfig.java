@@ -47,9 +47,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(jwtAccessDeniedHandler);
 
         http.authorizeRequests()
-                .antMatchers("/api/**").permitAll()
+                .antMatchers("/api/member/signIn").permitAll()
+                .antMatchers("/api/member/signUp").permitAll()
                 .antMatchers("/auth/**").authenticated()
-                .anyRequest().permitAll();
+                .anyRequest().authenticated();
 
         http.apply(new JwtTokenFilterConfigurer(jwtTokenProvider));
     }

@@ -1,6 +1,9 @@
 package com.www.scheduleer.config.jwt;
 
+import com.www.scheduleer.config.error.CustomException;
+import com.www.scheduleer.config.error.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -54,6 +57,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    public CustomException customException(ErrorCode errorCode) {
+        System.out.println(errorCode);
+        throw new CustomException(errorCode);
     }
 
     private String resolveToken(HttpServletRequest request, String header) {

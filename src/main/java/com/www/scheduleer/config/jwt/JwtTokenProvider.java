@@ -1,6 +1,8 @@
 package com.www.scheduleer.config.jwt;
 
 import com.www.scheduleer.Repository.RefreshTokenRepository;
+import com.www.scheduleer.config.error.CustomException;
+import com.www.scheduleer.config.error.ErrorCode;
 import com.www.scheduleer.domain.RefreshToken;
 import com.www.scheduleer.service.Member.AuthService;
 import io.jsonwebtoken.*;
@@ -81,8 +83,11 @@ public class JwtTokenProvider implements InitializingBean {
         } catch (ExpiredJwtException e){
             // 만료된 경우에는 refresh token을 확인하기 위해
             return JwtCode.EXPIRED;
-        } catch (JwtException | IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             log.info("jwtException : {}", e);
+            return JwtCode.DENIED;
+        } catch (MalformedJwtException e) {
+            log.info("잘못된 JWT 서명입니다.");
         }
         return JwtCode.DENIED;
     }
@@ -140,6 +145,7 @@ public class JwtTokenProvider implements InitializingBean {
     public enum JwtCode{
         DENIED,
         ACCESS,
-        EXPIRED;
+        EXPIRED,
+        ERROR,;
     }
 }
