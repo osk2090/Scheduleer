@@ -72,6 +72,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         response.setStatus(errorCode.getStatus().value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         ErrorResponse errorResponse = new ErrorResponse(errorCode.getStatus(), errorCode.getCode(), errorCode.getMessage());
+        log.error(errorResponse.toString());
         try{
             response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
         }catch (IOException e){

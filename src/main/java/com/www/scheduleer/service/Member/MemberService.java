@@ -2,6 +2,8 @@ package com.www.scheduleer.service.Member;
 
 import com.www.scheduleer.Repository.MemberRepository;
 import com.www.scheduleer.Repository.RefreshTokenRepository;
+import com.www.scheduleer.config.error.CustomException;
+import com.www.scheduleer.config.error.ErrorCode;
 import com.www.scheduleer.config.jwt.JwtTokenProvider;
 import com.www.scheduleer.controller.dto.member.MemberLoginResponseDto;
 import com.www.scheduleer.controller.dto.member.PrincipalDetails;
@@ -81,7 +83,8 @@ public class MemberService {
         UserDetails userDetails = authService.loadUserByUsername(email);
 
         if(!passwordEncoder.matches(pw, userDetails.getPassword())){
-            throw new BadCredentialsException(userDetails.getUsername() + "Invalid password");
+//            throw new BadCredentialsException(userDetails.getUsername() + "Invalid password");
+            throw new CustomException(ErrorCode.BADCREDENTIALS);
         }
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(
