@@ -1,7 +1,7 @@
 package com.www.scheduleer.Repository;
 
-import com.www.scheduleer.web.domain.Board;
-import com.www.scheduleer.web.domain.Member;
+import com.www.scheduleer.domain.Board;
+import com.www.scheduleer.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
