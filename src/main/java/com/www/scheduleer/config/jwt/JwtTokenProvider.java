@@ -66,30 +66,23 @@ public class JwtTokenProvider implements InitializingBean {
     }
 
     public Authentication getAuthentication(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        Claims claims = validateToken(token);
 
         UserDetails userDetails = authService.loadUserByUsername(claims.getSubject());
         return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
     }
 
-    public JwtCode validateToken(String token) {
+    public Claims validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return JwtCode.ACCESS;
-        } catch (ExpiredJwtException e){
-            // 만료된 경우에는 refresh token을 확인하기 위해
-            return JwtCode.EXPIRED;
-        } catch (IllegalArgumentException e) {
-            log.info("jwtException : {}", e);
-            return JwtCode.DENIED;
-        } catch (MalformedJwtException e) {
-            log.info("잘못된 JWT 서명입니다.");
+            return Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (ExpiredJwtException | IllegalArgumentException | MalformedJwtException |
+                 UnsupportedJwtException e) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED);
         }
-        return JwtCode.DENIED;
     }
 
     @Transactional

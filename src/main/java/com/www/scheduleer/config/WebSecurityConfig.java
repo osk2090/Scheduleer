@@ -1,7 +1,7 @@
 package com.www.scheduleer.config;
 
 import com.www.scheduleer.config.jwt.JwtAccessDeniedHandler;
-import com.www.scheduleer.config.jwt.JwtTokenFilterConfigurer;
+import com.www.scheduleer.config.jwt.JwtTokenFilter;
 import com.www.scheduleer.config.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -51,8 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/member/signUp").permitAll()
                 .antMatchers("/auth/**").authenticated()
                 .anyRequest().authenticated();
-
-        http.apply(new JwtTokenFilterConfigurer(jwtTokenProvider));
+        http.addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean

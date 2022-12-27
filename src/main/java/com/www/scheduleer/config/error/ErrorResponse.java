@@ -1,28 +1,23 @@
 package com.www.scheduleer.config.error;
 
-import lombok.*;
-import org.springframework.http.ResponseEntity;
-
-import java.time.LocalDateTime;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.springframework.http.HttpStatus;
 
 @Getter
-@Builder
+@ToString
+@NoArgsConstructor
 public class ErrorResponse {
-    private final LocalDateTime timestamp = LocalDateTime.now();
-    private final int status;
-    private final String error;
-    private final String code;
-    private final String message;
+    private HttpStatus status;
+    private String code;
+    private String message;
 
-    public static ResponseEntity<ErrorResponse> toResponseEntity(ErrorCode errorCode) {
-        return ResponseEntity
-                .status(errorCode.getHttpStatus())
-                .body(ErrorResponse.builder()
-                        .status(errorCode.getHttpStatus().value())
-                        .error(errorCode.getHttpStatus().name())
-                        .code(errorCode.name())
-                        .message(errorCode.getDetail())
-                        .build()
-                );
+    @Builder
+    public ErrorResponse(HttpStatus status, String code, String message) {
+        this.status = status;
+        this.code = code;
+        this.message = message;
     }
 }
