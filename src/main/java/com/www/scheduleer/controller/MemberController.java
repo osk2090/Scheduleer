@@ -1,6 +1,7 @@
 package com.www.scheduleer.controller;
 
 import com.www.scheduleer.config.annotation.CurrentMember;
+import com.www.scheduleer.controller.dto.member.ChangePasswdDto;
 import com.www.scheduleer.controller.dto.member.MemberLoginResponseDto;
 import com.www.scheduleer.controller.dto.member.SignInDto;
 import com.www.scheduleer.controller.dto.member.SignUpDto;
@@ -9,6 +10,8 @@ import com.www.scheduleer.service.Board.BoardService;
 import com.www.scheduleer.service.Member.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController()
@@ -36,4 +39,10 @@ public class MemberController {
         return member.getEmail();
     }
 
+    @PatchMapping("/updatePasswd")
+    public ResponseEntity updatePassword(@RequestBody() ChangePasswdDto changePasswd, @CurrentMember Member member) {
+        System.out.println(member);
+        System.out.println(changePasswd);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }

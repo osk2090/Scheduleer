@@ -1,4 +1,4 @@
 jwt:
-  secret-key:
+  secret-key: c2NoZWR1bGVlci1vc2tzY2hlZHVsZWVyLW9za3NjaGVkdWxlZXItb3Nrc2NoZWR1bGVlci1vc2tzY2hlZHVsZWVyLW9zaw==
   token-validity-in-sec: 1800
   refresh-token-validity-in-sec: 2592000
