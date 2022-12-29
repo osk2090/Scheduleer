@@ -2,22 +2,19 @@ package com.www.scheduleer.domain;
 
 import com.www.scheduleer.controller.dto.BaseTimeEntity;
 import com.www.scheduleer.controller.dto.member.SignUpDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@DynamicUpdate
 @Entity(name = "member")
 public class Member extends BaseTimeEntity {
 
