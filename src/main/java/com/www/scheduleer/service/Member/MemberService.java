@@ -5,6 +5,7 @@ import com.www.scheduleer.Repository.RefreshTokenRepository;
 import com.www.scheduleer.config.error.CustomException;
 import com.www.scheduleer.config.error.ErrorCode;
 import com.www.scheduleer.config.jwt.JwtTokenProvider;
+import com.www.scheduleer.controller.dto.member.ChangePasswdDto;
 import com.www.scheduleer.controller.dto.member.MemberLoginResponseDto;
 import com.www.scheduleer.controller.dto.member.SignUpDto;
 import com.www.scheduleer.domain.Member;
@@ -25,7 +26,6 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -80,7 +80,7 @@ public class MemberService {
 
         if(!passwordEncoder.matches(pw, userDetails.getPassword())){
 //            throw new BadCredentialsException(userDetails.getUsername() + "Invalid password");
-            throw new CustomException(ErrorCode.BADCREDENTIALS);
+            throw new CustomException(ErrorCode.BAD_CREDENTIALS);
         }
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(
@@ -92,5 +92,14 @@ public class MemberService {
         return new MemberLoginResponseDto(
                 "Bearer-" + jwtTokenProvider.createAccessToken(authentication),
                 "Bearer-" + jwtTokenProvider.issueRefreshToken(authentication));
+    }
+
+    public void changePw(ChangePasswdDto changePasswd, Member member) {
+        if (changePasswd.getBeforePasswd().equals(changePasswd.getAfterPasswd())) {
+            throw new CustomException(ErrorCode.NOT_MATCH_PASSWORD);
+        }
+        member.setPassword(passwordEncoder.encode(changePasswd.getAfterPasswd()));
+        System.out.println(member.getPassword());
+        memberRepository.save(member);
     }
 }
