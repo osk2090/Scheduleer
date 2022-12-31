@@ -5,6 +5,7 @@ import com.google.cloud.storage.*;
 import com.www.scheduleer.domain.UploadReqDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
@@ -14,6 +15,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -21,48 +24,20 @@ import java.util.Arrays;
 @Slf4j
 @RequiredArgsConstructor
 public class GCSService {
-
-    private final Storage storage;
-
+    @Autowired
+    private Storage storage;
     @Value("${spring.cloud.gcp.credentials.location}")
     String keyFileName;
 
-    public BlobInfo uploadFileToGCS(UploadReqDto uploadReqDto){
-        try {
-            InputStream keyFile = ResourceUtils.getURL("classpath:" + keyFileName).openStream();
+    @SuppressWarnings("deprecation")
+    public BlobInfo uploadFileToGCS(UploadReqDto uploadReqDto) throws IOException {
 
-            Storage storage = StorageOptions.newBuilder().setProjectId(uploadReqDto.getBucketName())
-                    // Key 파일 수동 등록
-                    .setCredentials(GoogleCredentials.fromStream(keyFile))
-                    .build().getService();
+        BlobInfo blobInfo = storage.create(
+                BlobInfo.newBuilder(uploadReqDto.getBucketName(), uploadReqDto.getUploadFileName())
+                        .setAcl(new ArrayList<>(Arrays.asList(Acl.of(Acl.User.ofAllAuthenticatedUsers(), Acl.Role.READER))))
+                        .build(),
+                new FileInputStream(uploadReqDto.getLocalFileLocation()));
 
-            BlobId blobId = BlobId.of(uploadReqDto.getBucketName(), uploadReqDto.getUploadFileName());
-            BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
-                    .setAcl(new ArrayList<>(Arrays.asList(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER))))
-                    .build();
-
-            Blob blob = storage
-                    .create(blobInfo, new FileInputStream(uploadReqDto.getLocalFileLocation()));
-
-            return blob;
-        } catch (IOException e) {
-            log.error(e.getMessage());
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-
-    public String upload(MultipartFile file) {
-        try {
-            BlobInfo blobInfo = storage.create(
-                    BlobInfo.newBuilder("[Bucket_name]", file.getOriginalFilename()).build(), //get original file name
-                    file.getBytes(), // the file
-                    Storage.BlobTargetOption.predefinedAcl(Storage.PredefinedAcl.PUBLIC_READ) // Set file permission
-            );
-            return blobInfo.getMediaLink(); // Return file url
-        }catch(IllegalStateException | IOException e){
-            throw new RuntimeException(e);
-        }
+        return blobInfo;
     }
 }
