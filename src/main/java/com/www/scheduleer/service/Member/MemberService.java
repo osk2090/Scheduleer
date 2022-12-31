@@ -98,8 +98,12 @@ public class MemberService {
         if (changePasswd.getBeforePasswd().equals(changePasswd.getAfterPasswd())) {
             throw new CustomException(ErrorCode.NOT_MATCH_PASSWORD);
         }
+
+        if (!passwordEncoder.matches(changePasswd.getBeforePasswd(), member.getPassword())) {
+            throw new CustomException(ErrorCode.NOT_MATCH_PASSWORD);
+        }
+
         member.setPassword(passwordEncoder.encode(changePasswd.getAfterPasswd()));
-        System.out.println(member.getPassword());
         memberRepository.save(member);
     }
 }
