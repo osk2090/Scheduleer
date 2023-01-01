@@ -1,27 +1,28 @@
 package com.www.scheduleer.service.Member;
 
+import com.google.cloud.storage.BlobInfo;
 import com.www.scheduleer.Repository.MemberRepository;
 import com.www.scheduleer.Repository.RefreshTokenRepository;
 import com.www.scheduleer.config.error.CustomException;
 import com.www.scheduleer.config.error.ErrorCode;
 import com.www.scheduleer.config.jwt.JwtTokenProvider;
+import com.www.scheduleer.config.utils.FileUtil;
+import com.www.scheduleer.controller.dto.member.ChangePasswdDto;
 import com.www.scheduleer.controller.dto.member.MemberLoginResponseDto;
-import com.www.scheduleer.controller.dto.member.PrincipalDetails;
 import com.www.scheduleer.controller.dto.member.SignUpDto;
 import com.www.scheduleer.domain.Member;
+import com.www.scheduleer.domain.UploadReqDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,11 +30,12 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class MemberService {
 
     private final MemberRepository memberRepository;
     private final AuthService authService;
+    private final GCSService gcsService;
+    private final FileUtil fileUtil;
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -63,13 +65,26 @@ public class MemberService {
     }
 
     @Transactional
-    public Long signUp(SignUpDto signUpDto) { // 회원가입
+    public Long signUp(SignUpDto signUpDto) throws IOException { // 회원가입
         // 중복체크
         validateDuplicateUser(signUpDto.getEmail());
         signUpDto.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
-        return memberRepository.save(Member.createEntity(signUpDto)).getId();
-    }
+        UploadReqDto uploadReqDto = new UploadReqDto();
 
+        BlobInfo blobInfo = null;
+        if (signUpDto.getPicture() != null) {
+
+            String saveFilePath = fileUtil.save(signUpDto.getPicture());
+
+            uploadReqDto.setBucketName("scheduleer");
+            uploadReqDto.setUploadFileName("profile/" + signUpDto.getEmail() + ".jpg");
+            uploadReqDto.setLocalFileLocation(saveFilePath);
+            blobInfo = gcsService.uploadFileToGCS(uploadReqDto);
+            fileUtil.delete(signUpDto.getPicture());
+        }
+
+        return memberRepository.save(Member.createEntity(signUpDto, blobInfo == null ? null : blobInfo.getMediaLink())).getId();
+    }
     private void validateDuplicateUser(String email) {
         memberRepository.findByEmail(email)
                 .ifPresent(member -> {
@@ -84,7 +99,7 @@ public class MemberService {
 
         if(!passwordEncoder.matches(pw, userDetails.getPassword())){
 //            throw new BadCredentialsException(userDetails.getUsername() + "Invalid password");
-            throw new CustomException(ErrorCode.BADCREDENTIALS);
+            throw new CustomException(ErrorCode.BAD_CREDENTIALS);
         }
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(
@@ -96,5 +111,18 @@ public class MemberService {
         return new MemberLoginResponseDto(
                 "Bearer-" + jwtTokenProvider.createAccessToken(authentication),
                 "Bearer-" + jwtTokenProvider.issueRefreshToken(authentication));
+    }
+
+    public void changePw(ChangePasswdDto changePasswd, Member member) {
+        if (changePasswd.getBeforePasswd().equals(changePasswd.getAfterPasswd())) {
+            throw new CustomException(ErrorCode.NOT_MATCH_PASSWORD);
+        }
+
+        if (!passwordEncoder.matches(changePasswd.getBeforePasswd(), member.getPassword())) {
+            throw new CustomException(ErrorCode.NOT_MATCH_PASSWORD);
+        }
+
+        member.setPassword(passwordEncoder.encode(changePasswd.getAfterPasswd()));
+        memberRepository.save(member);
     }
 }

@@ -1,6 +1,7 @@
 package com.www.scheduleer.controller;
 
 import com.www.scheduleer.config.annotation.CurrentMember;
+import com.www.scheduleer.controller.dto.member.ChangePasswdDto;
 import com.www.scheduleer.controller.dto.member.MemberLoginResponseDto;
 import com.www.scheduleer.controller.dto.member.SignInDto;
 import com.www.scheduleer.controller.dto.member.SignUpDto;
@@ -9,7 +10,14 @@ import com.www.scheduleer.service.Board.BoardService;
 import com.www.scheduleer.service.Member.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 @RestController()
 @RequestMapping("/api/member")
@@ -21,8 +29,8 @@ public class MemberController {
 
     private final BoardService boardService;
 
-    @PostMapping("/signUp")
-    public Long signUp(@RequestBody SignUpDto signUpDto) {
+    @PostMapping(value = "/signUp")
+    public Long signUp(@ModelAttribute SignUpDto signUpDto) throws IOException {
         return memberService.signUp(signUpDto);
     }
 
@@ -31,9 +39,14 @@ public class MemberController {
         return memberService.signIn(signInDto.getEmail(), signInDto.getPassword());
     }
 
-    @GetMapping("/list")
-    public String list(@CurrentMember Member member) {
-        return member.getEmail();
+    @GetMapping("/myInfo")
+    public ResponseEntity myInfo(@CurrentMember Member member) {
+        return ResponseEntity.status(HttpStatus.OK).body(memberService.getMember(member.getEmail()));
     }
 
+    @PatchMapping("/updatePasswd")
+    public ResponseEntity updatePassword(@RequestBody() ChangePasswdDto changePasswd, @CurrentMember Member member) {
+        memberService.changePw(changePasswd, member);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }
