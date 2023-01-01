@@ -50,12 +50,12 @@ public class Member extends BaseTimeEntity {
         this.auth = "ROLE_USER";
     }
 
-    public static Member createEntity(SignUpDto signUpDto) {
+    public static Member createEntity(SignUpDto signUpDto, String picture) {
         return Member.builder()
                 .email(signUpDto.getEmail())
                 .password(signUpDto.getPassword())
                 .name(signUpDto.getName())
-                .picture(signUpDto.getPicture())
+                .picture(picture)
                 .auth(Auth.ROLE_USER.toString())
                 .type(Type.GENERAL)
                 .build();
