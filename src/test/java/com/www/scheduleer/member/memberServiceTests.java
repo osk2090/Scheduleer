@@ -27,7 +27,7 @@ public class memberServiceTests {
         dto.setUploadFileName("uploadGCS/profile/profile-test-file.png");// 유저 email별로 파일 받기
         dto.setLocalFileLocation("/Users/osk2090/Documents/Git/Scheduleer/src/main/resources/static/image/profile-test-file.png");
         BlobInfo blobInfo = gcsService.uploadFileToGCS(dto);
-
+        System.out.println(blobInfo.getMediaLink());
         System.out.println("소요시간:"+(System.currentTimeMillis()-stime)+"ms");
     }
 }
