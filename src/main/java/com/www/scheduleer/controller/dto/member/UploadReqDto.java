@@ -1,4 +1,4 @@
-package com.www.scheduleer.domain;
+package com.www.scheduleer.controller.dto.member;
 
 import lombok.*;
 

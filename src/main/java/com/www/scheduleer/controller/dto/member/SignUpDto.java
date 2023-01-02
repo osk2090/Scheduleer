@@ -13,6 +13,8 @@ import java.io.Serializable;
 public class SignUpDto {
     @Email(message = "NOT_VALID_EMAIL")
     private String email;
+    @NotBlank(message = "NOT_EMPTY_NICKNAME")
+    private String nickName;
     @NotBlank(message="PASSWORD_IS_MANDATORY")
     private String password;
     @NotBlank(message="NAME_IS_MANDATORY")

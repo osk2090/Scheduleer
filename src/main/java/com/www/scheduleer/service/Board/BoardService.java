@@ -1,6 +1,7 @@
 package com.www.scheduleer.service.Board;
 
 import com.www.scheduleer.Repository.BoardRepository;
+import com.www.scheduleer.controller.dto.board.BoardResponseDto;
 import com.www.scheduleer.controller.dto.board.BoardSaveRequestDto;
 import com.www.scheduleer.domain.Board;
 import com.www.scheduleer.domain.Member;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,8 +30,32 @@ public class BoardService {
         return boardRepository.save(boardSaveRequestDto.toEntity()).getId();
     }
 
-    public List<Board> getBoardList() {
-        return boardRepository.findAll();
+    public List<BoardResponseDto> getBoardList(int sort) {
+        List<Board> boardList = boardRepository.findAllBy();
+        List<BoardResponseDto> responseDto = new ArrayList<>();
+        if (boardList.size() > 0) {
+            boardList.forEach(data -> {
+                responseDto.add(
+                        BoardResponseDto.builder()
+                                .title(data.getTitle())
+                                .nickName(data.getWriter().getNickName())
+                                .picture(data.getWriter().getPicture())
+                                .views(data.getViews())
+                                .isCheck(data.getCheckStar())
+                                .regDate(data.getRegDate())
+                                .build()
+                );
+            });
+        }
+
+        List<BoardResponseDto> result = new ArrayList<>();
+        switch (sort) {
+            case 0 ->
+                    responseDto.stream().sorted(Comparator.comparing(BoardResponseDto::getRegDate).reversed()).forEach(result::add);
+            case 1 ->
+                    responseDto.stream().sorted(Comparator.comparing(BoardResponseDto::getViews).reversed()).forEach(result::add);
+        }
+        return result;
     }
 
     @Transactional
@@ -40,28 +67,4 @@ public class BoardService {
         return boardRepository.findBoardInfoById(boardId);
     }
 
-//    public MemberDto getLoginGoogle() {
-//        return (MemberDto) httpSession.getAttribute("member");
-//    }
-//
-//    public void loginInfo(@LoginUser MemberDto memberDto, Model model) {
-//        if (memberDto == null) {
-//            if (getLoginGoogle() != null) {
-//                model.addAttribute("member", getLoginGoogle());
-//            }
-//        } else {
-//            model.addAttribute("member", memberDto);
-//        }
-//    }
-
-    public void saveAlgorithm(Member member, MemberService memberService, BoardService boardService, BoardSaveRequestDto boardSaveRequestDto) {
-//        if (member == null) {
-//            Optional<Member> loginGoogleInfo = memberService.findMemberInfoFromMemberInfoDTO(boardService.getLoginGoogle().getEmail());
-//            if (loginGoogleInfo.isPresent()) {
-//                boardService.save(boardSaveRequestDto, loginGoogleInfo.get());
-//            }
-//        } else {
-//            boardService.save(boardSaveRequestDto, member);
-//        }
-    }
 }

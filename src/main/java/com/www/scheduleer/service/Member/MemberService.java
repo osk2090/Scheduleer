@@ -10,7 +10,7 @@ import com.www.scheduleer.config.utils.FileUtil;
 import com.www.scheduleer.controller.dto.member.*;
 import com.www.scheduleer.domain.Board;
 import com.www.scheduleer.domain.Member;
-import com.www.scheduleer.domain.UploadReqDto;
+import com.www.scheduleer.controller.dto.member.UploadReqDto;
 import com.www.scheduleer.service.Board.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -127,16 +127,16 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    public MemberInfo getMemberInfo(String email) {
+    public MemberInfoDto getMemberInfo(String email) {
         Optional<Member> m = this.getMember(email);
         List<Board> b = boardService.findBoardInfoByWriterEmail(email);
 
         Member getMember = null;
-        List<BoardInfo> boardInfoList = new ArrayList<>();
+        List<BoardInfoDto> boardInfoDtoList = new ArrayList<>();
 
         if (b.size() > 0) {
             b.forEach(data -> {
-                boardInfoList.add(BoardInfo.builder()
+                boardInfoDtoList.add(BoardInfoDto.builder()
                         .title(data.getTitle())
                         .createDate(data.getRegDate())
                         .isCheck(data.getCheckStar())
@@ -147,6 +147,6 @@ public class MemberService {
         if (m.isPresent()) {
             getMember = m.get();
         }
-        return MemberInfo.builder().name(getMember.getName()).email(getMember.getEmail()).password(getMember.getPassword()).picture(getMember.getPicture()).boardInfoList(boardInfoList).build();
+        return MemberInfoDto.builder().name(getMember.getName()).email(getMember.getEmail()).password(getMember.getPassword()).picture(getMember.getPicture()).boardInfoDtoList(boardInfoDtoList).build();
     }
 }

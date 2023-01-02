@@ -25,6 +25,8 @@ public class Member extends BaseTimeEntity {
     @Column(name = "name")
     private String name;
 
+    private String nickName;
+
     @Column(unique = true, name = "email")
     private String email;
 
@@ -41,8 +43,9 @@ public class Member extends BaseTimeEntity {
     private String auth;
 
     @Builder
-    public Member(String name, String email, String password, String picture, Type type, String auth) {
+    public Member(String name, String nickName, String email, String password, String picture, Type type, String auth) {
         this.name = name;
+        this.nickName = nickName;
         this.email = email;
         this.password = password;
         this.picture = picture;
@@ -55,6 +58,7 @@ public class Member extends BaseTimeEntity {
                 .email(signUpDto.getEmail())
                 .password(signUpDto.getPassword())
                 .name(signUpDto.getName())
+                .nickName(signUpDto.getNickName())
                 .picture(picture)
                 .auth(Auth.ROLE_USER.toString())
                 .type(Type.GENERAL)
