@@ -1,23 +1,38 @@
 package com.www.scheduleer.member;
 
 import com.google.cloud.storage.BlobInfo;
+import com.www.scheduleer.controller.dto.member.BoardInfo;
+import com.www.scheduleer.controller.dto.member.MemberInfo;
+import com.www.scheduleer.domain.Board;
+import com.www.scheduleer.domain.Member;
 import com.www.scheduleer.domain.UploadReqDto;
+import com.www.scheduleer.service.Board.BoardService;
 import com.www.scheduleer.service.Member.GCSService;
+import com.www.scheduleer.service.Member.MemberService;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest
 @Log4j2
 public class memberServiceTests {
     @Autowired
     private GCSService gcsService;
+    @Autowired
+    private MemberService memberService;
+    @Autowired
+    private BoardService boardService;
 
     @Test
+    @Transactional
     @DisplayName("GCS 업로드 테스트")
     public void uploadProfile() throws IOException {
         long stime = System.currentTimeMillis();
@@ -29,5 +44,36 @@ public class memberServiceTests {
         BlobInfo blobInfo = gcsService.uploadFileToGCS(dto);
         System.out.println(blobInfo.getMediaLink());
         System.out.println("소요시간:"+(System.currentTimeMillis()-stime)+"ms");
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("/member/myInfo")
+    public void getMemberInfo() {
+        long stime = System.currentTimeMillis();
+
+        String email = "1234@naver.com";
+        Optional<Member> m = memberService.getMember(email);
+        List<Board> b = boardService.findBoardInfoByWriterEmail(email);
+        Member getMember = null;
+        List<BoardInfo> boardInfoList = new ArrayList<>();
+
+        if (b.size() > 0) {
+            b.forEach(data -> {
+                boardInfoList.add(BoardInfo.builder()
+                        .title(data.getTitle())
+                        .createDate(data.getRegDate())
+                        .isCheck(data.getCheckStar())
+                        .build());
+            });
+        }
+
+        if (m.isPresent()) {
+            getMember = m.get();
+        }
+        System.out.println("소요시간:"+(System.currentTimeMillis()-stime)+"ms");
+        System.out.println(
+                MemberInfo.builder().name(getMember.getName()).email(getMember.getEmail()).password(getMember.getPassword()).picture(getMember.getPicture()).boardInfoList(boardInfoList)
+        );
     }
 }

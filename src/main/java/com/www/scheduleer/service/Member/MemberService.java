@@ -7,11 +7,11 @@ import com.www.scheduleer.config.error.CustomException;
 import com.www.scheduleer.config.error.ErrorCode;
 import com.www.scheduleer.config.jwt.JwtTokenProvider;
 import com.www.scheduleer.config.utils.FileUtil;
-import com.www.scheduleer.controller.dto.member.ChangePasswdDto;
-import com.www.scheduleer.controller.dto.member.MemberLoginResponseDto;
-import com.www.scheduleer.controller.dto.member.SignUpDto;
+import com.www.scheduleer.controller.dto.member.*;
+import com.www.scheduleer.domain.Board;
 import com.www.scheduleer.domain.Member;
 import com.www.scheduleer.domain.UploadReqDto;
+import com.www.scheduleer.service.Board.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,6 +34,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final AuthService authService;
+    private final BoardService boardService;
     private final GCSService gcsService;
     private final FileUtil fileUtil;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -124,5 +125,28 @@ public class MemberService {
 
         member.setPassword(passwordEncoder.encode(changePasswd.getAfterPasswd()));
         memberRepository.save(member);
+    }
+
+    public MemberInfo getMemberInfo(String email) {
+        Optional<Member> m = this.getMember(email);
+        List<Board> b = boardService.findBoardInfoByWriterEmail(email);
+
+        Member getMember = null;
+        List<BoardInfo> boardInfoList = new ArrayList<>();
+
+        if (b.size() > 0) {
+            b.forEach(data -> {
+                boardInfoList.add(BoardInfo.builder()
+                        .title(data.getTitle())
+                        .createDate(data.getRegDate())
+                        .isCheck(data.getCheckStar())
+                        .build());
+            });
+        }
+
+        if (m.isPresent()) {
+            getMember = m.get();
+        }
+        return MemberInfo.builder().name(getMember.getName()).email(getMember.getEmail()).password(getMember.getPassword()).picture(getMember.getPicture()).boardInfoList(boardInfoList).build();
     }
 }
