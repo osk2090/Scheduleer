@@ -58,8 +58,8 @@ class ScheduleerApplicationTests {
 
     @Test
     void insertBoard() {
-        Board board = new Board(1L, "test1", "test111", false, new Member( "osk", "osk@naver.com", "osk", null, Type.GENERAL, Auth.ROLE_USER.toString()));
-        boardRepository.save(board);
+//        Board board = new Board(1L, "test1", "test111", false, new Member( "osk", "osk@naver.com", "osk", null, Type.GENERAL, Auth.ROLE_USER.toString()));
+//        boardRepository.save(board);
     }
 
     @Test

@@ -1,22 +1,15 @@
 package com.www.scheduleer.service.Member;
 
-import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.*;
-import com.www.scheduleer.domain.UploadReqDto;
+import com.www.scheduleer.controller.dto.member.UploadReqDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 

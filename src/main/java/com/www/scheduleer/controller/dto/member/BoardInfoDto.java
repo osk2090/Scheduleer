@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-public class BoardInfo {
+public class BoardInfoDto {
     private String title;
     private LocalDateTime createDate;
     private Boolean isCheck;
