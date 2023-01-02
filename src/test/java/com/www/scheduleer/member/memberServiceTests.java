@@ -1,11 +1,11 @@
 package com.www.scheduleer.member;
 
 import com.google.cloud.storage.BlobInfo;
-import com.www.scheduleer.controller.dto.member.BoardInfo;
-import com.www.scheduleer.controller.dto.member.MemberInfo;
+import com.www.scheduleer.controller.dto.member.BoardInfoDto;
+import com.www.scheduleer.controller.dto.member.MemberInfoDto;
 import com.www.scheduleer.domain.Board;
 import com.www.scheduleer.domain.Member;
-import com.www.scheduleer.domain.UploadReqDto;
+import com.www.scheduleer.controller.dto.member.UploadReqDto;
 import com.www.scheduleer.service.Board.BoardService;
 import com.www.scheduleer.service.Member.GCSService;
 import com.www.scheduleer.service.Member.MemberService;
@@ -56,11 +56,11 @@ public class memberServiceTests {
         Optional<Member> m = memberService.getMember(email);
         List<Board> b = boardService.findBoardInfoByWriterEmail(email);
         Member getMember = null;
-        List<BoardInfo> boardInfoList = new ArrayList<>();
+        List<BoardInfoDto> boardInfoDtoList = new ArrayList<>();
 
         if (b.size() > 0) {
             b.forEach(data -> {
-                boardInfoList.add(BoardInfo.builder()
+                boardInfoDtoList.add(BoardInfoDto.builder()
                         .title(data.getTitle())
                         .createDate(data.getRegDate())
                         .isCheck(data.getCheckStar())
@@ -73,7 +73,7 @@ public class memberServiceTests {
         }
         System.out.println("소요시간:"+(System.currentTimeMillis()-stime)+"ms");
         System.out.println(
-                MemberInfo.builder().name(getMember.getName()).email(getMember.getEmail()).password(getMember.getPassword()).picture(getMember.getPicture()).boardInfoList(boardInfoList)
+                MemberInfoDto.builder().name(getMember.getName()).email(getMember.getEmail()).password(getMember.getPassword()).picture(getMember.getPicture()).boardInfoDtoList(boardInfoDtoList)
         );
     }
 }
