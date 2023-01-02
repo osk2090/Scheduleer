@@ -11,12 +11,9 @@ import com.www.scheduleer.service.Member.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @RestController()
@@ -41,7 +38,7 @@ public class MemberController {
 
     @GetMapping("/myInfo")
     public ResponseEntity myInfo(@CurrentMember Member member) {
-        return ResponseEntity.status(HttpStatus.OK).body(memberService.getMember(member.getEmail()));
+        return ResponseEntity.status(HttpStatus.OK).body(memberService.getMemberInfo(member.getEmail()));
     }
 
     @PatchMapping("/updatePasswd")

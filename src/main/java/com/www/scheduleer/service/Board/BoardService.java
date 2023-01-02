@@ -32,8 +32,8 @@ public class BoardService {
     }
 
     @Transactional
-    public Optional<Board> findBoardInfoByWriter(Member member) {
-        return boardRepository.findBoardInfoByWriter(member);
+    public List<Board> findBoardInfoByWriterEmail(String email) {
+        return boardRepository.findBoardByWriter_Email(email);
     }
 
     public Optional<Board> findBoardById(Long boardId) {
