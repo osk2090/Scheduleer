@@ -1,20 +1,20 @@
 package com.www.scheduleer.controller;
 
-import com.www.scheduleer.domain.Board;
+import com.www.scheduleer.config.annotation.CurrentMember;
+import com.www.scheduleer.controller.dto.board.BoardResponseDto;
 import com.www.scheduleer.controller.dto.board.BoardSaveRequestDto;
+import com.www.scheduleer.domain.Board;
 import com.www.scheduleer.domain.Member;
 import com.www.scheduleer.service.Board.BoardService;
 import com.www.scheduleer.service.Member.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/board")
+@RequestMapping("/api/board")
 @RequiredArgsConstructor
 public class BoardController {
 
@@ -22,10 +22,14 @@ public class BoardController {
 
     private final MemberService memberService;
 
-    @PostMapping("/board")
-    public String addBoard(BoardSaveRequestDto boardSaveRequestDto, @AuthenticationPrincipal Member member) {
-        boardService.saveAlgorithm(member, memberService, boardService, boardSaveRequestDto);
-        return "redirect:/main";
+    @GetMapping("/list")
+    public List<BoardResponseDto> getBoardList(@RequestParam("sort") int sort) {
+        return boardService.getBoardList(sort);
+    }
+
+    @PostMapping("/add")
+    public Long addBoard(BoardSaveRequestDto boardSaveRequestDto, @CurrentMember Member member) {
+        return boardService.save(boardSaveRequestDto, member);
     }
 
 //    @GetMapping("/main")
@@ -49,12 +53,10 @@ public class BoardController {
         return "/board/update";
     }
 
-    @PutMapping("/board/update/{id}")
-    @Transactional
-    public String update(BoardSaveRequestDto boardSaveRequestDto, @AuthenticationPrincipal Member member) {
-        boardService.saveAlgorithm(member, memberService, boardService, boardSaveRequestDto);
-        return "redirect:/main";
-    }
+//    @PutMapping("/board/update/{id}")
+//    @Transactional
+//    public String update(BoardSaveRequestDto boardSaveRequestDto, @AuthenticationPrincipal Member member) {
+//    }
 
 //    @GetMapping("/board/list")
 //    public String myBoardList(@RequestBody MemberInfo memberInfo, Model model) {

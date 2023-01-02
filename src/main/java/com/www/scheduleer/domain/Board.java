@@ -3,7 +3,9 @@ package com.www.scheduleer.domain;
 import com.www.scheduleer.controller.dto.BaseTimeEntity;
 import lombok.*;
 
+import javax.annotation.Nullable;
 import javax.persistence.*;
+import javax.validation.constraints.Null;
 
 @Entity
 @Getter
@@ -15,15 +17,17 @@ public class Board extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 30)
-//    @NotNull
+    @Column(length = 30, nullable = false)
     private String title;
 
     @Lob//대용량
-//    @NotNull
+    @Column(nullable = false)
     private String content;
 
     private Boolean checkStar;//별표유무
+
+    @Column(nullable = false)
+    private int views;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_info_id")
