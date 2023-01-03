@@ -2,10 +2,9 @@ package com.www.scheduleer.service.Board;
 
 import com.www.scheduleer.Repository.BoardRepository;
 import com.www.scheduleer.controller.dto.board.BoardResponseDto;
-import com.www.scheduleer.controller.dto.board.BoardSaveRequestDto;
+import com.www.scheduleer.controller.dto.board.BoardSaveDto;
 import com.www.scheduleer.domain.Board;
 import com.www.scheduleer.domain.Member;
-import com.www.scheduleer.service.Member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,9 +24,8 @@ public class BoardService {
     private final HttpSession httpSession;
 
     @Transactional
-    public Long save(BoardSaveRequestDto boardSaveRequestDto, Member writer) {
-        boardSaveRequestDto.setMember(writer);
-        return boardRepository.save(boardSaveRequestDto.toEntity()).getId();
+    public Long save(BoardSaveDto boardSaveDto, Member writer) {
+        return boardRepository.save(Board.createEntity(boardSaveDto, writer)).getId();
     }
 
     public List<BoardResponseDto> getBoardList(int sort) {

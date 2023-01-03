@@ -2,8 +2,7 @@ package com.www.scheduleer.controller;
 
 import com.www.scheduleer.config.annotation.CurrentMember;
 import com.www.scheduleer.controller.dto.board.BoardResponseDto;
-import com.www.scheduleer.controller.dto.board.BoardSaveRequestDto;
-import com.www.scheduleer.domain.Board;
+import com.www.scheduleer.controller.dto.board.BoardSaveDto;
 import com.www.scheduleer.domain.Member;
 import com.www.scheduleer.service.Board.BoardService;
 import com.www.scheduleer.service.Member.MemberService;
@@ -28,8 +27,8 @@ public class BoardController {
     }
 
     @PostMapping("/add")
-    public Long addBoard(BoardSaveRequestDto boardSaveRequestDto, @CurrentMember Member member) {
-        return boardService.save(boardSaveRequestDto, member);
+    public Long addBoard(BoardSaveDto boardSaveDto, @CurrentMember Member member) {
+        return boardService.save(boardSaveDto, member);
     }
 
 //    @GetMapping("/main")
