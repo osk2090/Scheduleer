@@ -1,17 +1,9 @@
 package com.www.scheduleer.member;
 
-import com.google.cloud.storage.BlobInfo;
 import com.www.scheduleer.Repository.BoardRepository;
 import com.www.scheduleer.controller.dto.board.BoardResponseDto;
-import com.www.scheduleer.controller.dto.board.BoardSaveRequestDto;
-import com.www.scheduleer.controller.dto.member.BoardInfoDto;
-import com.www.scheduleer.controller.dto.member.MemberInfoDto;
-import com.www.scheduleer.controller.dto.member.UploadReqDto;
 import com.www.scheduleer.domain.Board;
-import com.www.scheduleer.domain.Member;
 import com.www.scheduleer.service.Board.BoardService;
-import com.www.scheduleer.service.Member.GCSService;
-import com.www.scheduleer.service.Member.MemberService;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,7 +15,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 @SpringBootTest
 @Log4j2

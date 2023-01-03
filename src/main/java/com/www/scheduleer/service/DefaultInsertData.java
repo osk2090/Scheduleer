@@ -2,6 +2,7 @@ package com.www.scheduleer.service;
 
 import com.www.scheduleer.Repository.BoardRepository;
 import com.www.scheduleer.Repository.MemberRepository;
+import com.www.scheduleer.controller.dto.board.BoardSaveDto;
 import com.www.scheduleer.domain.Auth;
 import com.www.scheduleer.domain.Board;
 import com.www.scheduleer.domain.Member;
@@ -38,8 +39,8 @@ public class DefaultInsertData {
         Optional<Member> member = memberService.getMember("1234@naver.com");
         if (member.isPresent()) {
             Member m = member.get();
-            boardRepository.save(new Board(1L, "test title", "test content", true, m));
-            boardRepository.save(new Board(2L, "test1 title", "test1 content", true, m));
+            boardRepository.save(Board.createEntity(new BoardSaveDto("test title", "test content"), m));
+            boardRepository.save(Board.createEntity(new BoardSaveDto("test title1", "test content1"), m));
         }
     }
 }
