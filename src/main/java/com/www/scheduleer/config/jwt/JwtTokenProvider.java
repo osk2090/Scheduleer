@@ -50,7 +50,6 @@ public class JwtTokenProvider implements InitializingBean {
     public void afterPropertiesSet() throws Exception {  // init()
         String encodedKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
         key = Keys.hmacShaKeyFor(encodedKey.getBytes());
-        // https://budnamu.tistory.com/entry/JWT 참고
     }
 
     public String createAccessToken(Authentication authentication) {
