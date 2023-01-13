@@ -31,20 +31,10 @@ public class BoardController {
         return boardService.save(boardSaveDto, member);
     }
 
-//    @GetMapping("/main")
-//    public String list(Model model,  @AuthenticationPrincipal MemberDto memberDto) {
-//        boardService.loginInfo(memberDto, model);
-//        List<Board> boardList = boardService.getBoardList();
-//        model.addAttribute("boardList", boardList);
-//        return "/main";
-//    }
-
-//    @GetMapping("/board/detail/{id}")
-//    public String detail(Model model, @PathVariable("id") Long boardId, @AuthenticationPrincipal MemberDto memberDto) {
-//        boardService.loginInfo(memberDto, model);
-//        model.addAttribute("boardDetail", boardService.findBoardById(boardId).get());
-//        return "/board/detail";
-//    }
+    @GetMapping("/{id}")
+    public String detail(@PathVariable("id") Long id, @CurrentMember Member member) {
+        return null;
+    }
 
     @GetMapping("/board/update/{id}")
     public String edit(Model model, @PathVariable("id") Long boardId) {
