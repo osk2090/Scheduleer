@@ -1,12 +1,11 @@
 package com.www.scheduleer.config;
 
-import com.www.scheduleer.config.jwt.JwtAccessDeniedHandler;
+import com.www.scheduleer.config.jwt.JwtAuthenticationEntryPoint;
 import com.www.scheduleer.config.jwt.JwtTokenFilter;
 import com.www.scheduleer.config.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,12 +17,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true) // 이게 뭐임?
+//@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true) // 이게 뭐임?
 @RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -43,9 +42,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         //session 사용 안함
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
         http.exceptionHandling()
-                .accessDeniedHandler(jwtAccessDeniedHandler);
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint);
 
         http.authorizeRequests()
                 .antMatchers("/api/member/signIn").permitAll()
