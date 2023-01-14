@@ -82,11 +82,10 @@ public class boardServiceTests {
         replyRepository.save(Reply.createReply(new ReplySaveDto(1L, null, "댓글"), m.get()));
         replyRepository.save(Reply.createReply(new ReplySaveDto(1L, 1L, "대댓글"), m.get()));
 
-        List<Reply> replies = replyRepository.findByBoardId(1L);
+        replyRepository.findByBoardId(1L).stream().sorted(Comparator.comparing(Reply::getRegDate)).forEach(data -> {
+            System.out.println(data.getBoardId() + ":" + data.getReReplyId() + ":" + data.getComment() + ":" + data.getRegDate());
+        });
 
-        for (Reply r : replies) {
-            System.out.println(r.getComment() + r.getBoardId() + r.getReReplyId());
-        }
         System.out.println("소요시간:"+(System.currentTimeMillis()-stime)+"ms");
 
     }

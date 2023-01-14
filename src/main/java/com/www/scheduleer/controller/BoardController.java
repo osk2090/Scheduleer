@@ -1,6 +1,7 @@
 package com.www.scheduleer.controller;
 
 import com.www.scheduleer.config.annotation.CurrentMember;
+import com.www.scheduleer.controller.dto.board.BoardDetailDto;
 import com.www.scheduleer.controller.dto.board.BoardResponseDto;
 import com.www.scheduleer.controller.dto.board.BoardSaveDto;
 import com.www.scheduleer.domain.Member;
@@ -32,13 +33,13 @@ public class BoardController {
     }
 
     @GetMapping("/{id}")
-    public String detail(@PathVariable("id") Long id, @CurrentMember Member member) {
-        return null;
+    public BoardDetailDto detail(@PathVariable("id") Long id) {
+        return boardService.findBoardById(id);
     }
 
     @GetMapping("/board/update/{id}")
     public String edit(Model model, @PathVariable("id") Long boardId) {
-        model.addAttribute("board", boardService.findBoardById(boardId).get());
+//        model.addAttribute("board", boardService.findBoardById(boardId).get());
         return "/board/update";
     }
 

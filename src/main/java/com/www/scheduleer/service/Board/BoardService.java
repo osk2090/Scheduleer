@@ -1,6 +1,7 @@
 package com.www.scheduleer.service.Board;
 
 import com.www.scheduleer.Repository.BoardRepository;
+import com.www.scheduleer.controller.dto.board.BoardDetailDto;
 import com.www.scheduleer.controller.dto.board.BoardResponseDto;
 import com.www.scheduleer.controller.dto.board.BoardSaveDto;
 import com.www.scheduleer.domain.Board;
@@ -9,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -21,7 +21,7 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
 
-    private final HttpSession httpSession;
+    private final ReplyService replyService;
 
     @Transactional
     public Long save(BoardSaveDto boardSaveDto, Member writer) {
@@ -61,8 +61,24 @@ public class BoardService {
         return boardRepository.findBoardByWriter_Email(email);
     }
 
-    public Optional<Board> findBoardById(Long boardId) {
-        return boardRepository.findBoardInfoById(boardId);
+    public BoardDetailDto findBoardById(Long boardId) {
+        Optional<Board> board = boardRepository.findBoardInfoById(boardId);
+        Board b = null;
+        BoardDetailDto boardDetailDto = null;
+        if (board.isPresent()) {
+            b = board.get();
+
+            boardDetailDto = new BoardDetailDto(
+                    b.getTitle(),
+                    b.getWriter().getNickName(),
+                    b.getWriter().getPicture(),
+                    b.getViews(),
+                    b.getCheckStar(),
+                    b.getRegDate(),
+                    replyService.findReplies(b.getId())
+            );
+        }
+        return boardDetailDto;
     }
 
 }
