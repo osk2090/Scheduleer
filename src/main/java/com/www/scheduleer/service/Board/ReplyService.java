@@ -2,10 +2,13 @@ package com.www.scheduleer.service.Board;
 
 import com.www.scheduleer.Repository.ReplyRepository;
 import com.www.scheduleer.controller.dto.board.ReplyResponseDto;
+import com.www.scheduleer.controller.dto.board.ReplySaveDto;
 import com.www.scheduleer.controller.dto.member.MemberToReplyDto;
+import com.www.scheduleer.domain.Member;
 import com.www.scheduleer.domain.Reply;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -33,5 +36,10 @@ public class ReplyService {
         List<ReplyResponseDto> result = new ArrayList<>();
         replyList.stream().sorted(Comparator.comparing(ReplyResponseDto::getRegDate)).forEach(result::add);
         return result;
+    }
+
+    @Transactional
+    public Long save(ReplySaveDto replySaveDto, Member member) {
+        return replyRepository.save(Reply.createReply(replySaveDto, member)).getId();
     }
 }

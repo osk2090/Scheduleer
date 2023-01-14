@@ -68,16 +68,17 @@ public class BoardService {
         if (board.isPresent()) {
             b = board.get();
 
-            boardDetailDto = new BoardDetailDto(
-                    b.getTitle(),
-                    b.getWriter().getNickName(),
-                    b.getWriter().getPicture(),
-                    b.getViews(),
-                    b.getCheckStar(),
-                    b.getRegDate(),
-                    replyService.findReplies(b.getId())
-            );
+            boardDetailDto = BoardDetailDto.builder()
+                    .title(b.getTitle())
+                    .nickName(b.getWriter().getNickName())
+                    .picture(b.getWriter().getPicture())
+                    .views(b.getViews())
+                    .isCheck(b.getCheckStar())
+                    .regDate(b.getRegDate())
+                    .replyResponse(replyService.findReplies(b.getId()))
+                    .build();
         }
+
         return boardDetailDto;
     }
 

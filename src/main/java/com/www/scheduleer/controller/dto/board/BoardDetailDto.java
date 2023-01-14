@@ -1,16 +1,20 @@
 package com.www.scheduleer.controller.dto.board;
 
 import lombok.Builder;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class BoardDetailDto extends BoardResponseDto {
-
+@Builder
+@Data
+public class BoardDetailDto {
+    private String title;
+    private String nickName;
+    private String picture;
+    private int views;
+    private Boolean isCheck;
+    private LocalDateTime regDate;
     private List<ReplyResponseDto> replyResponse;
-
-    public BoardDetailDto(String title, String nickName, String picture, int views, Boolean isCheck, LocalDateTime regDate, List<ReplyResponseDto> replyResponse) {
-        super(title, nickName, picture, views, isCheck, regDate);
-        this.replyResponse = replyResponse;
-    }
 }
+
