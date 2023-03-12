@@ -1,6 +1,5 @@
 package com.www.scheduleer.service.Member;
 
-import com.google.cloud.storage.BlobInfo;
 import com.www.scheduleer.Repository.MemberRepository;
 import com.www.scheduleer.Repository.RefreshTokenRepository;
 import com.www.scheduleer.config.error.CustomException;
@@ -10,7 +9,6 @@ import com.www.scheduleer.config.utils.FileUtil;
 import com.www.scheduleer.controller.dto.member.*;
 import com.www.scheduleer.domain.Board;
 import com.www.scheduleer.domain.Member;
-import com.www.scheduleer.controller.dto.member.UploadReqDto;
 import com.www.scheduleer.service.Board.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +33,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final AuthService authService;
     private final BoardService boardService;
-    private final GCSService gcsService;
+    private final S3Uploader s3Uploader;
     private final FileUtil fileUtil;
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtTokenProvider jwtTokenProvider;
@@ -70,21 +68,12 @@ public class MemberService {
         // 중복체크
         validateDuplicateUser(signUpDto.getEmail());
         signUpDto.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
-        UploadReqDto uploadReqDto = new UploadReqDto();
 
-        BlobInfo blobInfo = null;
+        String s3ObjectUrl = null;
         if (signUpDto.getPicture() != null) {
-
-            String saveFilePath = fileUtil.save(signUpDto.getPicture());
-
-            uploadReqDto.setBucketName("scheduleer");
-            uploadReqDto.setUploadFileName("profile/" + signUpDto.getEmail() + ".jpg");
-            uploadReqDto.setLocalFileLocation(saveFilePath);
-            blobInfo = gcsService.uploadFileToGCS(uploadReqDto);
-            fileUtil.delete(signUpDto.getPicture());
+            s3ObjectUrl = s3Uploader.upload(signUpDto.getPicture(), "image", signUpDto.getEmail());
         }
-
-        return memberRepository.save(Member.createEntity(signUpDto, blobInfo == null ? null : blobInfo.getMediaLink())).getId();
+        return memberRepository.save(Member.createEntity(signUpDto, s3ObjectUrl)).getId();
     }
     private void validateDuplicateUser(String email) {
         memberRepository.findByEmail(email)

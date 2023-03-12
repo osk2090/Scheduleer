@@ -14,6 +14,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
@@ -131,5 +132,15 @@ class ScheduleerApplicationTests {
         System.out.println("수정된 비밀번호: " + pw2);
         assertThat(passwordEncoder.matches(pw2, memberService.getMember("1234@naver.com").get().getPassword())).isTrue();
 
+    }
+    @Value("${cloud.aws.credentials.secretKey}")
+    String secretKey;
+
+    @Value("${cloud.aws.credentials.accessKey}")
+    String accessKey;
+    @Test
+    void getAwsKey() {
+        System.out.println(secretKey);
+        System.out.println(accessKey);
     }
 }

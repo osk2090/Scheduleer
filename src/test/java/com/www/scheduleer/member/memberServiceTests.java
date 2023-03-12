@@ -1,13 +1,12 @@
 package com.www.scheduleer.member;
 
-import com.google.cloud.storage.BlobInfo;
 import com.www.scheduleer.controller.dto.member.BoardInfoDto;
 import com.www.scheduleer.controller.dto.member.MemberInfoDto;
 import com.www.scheduleer.domain.Board;
 import com.www.scheduleer.domain.Member;
 import com.www.scheduleer.controller.dto.member.UploadReqDto;
 import com.www.scheduleer.service.Board.BoardService;
-import com.www.scheduleer.service.Member.GCSService;
+import com.www.scheduleer.service.Member.S3Uploader;
 import com.www.scheduleer.service.Member.MemberService;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
@@ -25,7 +24,7 @@ import java.util.Optional;
 @Log4j2
 public class memberServiceTests {
     @Autowired
-    private GCSService gcsService;
+    private S3Uploader s3Uploader;
     @Autowired
     private MemberService memberService;
     @Autowired
@@ -41,8 +40,8 @@ public class memberServiceTests {
         dto.setBucketName("scheduleer");
         dto.setUploadFileName("uploadGCS/profile/profile-test-file.png");// 유저 email별로 파일 받기
         dto.setLocalFileLocation("/Users/osk2090/Documents/Git/Scheduleer/src/main/resources/static/image/profile-test-file.png");
-        BlobInfo blobInfo = gcsService.uploadFileToGCS(dto);
-        System.out.println(blobInfo.getMediaLink());
+//        BlobInfo blobInfo = gcsService.uploadFileToGCS(dto);
+//        System.out.println(blobInfo.getMediaLink());
         System.out.println("소요시간:"+(System.currentTimeMillis()-stime)+"ms");
     }
 
