@@ -34,8 +34,8 @@ public class BoardController {
     }
 
     @GetMapping("/{id}")
-    public BoardDetailDto detail(@PathVariable("id") Long id) {
-        return boardService.findBoardById(id);
+    public BoardDetailDto detail(@PathVariable("id") Long id,@CurrentMember Member member) {
+        return boardService.findBoardById(id,member);
     }
 
     @PatchMapping("/update")

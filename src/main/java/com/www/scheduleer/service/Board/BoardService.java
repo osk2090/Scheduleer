@@ -61,7 +61,7 @@ public class BoardService {
         return boardRepository.findBoardByWriter_Email(email);
     }
 
-    public BoardDetailDto findBoardById(Long boardId) {
+    public BoardDetailDto findBoardById(Long boardId, Member member) {
         Optional<Board> board = boardRepository.findBoardInfoById(boardId);
         Board b = null;
         BoardDetailDto boardDetailDto = null;
@@ -77,6 +77,11 @@ public class BoardService {
                     .regDate(b.getRegDate())
                     .replyResponse(replyService.findReplies(b.getId()))
                     .build();
+            if (!Objects.equals(member.getEmail(), b.getWriter().getEmail())) {
+                int oldViews = b.getViews();
+                b.setViews(oldViews + 1);
+                boardRepository.save(b);
+            }
         }
 
         return boardDetailDto;
