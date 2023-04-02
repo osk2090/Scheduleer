@@ -1,4 +1,4 @@
-package com.www.scheduleer.controller.dto.board;
+package com.www.scheduleer.controller.dto.reply;
 
 import com.www.scheduleer.controller.dto.member.MemberToReplyDto;
 import lombok.Builder;

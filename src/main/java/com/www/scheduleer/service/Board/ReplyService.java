@@ -1,7 +1,7 @@
 package com.www.scheduleer.service.Board;
 
 import com.www.scheduleer.Repository.ReplyRepository;
-import com.www.scheduleer.controller.dto.board.ReplyResponseDto;
+import com.www.scheduleer.controller.dto.reply.ReplyResponseDto;
 import com.www.scheduleer.controller.dto.board.ReplySaveDto;
 import com.www.scheduleer.controller.dto.member.MemberToReplyDto;
 import com.www.scheduleer.domain.Member;
