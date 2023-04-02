@@ -4,6 +4,7 @@ import com.www.scheduleer.config.annotation.CurrentMember;
 import com.www.scheduleer.controller.dto.board.BoardDetailDto;
 import com.www.scheduleer.controller.dto.board.BoardResponseDto;
 import com.www.scheduleer.controller.dto.board.BoardSaveDto;
+import com.www.scheduleer.controller.dto.board.BoardUpdateDto;
 import com.www.scheduleer.domain.Member;
 import com.www.scheduleer.service.Board.BoardService;
 import com.www.scheduleer.service.Member.MemberService;
@@ -37,20 +38,8 @@ public class BoardController {
         return boardService.findBoardById(id);
     }
 
-    @GetMapping("/board/update/{id}")
-    public String edit(Model model, @PathVariable("id") Long boardId) {
-//        model.addAttribute("board", boardService.findBoardById(boardId).get());
-        return "/board/update";
+    @PatchMapping("/update")
+    public Long edit(BoardUpdateDto boardUpdateDto,@CurrentMember Member member) {
+        return boardService.updateBoard(boardUpdateDto,member);
     }
-
-//    @PutMapping("/board/update/{id}")
-//    @Transactional
-//    public String update(BoardSaveRequestDto boardSaveRequestDto, @AuthenticationPrincipal Member member) {
-//    }
-
-//    @GetMapping("/board/list")
-//    public String myBoardList(@RequestBody MemberInfo memberInfo, Model model) {
-//        model.addAttribute("boardList", boardService.findBoardInfoByWriter(memberInfo));
-//        return "/member/info";
-//    }
 }

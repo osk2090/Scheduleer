@@ -1,19 +1,19 @@
 package com.www.scheduleer.service.Board;
 
 import com.www.scheduleer.Repository.BoardRepository;
+import com.www.scheduleer.config.error.CustomException;
+import com.www.scheduleer.config.error.ErrorCode;
 import com.www.scheduleer.controller.dto.board.BoardDetailDto;
 import com.www.scheduleer.controller.dto.board.BoardResponseDto;
 import com.www.scheduleer.controller.dto.board.BoardSaveDto;
+import com.www.scheduleer.controller.dto.board.BoardUpdateDto;
 import com.www.scheduleer.domain.Board;
 import com.www.scheduleer.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -82,4 +82,19 @@ public class BoardService {
         return boardDetailDto;
     }
 
+    public Long updateBoard(BoardUpdateDto boardUpdateDto, Member member) {
+        Optional<Board> board = boardRepository.findBoardInfoById(boardUpdateDto.getBoardId());
+
+        if (board.isPresent()) {
+            Board b = board.get();
+            if (!Objects.equals(member.getEmail(), b.getWriter().getEmail())) {
+                throw new CustomException(ErrorCode.NOT_MATCH_WRITER);
+            }
+
+            b.setContent(boardUpdateDto.getContent());
+            b.setCheckStar(boardUpdateDto.getCheckStar());
+            return boardRepository.save(b).getId();
+        }
+        return null;
+    }
 }

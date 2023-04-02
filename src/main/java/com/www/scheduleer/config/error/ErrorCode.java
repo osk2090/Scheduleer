@@ -16,6 +16,7 @@ public enum ErrorCode {
     BAD_CREDENTIALS(HttpStatus.NOT_FOUND, "C004","BAD_CREDENTIALS"),
 
     NOT_MATCH_PASSWORD(HttpStatus.BAD_REQUEST, "C005", "NOT_MATCH_PASSWORD"),
+    NOT_MATCH_WRITER(HttpStatus.UNAUTHORIZED, "C006", "NOT_MATCH_WRITER"),
     ;
 
     private final HttpStatus status;
