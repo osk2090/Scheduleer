@@ -1,5 +1,6 @@
 package com.www.scheduleer.controller.dto.board;
 
+import com.www.scheduleer.controller.dto.reply.ReplyResponseDto;
 import lombok.Builder;
 import lombok.Data;
 
