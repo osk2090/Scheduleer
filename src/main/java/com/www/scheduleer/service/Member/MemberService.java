@@ -1,65 +1,141 @@
 package com.www.scheduleer.service.Member;
 
 import com.www.scheduleer.Repository.MemberRepository;
-import com.www.scheduleer.VO.MemberInfo;
-import com.www.scheduleer.VO.security.MemberInfoDto;
+import com.www.scheduleer.Repository.RefreshTokenRepository;
+import com.www.scheduleer.config.error.CustomException;
+import com.www.scheduleer.config.error.ErrorCode;
+import com.www.scheduleer.config.jwt.JwtTokenProvider;
+import com.www.scheduleer.config.utils.FileUtil;
+import com.www.scheduleer.controller.dto.member.*;
+import com.www.scheduleer.domain.Board;
+import com.www.scheduleer.domain.Member;
+import com.www.scheduleer.service.Board.BoardService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
-@Transactional
 @RequiredArgsConstructor
-public class MemberService implements UserDetailsService {
+public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final AuthService authService;
+    private final BoardService boardService;
+    private final S3Uploader s3Uploader;
+    private final FileUtil fileUtil;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public Long save(MemberInfoDto infoDto) {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        infoDto.setPassword(encoder.encode(infoDto.getPassword()));
+    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-        return memberRepository.save(MemberInfo.builder()
-                .name(infoDto.getName())
-                .email(infoDto.getEmail())
-                .auth(infoDto.getAuth())
-                .picture(infoDto.getPicture())
-                .password(infoDto.getPassword()).build()).getId();
-    }
-
-    public List<MemberInfo> getMemberList() {
-        return memberRepository.findAll();
-    }
-
-    public Optional<MemberInfo> getMember(String email) {
-        return memberRepository.findByEmail(email);
-    }
-
-    public List<MemberInfo> findMembers(String email) {
-        List<MemberInfo> members = memberRepository.findByEmailContaining(email);
-        List<MemberInfo> m = new ArrayList<>();
-        for (MemberInfo member : members) {
+    public List<Member> findMembers(String email) {
+        List<Member> members = memberRepository.findByEmailContaining(email);
+        List<Member> m = new ArrayList<>();
+        for (Member member : members) {
             m.add(member);
         }
 
         return m;
     }
 
-    @Override
-    public MemberInfo loadUserByUsername(String email) throws UsernameNotFoundException {
-        return memberRepository.findByEmail(email).orElseThrow (() -> new UsernameNotFoundException(email));
+    public Optional<Member> getMember(String email) {
+        return memberRepository.findByEmail(email);
     }
 
-    private void validateDuplicateMember(MemberInfo memberInfo) {
-        Optional<MemberInfo> findMember = memberRepository.findByEmail(memberInfo.getEmail());
-        if (findMember != null) {
-            throw new IllegalStateException("이미 가입된 회원입니다.");
+    public Optional<Member> findMember(Long memberId) {
+        return memberRepository.findMemberInfoById(memberId);
+    }
+
+    public List<Member> getMemberList() {
+        return memberRepository.findAll();
+    }
+
+    @Transactional
+    public Long signUp(SignUpDto signUpDto) throws IOException { // 회원가입
+        // 중복체크
+        validateDuplicateUser(signUpDto.getEmail());
+        signUpDto.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
+
+        String s3ObjectUrl = null;
+        if (signUpDto.getPicture() != null) {
+            s3ObjectUrl = s3Uploader.upload(signUpDto.getPicture(), "image", signUpDto.getEmail());
         }
+        return memberRepository.save(Member.createEntity(signUpDto, s3ObjectUrl)).getId();
+    }
+    private void validateDuplicateUser(String email) {
+        memberRepository.findByEmail(email)
+                .ifPresent(member -> {
+                    log.debug("email : {}, 이메일 중복으로 회원가입 실패", email);
+                    throw new RuntimeException("이메일 중복");
+                });
+    }
+
+    @Transactional()
+    public MemberLoginResponseDto signIn(String email, String pw) {
+        UserDetails userDetails = authService.loadUserByUsername(email);
+
+        if(!passwordEncoder.matches(pw, userDetails.getPassword())){
+//            throw new BadCredentialsException(userDetails.getUsername() + "Invalid password");
+            throw new CustomException(ErrorCode.BAD_CREDENTIALS);
+        }
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
+
+        log.info("signIn service | authentication.getName : {}, authentication.getCredentials() : {}",
+                authentication.getName(), authentication.getCredentials());
+
+        return new MemberLoginResponseDto(
+                "Bearer-" + jwtTokenProvider.createAccessToken(authentication),
+                "Bearer-" + jwtTokenProvider.issueRefreshToken(authentication));
+    }
+
+    public void changePw(ChangePasswdDto changePasswd, Member member) {
+        if (changePasswd.getBeforePasswd().equals(changePasswd.getAfterPasswd())) {
+            throw new CustomException(ErrorCode.NOT_MATCH_PASSWORD);
+        }
+
+        if (!passwordEncoder.matches(changePasswd.getBeforePasswd(), member.getPassword())) {
+            throw new CustomException(ErrorCode.NOT_MATCH_PASSWORD);
+        }
+
+        member.setPassword(passwordEncoder.encode(changePasswd.getAfterPasswd()));
+        memberRepository.save(member);
+    }
+
+    public MemberInfoDto getMemberInfo(String email) {
+        Optional<Member> m = this.getMember(email);
+        List<Board> b = boardService.findBoardInfoByWriterEmail(email);
+
+        Member getMember = null;
+        List<BoardInfoDto> boardInfoDtoList = new ArrayList<>();
+
+        if (b.size() > 0) {
+            b.forEach(data -> {
+                boardInfoDtoList.add(BoardInfoDto.builder()
+                        .title(data.getTitle())
+                        .createDate(data.getRegDate())
+                        .isCheck(data.getCheckStar())
+                        .build());
+            });
+        }
+
+        if (m.isPresent()) {
+            getMember = m.get();
+        }
+        return MemberInfoDto.builder().name(getMember.getName()).email(getMember.getEmail()).password(getMember.getPassword()).picture(getMember.getPicture()).boardInfoDtoList(boardInfoDtoList).build();
     }
 }

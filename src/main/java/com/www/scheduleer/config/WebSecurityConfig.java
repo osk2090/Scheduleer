@@ -1,70 +1,61 @@
 package com.www.scheduleer.config;
 
-import com.www.scheduleer.service.Member.MemberService;
+import com.www.scheduleer.config.jwt.JwtAuthenticationEntryPoint;
+import com.www.scheduleer.config.jwt.JwtTokenFilter;
+import com.www.scheduleer.config.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+@Configuration
+@EnableWebSecurity
+//@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true) // 이게 뭐임?
 @RequiredArgsConstructor
-@EnableWebSecurity // 1
-//@Configuration
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final MemberService memberService;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-    private final AuthenticationFailureHandler authenticationFailureHandler;//로그인 실패 핸들러 의존성 주입
-
-    private final CustomOAuth2UserService customOAuth2UserService;
     @Override
-    public void configure(WebSecurity web) {
-        web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-                .antMatchers("/css/**", "/js/**", "/image/**",
-                        "/favicon.ico", "resources/**", "/error");
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring()
+//                .antMatchers(HttpMethod.OPTIONS, "/**") // 이게 뭐임?
+                .antMatchers(
+                        "/",
+                        "/*.html",
+                        "/favicon.ico",
+                        "/h2-console/**"
+                );
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.csrf().disable();
 
-        http
-                .authorizeRequests() // 6
-                .antMatchers("/signup1", "/signup").permitAll()//회원가입 및 약관동의 비로그인 접근가능
-                .antMatchers("/login", "/member", "/main", "/board/detail/**").permitAll() // 누구나 접근 허용
-                .antMatchers("/").hasRole("USER") // USER, ADMIN만 접근 가능
-                .antMatchers("/admin/admin", "/member/list").hasRole("ADMIN") // ADMIN만 접근 가능
-                .anyRequest().authenticated(); // 나머지 요청들은 권한의 종류에 상관 없이 권한이 있어야 접근 가능
-        http
-                .formLogin() // 7
-                .loginPage("/login") // 로그인 페이지 링크
-                .defaultSuccessUrl("/main") // 로그인 성공 후 리다이렉트 주소
-                .failureHandler(authenticationFailureHandler)
-                .and()
-                .logout() // 8
-                .logoutSuccessUrl("/main") // 로그아웃 성공시 리다이렉트 주소
-                .invalidateHttpSession(true) // 세션 날리기
-                .and()
-                //구글로그인 구현
-                .oauth2Login()
-                .loginPage("/login")//구현한 로그인페이지 이용
-                .defaultSuccessUrl("/main")
-                .userInfoEndpoint()
-                .userService(customOAuth2UserService)
-        ;
+        //session 사용 안함
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.exceptionHandling()
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint);
+
+        http.authorizeRequests()
+                .antMatchers("/api/member/signIn").permitAll()
+                .antMatchers("/api/member/signUp").permitAll()
+                .antMatchers("/api/board/list").permitAll()
+                .antMatchers("/auth/**").authenticated()
+                .anyRequest().authenticated();
+        http.addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
     }
 
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception { // 9
-        auth.userDetailsService(memberService)
-                // 해당 서비스(userService)에서는 UserDetailsService를 implements해서
-                // loadUserByUsername() 구현해야함 (서비스 참고)
-                .passwordEncoder(new BCryptPasswordEncoder());
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
     }
 }

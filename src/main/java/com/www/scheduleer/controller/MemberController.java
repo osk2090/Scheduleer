@@ -1,71 +1,49 @@
 package com.www.scheduleer.controller;
 
-import com.www.scheduleer.VO.MemberInfo;
-import com.www.scheduleer.VO.security.MemberInfoDto;
+import com.www.scheduleer.config.annotation.CurrentMember;
+import com.www.scheduleer.controller.dto.member.ChangePasswdDto;
+import com.www.scheduleer.controller.dto.member.MemberLoginResponseDto;
+import com.www.scheduleer.controller.dto.member.SignInDto;
+import com.www.scheduleer.controller.dto.member.SignUpDto;
+import com.www.scheduleer.domain.Member;
 import com.www.scheduleer.service.Board.BoardService;
 import com.www.scheduleer.service.Member.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.Optional;
+import java.io.IOException;
 
-@Controller
+@RestController()
+@RequestMapping("/api/member")
 @RequiredArgsConstructor
+@Slf4j
 public class MemberController {
 
     private final MemberService memberService;
 
     private final BoardService boardService;
 
-    @GetMapping("/login")
-    public String login(@RequestParam(value = "error", required = false) String error, @RequestParam(value = "exception", required = false) String exception, Model model) {
-        model.addAttribute("error", error);
-        model.addAttribute("exception", exception);
-        return "/login";
+    @PostMapping(value = "/signUp")
+    public Long signUp(@ModelAttribute SignUpDto signUpDto) throws IOException {
+        return memberService.signUp(signUpDto);
     }
 
-    @GetMapping("/logout")
-    public String logoutPage(HttpServletRequest request, HttpServletResponse response) {
-        new SecurityContextLogoutHandler().logout(request,response, SecurityContextHolder
-                .getContext().getAuthentication());
-        return "/main";
+    @PostMapping("/signIn")
+    public MemberLoginResponseDto signInp(@RequestBody SignInDto signInDto) {
+        return memberService.signIn(signInDto.getEmail(), signInDto.getPassword());
     }
 
-    @PostMapping("/member")
-    public String signup(MemberInfoDto infoDto) {
-        memberService.save(infoDto);
-        return "/main";
+    @GetMapping("/myInfo")
+    public ResponseEntity myInfo(@CurrentMember Member member) {
+        return ResponseEntity.status(HttpStatus.OK).body(memberService.getMemberInfo(member.getEmail()));
     }
 
-    //현재 로그인된 멤버의 정보
-    @GetMapping("/info")
-    public String memberInfo(@AuthenticationPrincipal MemberInfo memberInfo, Model model) {
-        Optional<MemberInfo> member = memberService.getMember(memberInfo.getEmail());
-        model.addAttribute("member", member.get());
-        model.addAttribute("boardList", boardService.findBoardInfoByWriter(memberInfo).get());
-        return "/member/info";
-    }
-
-    @GetMapping("/list")
-    @Transactional
-    public String list(Model model, @AuthenticationPrincipal MemberInfo memberInfo) {
-        model.addAttribute("memberList", memberService.getMemberList());
-        return "/member/list";
-    }
-
-    @GetMapping("/find")
-    public String findMember(@RequestParam(value = "email") String email, Model model) {
-        List<MemberInfo> memberList = memberService.findMembers(email);
-        model.addAttribute("memberList", memberList);
-        return "/member/list";
+    @PatchMapping("/updatePasswd")
+    public ResponseEntity updatePassword(@RequestBody() ChangePasswdDto changePasswd, @CurrentMember Member member) {
+        memberService.changePw(changePasswd, member);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

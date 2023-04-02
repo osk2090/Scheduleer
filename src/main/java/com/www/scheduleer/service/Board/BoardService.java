@@ -1,13 +1,17 @@
 package com.www.scheduleer.service.Board;
 
 import com.www.scheduleer.Repository.BoardRepository;
-import com.www.scheduleer.VO.BoardInfo;
-import com.www.scheduleer.VO.BoardSaveRequestDto;
-import com.www.scheduleer.VO.MemberInfo;
+import com.www.scheduleer.controller.dto.board.BoardDetailDto;
+import com.www.scheduleer.controller.dto.board.BoardResponseDto;
+import com.www.scheduleer.controller.dto.board.BoardSaveDto;
+import com.www.scheduleer.domain.Board;
+import com.www.scheduleer.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,22 +21,65 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
 
-    @Transactional
-    public Long save(BoardSaveRequestDto boardSaveRequestDto, MemberInfo writer) {
-        boardSaveRequestDto.setMemberInfo(writer);
-        return boardRepository.save(boardSaveRequestDto.toEntity()).getId();
-    }
-
-    public List<BoardInfo> getBoardList() {
-        return boardRepository.findAll();
-    }
+    private final ReplyService replyService;
 
     @Transactional
-    public Optional<BoardInfo> findBoardInfoByWriter(MemberInfo memberInfo) {
-        return boardRepository.findBoardInfoByWriter(memberInfo);
+    public Long save(BoardSaveDto boardSaveDto, Member writer) {
+        return boardRepository.save(Board.createEntity(boardSaveDto, writer)).getId();
     }
 
-    public Optional<BoardInfo> findBoardById(Long boardId) {
-        return boardRepository.findBoardInfoById(boardId);
+    public List<BoardResponseDto> getBoardList(int sort) {
+        List<Board> boardList = boardRepository.findAllBy();
+        List<BoardResponseDto> responseDto = new ArrayList<>();
+        if (boardList.size() > 0) {
+            boardList.forEach(data -> {
+                responseDto.add(
+                        BoardResponseDto.builder()
+                                .title(data.getTitle())
+                                .nickName(data.getWriter().getNickName())
+                                .picture(data.getWriter().getPicture())
+                                .views(data.getViews())
+                                .isCheck(data.getCheckStar())
+                                .regDate(data.getRegDate())
+                                .build()
+                );
+            });
+        }
+
+        List<BoardResponseDto> result = new ArrayList<>();
+        switch (sort) {
+            case 0 ->
+                    responseDto.stream().sorted(Comparator.comparing(BoardResponseDto::getRegDate).reversed()).forEach(result::add);
+            case 1 ->
+                    responseDto.stream().sorted(Comparator.comparing(BoardResponseDto::getViews).reversed()).forEach(result::add);
+        }
+        return result;
     }
+
+    @Transactional
+    public List<Board> findBoardInfoByWriterEmail(String email) {
+        return boardRepository.findBoardByWriter_Email(email);
+    }
+
+    public BoardDetailDto findBoardById(Long boardId) {
+        Optional<Board> board = boardRepository.findBoardInfoById(boardId);
+        Board b = null;
+        BoardDetailDto boardDetailDto = null;
+        if (board.isPresent()) {
+            b = board.get();
+
+            boardDetailDto = BoardDetailDto.builder()
+                    .title(b.getTitle())
+                    .nickName(b.getWriter().getNickName())
+                    .picture(b.getWriter().getPicture())
+                    .views(b.getViews())
+                    .isCheck(b.getCheckStar())
+                    .regDate(b.getRegDate())
+                    .replyResponse(replyService.findReplies(b.getId()))
+                    .build();
+        }
+
+        return boardDetailDto;
+    }
+
 }

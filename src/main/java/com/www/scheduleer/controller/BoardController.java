@@ -1,60 +1,52 @@
 package com.www.scheduleer.controller;
 
-import com.www.scheduleer.VO.BoardInfo;
-import com.www.scheduleer.VO.BoardSaveRequestDto;
-import com.www.scheduleer.VO.MemberInfo;
+import com.www.scheduleer.config.annotation.CurrentMember;
+import com.www.scheduleer.controller.dto.board.BoardDetailDto;
+import com.www.scheduleer.controller.dto.board.BoardResponseDto;
+import com.www.scheduleer.controller.dto.board.BoardSaveDto;
+import com.www.scheduleer.domain.Member;
 import com.www.scheduleer.service.Board.BoardService;
+import com.www.scheduleer.service.Member.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
+@RequestMapping("/api/board")
 @RequiredArgsConstructor
 public class BoardController {
 
     private final BoardService boardService;
 
-    @PostMapping("/board")
-    public String addBoard(BoardSaveRequestDto boardSaveRequestDto, @AuthenticationPrincipal MemberInfo memberInfo) {
-        boardService.save(boardSaveRequestDto, memberInfo);
-        return "redirect:/main";
+    private final MemberService memberService;
+
+    @GetMapping("/list")
+    public List<BoardResponseDto> getBoardList(@RequestParam("sort") int sort) {
+        return boardService.getBoardList(sort);
     }
 
-    @GetMapping("/main")
-    public String list(Model model) {
-        List<BoardInfo> boardInfoList = boardService.getBoardList();
-        model.addAttribute("boardList", boardInfoList);
-        return "/main";
+    @PostMapping("/add")
+    public Long addBoard(BoardSaveDto boardSaveDto, @CurrentMember Member member) {
+        return boardService.save(boardSaveDto, member);
     }
 
-    @GetMapping("/board/detail/{id}")
-    public String detail(Model model, @PathVariable("id") Long boardId) {
-        model.addAttribute("boardDetail", boardService.findBoardById(boardId).get());
-        return "/board/detail";
+    @GetMapping("/{id}")
+    public BoardDetailDto detail(@PathVariable("id") Long id) {
+        return boardService.findBoardById(id);
     }
 
     @GetMapping("/board/update/{id}")
     public String edit(Model model, @PathVariable("id") Long boardId) {
-        model.addAttribute("board", boardService.findBoardById(boardId).get());
+//        model.addAttribute("board", boardService.findBoardById(boardId).get());
         return "/board/update";
     }
 
-    @PutMapping("/board/update/{id}")
-    public String update(BoardSaveRequestDto boardSaveRequestDto, @AuthenticationPrincipal MemberInfo memberInfo) {
-        if (boardSaveRequestDto.getCheckStar() == null) {
-            boardSaveRequestDto.setCheckStar(false);
-            System.out.println("----" + boardSaveRequestDto.getCheckStar());
-        }
-        boardService.save(boardSaveRequestDto, memberInfo);
-        return "redirect:/main";
-    }
+//    @PutMapping("/board/update/{id}")
+//    @Transactional
+//    public String update(BoardSaveRequestDto boardSaveRequestDto, @AuthenticationPrincipal Member member) {
+//    }
 
 //    @GetMapping("/board/list")
 //    public String myBoardList(@RequestBody MemberInfo memberInfo, Model model) {
