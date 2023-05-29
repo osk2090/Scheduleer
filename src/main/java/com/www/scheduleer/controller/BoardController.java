@@ -24,7 +24,7 @@ public class BoardController {
     private final MemberService memberService;
 
     @GetMapping("/list")
-    public List<BoardResponseDto> getBoardList(@RequestParam("sort") int sort) {
+    public List<BoardResponseDto> getBoardList(@RequestParam("sort") int sort,@RequestParam Long id) {
         return boardService.getBoardList(sort);
     }
 
@@ -42,4 +42,5 @@ public class BoardController {
     public Long edit(BoardUpdateDto boardUpdateDto,@CurrentMember Member member) {
         return boardService.updateBoard(boardUpdateDto,member);
     }
+
 }

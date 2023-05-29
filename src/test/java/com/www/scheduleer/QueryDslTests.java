@@ -1,10 +1,12 @@
 package com.www.scheduleer;
 
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.www.scheduleer.Repository.QueryDsl.BoardRepositorySupport;
 import com.www.scheduleer.Repository.QueryDsl.MemberRepositorySupport;
 import com.www.scheduleer.domain.Board;
 import com.www.scheduleer.domain.Member;
+import com.www.scheduleer.domain.OrderCondition;
 import com.www.scheduleer.domain.QMember;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -54,21 +56,12 @@ public class QueryDslTests {
     void pagingTest2() {
         Long cursor = 1L;
 
-//        if (cursor > 0L) {
-//            List<Board> boards = boardRepositorySupport.boards();
-//            if (!boards.isEmpty()) {
-//                boards.forEach(i -> {
-//                    System.out.println(i.getId()+":"+i.getTitle()+":"+i.getContent());
-//                });
-//            }
-//        }
-
         if (cursor > 0L) {
-            List<Board> boards = boardRepositorySupport.pagingBoards(cursor);
+            List<Board> boards = boardRepositorySupport.boards(cursor, OrderCondition.VIEW);
 
             if (!boards.isEmpty()) {
                 boards.forEach(i -> {
-                    System.out.println(i.getId()+":"+i.getTitle()+":"+i.getContent());
+                    System.out.println(i.getId() + ":" + i.getTitle() + ":" + i.getContent());
                 });
             }
         }
