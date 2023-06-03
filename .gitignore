@@ -40,4 +40,5 @@ application.yml
 application-oauth.yml
 application-app.yml
 credential-key.json
-.env
+
+/.env

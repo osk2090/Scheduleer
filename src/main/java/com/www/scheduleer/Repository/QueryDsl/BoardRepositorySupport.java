@@ -2,10 +2,13 @@ package com.www.scheduleer.Repository.QueryDsl;
 
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.www.scheduleer.Repository.BoardRepository;
 import com.www.scheduleer.domain.Board;
 import com.www.scheduleer.domain.Member;
 import com.www.scheduleer.domain.OrderCondition;
+import com.www.scheduleer.domain.QBoard;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
 
@@ -13,10 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.www.scheduleer.domain.QBoard.board;
 
 @Repository
 public class BoardRepositorySupport extends QuerydslRepositorySupport {
+    QBoard board = QBoard.board;
 
     private final JPAQueryFactory queryFactory;
 
@@ -26,30 +29,25 @@ public class BoardRepositorySupport extends QuerydslRepositorySupport {
         this.queryFactory = queryFactory;
     }
 
-    public List<Board> boards() {
+    public List<Board> boardsAll() {
         return queryFactory.selectFrom(board).fetch();
     }
 
-    //private OrderSpecifier[] createOrderSpecifier(OrderCondition orderCondition) {
-    //
-    //        List<OrderSpecifier> orderSpecifiers = new ArrayList<>();
-    //
-    //        if(Objects.isNull(orderCondition)){
-    //            orderSpecifiers.add(new OrderSpecifier(Order.DESC, person.name));
-    //        }else if(orderCondition.equals(OrderCondition.AGE)){
-    //            orderSpecifiers.add(new OrderSpecifier(Order.DESC, person.age));
-    //        }else{
-    //            orderSpecifiers.add(new OrderSpecifier(Order.DESC, person.region));
-    //        }
-    //        return orderSpecifiers.toArray(new OrderSpecifier[orderSpecifiers.size()]);
-    //    }
+    private BooleanExpression gtId(Long id) {
+        if (id == null) {
+            return null;
+        }
 
-    public List<Board> boards(Long id, OrderCondition orderCondition) {
+        return board.id.gt(id);
+    }
+
+    public List<Board> boards(Long id, int limit, OrderCondition orderCondition) {
         OrderSpecifier[] orderSpecifiers = createOrderSpecifier(orderCondition);
 
         return queryFactory.selectFrom(board)
-                .where(board.id.gt(id))
+                .where(gtId(id))
                 .orderBy(orderSpecifiers)
+                .limit(limit)
                 .fetch();
     }
     public OrderSpecifier[] createOrderSpecifier(OrderCondition orderCondition) {
@@ -62,4 +60,16 @@ public class BoardRepositorySupport extends QuerydslRepositorySupport {
                 }
                 return orderSpecifiers.toArray(new OrderSpecifier[orderSpecifiers.size()]);
     }
+
+    public void insertBoard(String title, String content, int views, boolean checkStar, Member member) {
+        queryFactory
+                .insert(board)
+                .set(board.title, title)
+                .set(board.content, content)
+                .set(board.views, views)
+                .set(board.checkStar, checkStar)
+                .set(board.writer, member)
+                .execute();
+    }
+
 }
