@@ -1,15 +1,15 @@
 package com.www.scheduleer.service.Board;
 
 import com.www.scheduleer.Repository.BoardRepository;
+import com.www.scheduleer.Repository.QueryDsl.BoardRepositorySupport;
 import com.www.scheduleer.config.error.CustomException;
 import com.www.scheduleer.config.error.ErrorCode;
-import com.www.scheduleer.controller.dto.board.BoardDetailDto;
-import com.www.scheduleer.controller.dto.board.BoardResponseDto;
-import com.www.scheduleer.controller.dto.board.BoardSaveDto;
-import com.www.scheduleer.controller.dto.board.BoardUpdateDto;
+import com.www.scheduleer.controller.dto.board.*;
 import com.www.scheduleer.domain.Board;
 import com.www.scheduleer.domain.Member;
+import com.www.scheduleer.domain.OrderCondition;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,18 +23,28 @@ public class BoardService {
 
     private final ReplyService replyService;
 
+    private final BoardRepositorySupport boardRepositorySupport;
+
     @Transactional
     public Long save(BoardSaveDto boardSaveDto, Member writer) {
         return boardRepository.save(Board.createEntity(boardSaveDto, writer)).getId();
     }
 
-    public List<BoardResponseDto> getBoardList(int sort) {
-        List<Board> boardList = boardRepository.findAllBy();
+    public BoardPageDto getBoardList(int sort, Long id, int limit) {
+        OrderCondition orderCondition = null;
+        if (sort == 0) {
+            orderCondition = OrderCondition.REG;
+        } else if (sort == 1) {
+            orderCondition = OrderCondition.VIEW;
+        }
+
+        List<Board> boardList = boardRepositorySupport.boards(id, limit, orderCondition);
         List<BoardResponseDto> responseDto = new ArrayList<>();
         if (boardList.size() > 0) {
             boardList.forEach(data -> {
                 responseDto.add(
                         BoardResponseDto.builder()
+                                .id(data.getId())
                                 .title(data.getTitle())
                                 .nickName(data.getWriter().getNickName())
                                 .picture(data.getWriter().getPicture())
@@ -46,14 +56,10 @@ public class BoardService {
             });
         }
 
-        List<BoardResponseDto> result = new ArrayList<>();
-        switch (sort) {
-            case 0 ->
-                    responseDto.stream().sorted(Comparator.comparing(BoardResponseDto::getRegDate).reversed()).forEach(result::add);
-            case 1 ->
-                    responseDto.stream().sorted(Comparator.comparing(BoardResponseDto::getViews).reversed()).forEach(result::add);
-        }
-        return result;
+        return BoardPageDto.builder()
+                .boardResponseDto(responseDto)
+                .lastIndex(responseDto.get(responseDto.size() - 1).getId())
+                .build();
     }
 
     @Transactional

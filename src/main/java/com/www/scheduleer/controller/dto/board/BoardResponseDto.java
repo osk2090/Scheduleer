@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class BoardResponseDto {
+    private Long id;
     private String title;
     private String nickName;
     private String picture;

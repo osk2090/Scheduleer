@@ -1,10 +1,7 @@
 package com.www.scheduleer.controller;
 
 import com.www.scheduleer.config.annotation.CurrentMember;
-import com.www.scheduleer.controller.dto.board.BoardDetailDto;
-import com.www.scheduleer.controller.dto.board.BoardResponseDto;
-import com.www.scheduleer.controller.dto.board.BoardSaveDto;
-import com.www.scheduleer.controller.dto.board.BoardUpdateDto;
+import com.www.scheduleer.controller.dto.board.*;
 import com.www.scheduleer.domain.Member;
 import com.www.scheduleer.service.Board.BoardService;
 import com.www.scheduleer.service.Member.MemberService;
@@ -24,8 +21,10 @@ public class BoardController {
     private final MemberService memberService;
 
     @GetMapping("/list")
-    public List<BoardResponseDto> getBoardList(@RequestParam("sort") int sort,@RequestParam Long id) {
-        return boardService.getBoardList(sort);
+    public BoardPageDto getBoardList(@RequestParam("sort") int sort,
+                                           @RequestParam(required = false) Long id,
+                                           @RequestParam(required = false) int limit) {
+        return boardService.getBoardList(sort, id, limit);
     }
 
     @PostMapping("/add")

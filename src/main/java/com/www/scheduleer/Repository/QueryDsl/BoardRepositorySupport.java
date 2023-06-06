@@ -53,12 +53,12 @@ public class BoardRepositorySupport extends QuerydslRepositorySupport {
     public OrderSpecifier[] createOrderSpecifier(OrderCondition orderCondition) {
         List<OrderSpecifier> orderSpecifiers = new ArrayList<>();
 
-                if(Objects.isNull(orderCondition)){
-                    orderSpecifiers.add(new OrderSpecifier(Order.DESC, board.regDate));
-                } else if (orderCondition.equals(OrderCondition.VIEW)) {
-                    orderSpecifiers.add(new OrderSpecifier(Order.DESC, board.views));
-                }
-                return orderSpecifiers.toArray(new OrderSpecifier[orderSpecifiers.size()]);
+        if (Objects.isNull(orderCondition) || orderCondition.equals(OrderCondition.REG)) {
+            orderSpecifiers.add(new OrderSpecifier(Order.DESC, board.regDate));
+        } else if (orderCondition.equals(OrderCondition.VIEW)) {
+            orderSpecifiers.add(new OrderSpecifier(Order.DESC, board.views));
+        }
+        return orderSpecifiers.toArray(new OrderSpecifier[orderSpecifiers.size()]);
     }
 
     public void insertBoard(String title, String content, int views, boolean checkStar, Member member) {
