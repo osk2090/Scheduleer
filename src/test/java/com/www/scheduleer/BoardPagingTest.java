@@ -57,7 +57,7 @@ public class BoardPagingTest {
     @Test
     @DisplayName("커서 방식의 페이지네이션 테스트 - 1페이지")
     void cursorPagingTest1() {
-        List<Board> boards = boardRepositorySupport.boards(null, 5, OrderCondition.REG);
+        List<Board> boards = boardRepositorySupport.boards(null, 5, null, OrderCondition.REG);
         if (!boards.isEmpty()) {
             System.out.println("page count: " + boards.size());
 
@@ -72,7 +72,7 @@ public class BoardPagingTest {
     @Test
     @DisplayName("커서 방식의 페이지네이션 테스트 - 2페이지")
     void cursorPagingTest2() {
-        List<Board> boards = boardRepositorySupport.boards(5L, 5, OrderCondition.REG);
+        List<Board> boards = boardRepositorySupport.boards(5L, 5, null, OrderCondition.REG);
         if (!boards.isEmpty()) {
             System.out.println("page count: " + boards.size());
 

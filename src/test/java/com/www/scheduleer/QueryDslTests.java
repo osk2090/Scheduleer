@@ -63,7 +63,7 @@ public class QueryDslTests {
         Long cursor = 1L;
 
         if (cursor > 0L) {
-            List<Board> boards = boardRepositorySupport.boards(cursor,5, OrderCondition.VIEW);
+            List<Board> boards = boardRepositorySupport.boards(cursor, 5, null, OrderCondition.VIEW);
 
             if (!boards.isEmpty()) {
                 boards.forEach(i -> {

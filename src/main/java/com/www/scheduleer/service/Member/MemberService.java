@@ -6,6 +6,7 @@ import com.www.scheduleer.config.error.CustomException;
 import com.www.scheduleer.config.error.ErrorCode;
 import com.www.scheduleer.config.jwt.JwtTokenProvider;
 import com.www.scheduleer.config.utils.FileUtil;
+import com.www.scheduleer.controller.dto.board.BoardPageDto;
 import com.www.scheduleer.controller.dto.member.*;
 import com.www.scheduleer.domain.Board;
 import com.www.scheduleer.domain.Member;
@@ -116,26 +117,19 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    public MemberInfoDto getMemberInfo(String email) {
-        Optional<Member> m = this.getMember(email);
-        List<Board> b = boardService.findBoardInfoByWriterEmail(email);
-
+    public MemberInfoDto getMemberInfo(Member member) {
+        Optional<Member> m = this.getMember(member.getEmail());
         Member getMember = null;
-        List<BoardInfoDto> boardInfoDtoList = new ArrayList<>();
-
-        if (b.size() > 0) {
-            b.forEach(data -> {
-                boardInfoDtoList.add(BoardInfoDto.builder()
-                        .title(data.getTitle())
-                        .createDate(data.getRegDate())
-                        .isCheck(data.getCheckStar())
-                        .build());
-            });
-        }
 
         if (m.isPresent()) {
             getMember = m.get();
         }
-        return MemberInfoDto.builder().name(getMember.getName()).email(getMember.getEmail()).password(getMember.getPassword()).picture(getMember.getPicture()).boardInfoDtoList(boardInfoDtoList).build();
+
+        return MemberInfoDto.builder()
+                .name(getMember.getName())
+                .email(getMember.getEmail())
+                .password(getMember.getPassword())
+                .picture(getMember.getPicture())
+                .build();
     }
 }

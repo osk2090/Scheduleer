@@ -30,7 +30,7 @@ public class BoardService {
         return boardRepository.save(Board.createEntity(boardSaveDto, writer)).getId();
     }
 
-    public BoardPageDto getBoardList(int sort, Long id, int limit) {
+    public BoardPageDto getBoardList(int sort, Long id, Member member, int limit) {
         OrderCondition orderCondition = null;
         if (sort == 0) {
             orderCondition = OrderCondition.REG;
@@ -38,7 +38,7 @@ public class BoardService {
             orderCondition = OrderCondition.VIEW;
         }
 
-        List<Board> boardList = boardRepositorySupport.boards(id, limit, orderCondition);
+        List<Board> boardList = boardRepositorySupport.boards(id, limit, member, orderCondition);
         List<BoardResponseDto> responseDto = new ArrayList<>();
         if (boardList.size() > 0) {
             boardList.forEach(data -> {
@@ -63,8 +63,8 @@ public class BoardService {
     }
 
     @Transactional
-    public List<Board> findBoardInfoByWriterEmail(String email) {
-        return boardRepository.findBoardByWriter_Email(email);
+    public List<Board> findBoardInfoByWriter(Member member) {
+        return boardRepository.findBoardByWriter(member);
     }
 
     public BoardDetailDto findBoardById(Long boardId, Member member) {

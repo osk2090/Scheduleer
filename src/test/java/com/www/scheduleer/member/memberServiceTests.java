@@ -53,7 +53,7 @@ public class memberServiceTests {
 
         String email = "1234@naver.com";
         Optional<Member> m = memberService.getMember(email);
-        List<Board> b = boardService.findBoardInfoByWriterEmail(email);
+        List<Board> b = boardService.findBoardInfoByWriter(m.orElse(null));
         Member getMember = null;
         List<BoardInfoDto> boardInfoDtoList = new ArrayList<>();
 
@@ -72,7 +72,6 @@ public class memberServiceTests {
         }
         System.out.println("소요시간:"+(System.currentTimeMillis()-stime)+"ms");
         System.out.println(
-                MemberInfoDto.builder().name(getMember.getName()).email(getMember.getEmail()).password(getMember.getPassword()).picture(getMember.getPicture()).boardInfoDtoList(boardInfoDtoList)
-        );
+                MemberInfoDto.builder().name(getMember.getName()).email(getMember.getEmail()).password(getMember.getPassword()).picture(getMember.getPicture()));
     }
 }

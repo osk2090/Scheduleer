@@ -38,7 +38,12 @@ public class MemberController {
 
     @GetMapping("/myInfo")
     public ResponseEntity myInfo(@CurrentMember Member member) {
-        return ResponseEntity.status(HttpStatus.OK).body(memberService.getMemberInfo(member.getEmail()));
+        return ResponseEntity.status(HttpStatus.OK).body(memberService.getMemberInfo(member));
+    }
+
+    @GetMapping("/myInfo/boards")
+    public ResponseEntity myInfoForBoards(@CurrentMember Member member) {
+        return ResponseEntity.status(HttpStatus.OK).body(boardService.getBoardList(0, null, member, 10));
     }
 
     @PatchMapping("/updatePasswd")

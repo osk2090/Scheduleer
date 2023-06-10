@@ -46,11 +46,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint);
 
         http.authorizeRequests()
-                .antMatchers("/api/member/signIn").permitAll()
-                .antMatchers("/api/member/signUp").permitAll()
-                .antMatchers("/api/board/list").permitAll()
-                .antMatchers("/auth/**").authenticated()
-                .anyRequest().authenticated();
+                .antMatchers(
+                        "/api/member/signIn",
+                        "/api/member/signUp",
+                        "/api/board/list",
+                        "/swagger-ui.html",
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**",
+                        "/swagger-resources/**",
+                        "/webjars/**"
+                )
+                .permitAll()
+                .antMatchers("/api/**")
+                .authenticated()
+                .and()
+                .csrf()
+                .disable();
+
+
         http.addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
     }
 

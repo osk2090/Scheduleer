@@ -4,12 +4,14 @@ import com.www.scheduleer.config.annotation.CurrentMember;
 import com.www.scheduleer.controller.dto.board.*;
 import com.www.scheduleer.domain.Member;
 import com.www.scheduleer.service.Board.BoardService;
-import com.www.scheduleer.service.Member.MemberService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/board")
@@ -18,13 +20,18 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    private final MemberService memberService;
-
+    @Operation(summary = "메인 스케줄 호출", description = "유저들의 스케줄 리스트", tags = {"Board Controller"})
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK",
+                    content = @Content(schema = @Schema(implementation = BoardPageDto.class)))
+    })
     @GetMapping("/list")
-    public BoardPageDto getBoardList(@RequestParam("sort") int sort,
-                                           @RequestParam(required = false) Long id,
-                                           @RequestParam(required = false) int limit) {
-        return boardService.getBoardList(sort, id, limit);
+    public BoardPageDto getBoardList(@Parameter(description = "정렬 기준 (0: 생성일자순, 1: 조회수순)", required = true)
+                                     @RequestParam int sort,
+                                     @RequestParam(required = false) Long id,
+                                     @RequestParam int limit) {
+
+        return boardService.getBoardList(sort, id, null, limit);
     }
 
     @PostMapping("/add")

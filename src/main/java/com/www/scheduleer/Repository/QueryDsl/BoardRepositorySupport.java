@@ -41,11 +41,19 @@ public class BoardRepositorySupport extends QuerydslRepositorySupport {
         return board.id.gt(id);
     }
 
-    public List<Board> boards(Long id, int limit, OrderCondition orderCondition) {
+    private BooleanExpression eqMember(Member member) {
+        if (member == null) {
+            return null;
+        }
+
+        return board.writer.eq(member);
+    }
+
+    public List<Board> boards(Long id, int limit, Member member, OrderCondition orderCondition) {
         OrderSpecifier[] orderSpecifiers = createOrderSpecifier(orderCondition);
 
         return queryFactory.selectFrom(board)
-                .where(gtId(id))
+                .where(gtId(id), eqMember(member))
                 .orderBy(orderSpecifiers)
                 .limit(limit)
                 .fetch();
