@@ -27,9 +27,9 @@ public class BoardController {
     })
     @GetMapping("/list")
     public BoardPageDto getBoardList(@Parameter(description = "정렬 기준 (0: 생성일자순, 1: 조회수순)", required = true)
-                                     @RequestParam int sort,
+                                     @RequestParam(defaultValue = "0")  int sort,
                                      @RequestParam(required = false) Long id,
-                                     @RequestParam int limit) {
+                                     @RequestParam(defaultValue = "10") int limit) {
 
         return boardService.getBoardList(sort, id, null, limit);
     }
