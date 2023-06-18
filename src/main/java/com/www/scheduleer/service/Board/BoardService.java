@@ -58,7 +58,7 @@ public class BoardService {
 
         return BoardPageDto.builder()
                 .boardResponseDto(responseDto)
-                .lastIndex(responseDto.get(responseDto.size() - 1).getId())
+                .lastIndex(responseDto.size() > 0 ? responseDto.get(responseDto.size() - 1).getId() : null)
                 .build();
     }
 
