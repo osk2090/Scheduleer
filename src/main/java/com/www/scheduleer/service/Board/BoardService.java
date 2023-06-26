@@ -8,8 +8,8 @@ import com.www.scheduleer.controller.dto.board.*;
 import com.www.scheduleer.domain.Board;
 import com.www.scheduleer.domain.Member;
 import com.www.scheduleer.domain.OrderCondition;
+import com.www.scheduleer.service.kafka.KafkaProducer;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +20,7 @@ import java.util.*;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final KafkaProducer producer;
 
     private final ReplyService replyService;
 
@@ -27,7 +28,9 @@ public class BoardService {
 
     @Transactional
     public Long save(BoardSaveDto boardSaveDto, Member writer) {
-        return boardRepository.save(Board.createEntity(boardSaveDto, writer)).getId();
+        Long id = boardRepository.save(Board.createEntity(boardSaveDto, writer)).getId();
+        producer.sendMessage(writer.getNickName()+" 님이 새로운 계획을 등록하였습니다!");
+        return id;
     }
 
     public BoardPageDto getBoardList(int sort, Long id, Member member, int limit) {

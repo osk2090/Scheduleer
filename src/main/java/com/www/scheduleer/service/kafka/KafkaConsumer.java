@@ -10,6 +10,6 @@ public class KafkaConsumer {
     private static final String TOPIC = "scheduleer-kafka";
     @KafkaListener(topics = TOPIC, groupId = TOPIC)
     public void consume(String message) throws IOException {
-        System.out.println(String.format("Consumed message : %s", message));
+        System.out.println(message);
     }
 }
