@@ -70,6 +70,11 @@ public class BoardService {
         return boardRepository.findBoardByWriter(member);
     }
 
+    public String findBoardByIdForTitle(Long boardId) {
+        Optional<Board> board = boardRepository.findBoardInfoById(boardId);
+        return board.map(Board::getTitle).orElse(null);
+    }
+
     public BoardDetailDto findBoardById(Long boardId, Member member) {
         Optional<Board> board = boardRepository.findBoardInfoById(boardId);
         Board b = null;
