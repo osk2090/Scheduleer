@@ -36,9 +36,7 @@ out/
 ### VS Code ###
 .vscode/
 persistence.xml
-application.yml
 application-oauth.yml
-application-app.yml
 credential-key.json
 
 /.env
