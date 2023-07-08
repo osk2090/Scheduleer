@@ -1,16 +1,17 @@
 package com.www.scheduleer.controller;
 
 import com.www.scheduleer.config.annotation.CurrentMember;
-import com.www.scheduleer.controller.dto.board.BoardResponseDto;
-import com.www.scheduleer.controller.dto.board.BoardSaveDto;
+import com.www.scheduleer.controller.dto.board.*;
 import com.www.scheduleer.domain.Member;
 import com.www.scheduleer.service.Board.BoardService;
-import com.www.scheduleer.service.Member.MemberService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/board")
@@ -19,11 +20,18 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    private final MemberService memberService;
-
+    @Operation(summary = "메인 스케줄 호출", description = "유저들의 스케줄 리스트", tags = {"Board Controller"})
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK",
+                    content = @Content(schema = @Schema(implementation = BoardPageDto.class)))
+    })
     @GetMapping("/list")
-    public List<BoardResponseDto> getBoardList(@RequestParam("sort") int sort) {
-        return boardService.getBoardList(sort);
+    public BoardPageDto getBoardList(@Parameter(description = "정렬 기준 (0: 생성일자순, 1: 조회수순)", required = true)
+                                     @RequestParam(defaultValue = "0")  int sort,
+                                     @RequestParam(required = false) Long id,
+                                     @RequestParam(defaultValue = "10") int limit) {
+
+        return boardService.getBoardList(sort, id, null, limit);
     }
 
     @PostMapping("/add")
@@ -31,35 +39,14 @@ public class BoardController {
         return boardService.save(boardSaveDto, member);
     }
 
-//    @GetMapping("/main")
-//    public String list(Model model,  @AuthenticationPrincipal MemberDto memberDto) {
-//        boardService.loginInfo(memberDto, model);
-//        List<Board> boardList = boardService.getBoardList();
-//        model.addAttribute("boardList", boardList);
-//        return "/main";
-//    }
-
-//    @GetMapping("/board/detail/{id}")
-//    public String detail(Model model, @PathVariable("id") Long boardId, @AuthenticationPrincipal MemberDto memberDto) {
-//        boardService.loginInfo(memberDto, model);
-//        model.addAttribute("boardDetail", boardService.findBoardById(boardId).get());
-//        return "/board/detail";
-//    }
-
-    @GetMapping("/board/update/{id}")
-    public String edit(Model model, @PathVariable("id") Long boardId) {
-        model.addAttribute("board", boardService.findBoardById(boardId).get());
-        return "/board/update";
+    @GetMapping("/{id}")
+    public BoardDetailDto detail(@PathVariable("id") Long id,@CurrentMember Member member) {
+        return boardService.findBoardById(id,member);
     }
 
-//    @PutMapping("/board/update/{id}")
-//    @Transactional
-//    public String update(BoardSaveRequestDto boardSaveRequestDto, @AuthenticationPrincipal Member member) {
-//    }
+    @PatchMapping("/update")
+    public Long edit(BoardUpdateDto boardUpdateDto,@CurrentMember Member member) {
+        return boardService.updateBoard(boardUpdateDto,member);
+    }
 
-//    @GetMapping("/board/list")
-//    public String myBoardList(@RequestBody MemberInfo memberInfo, Model model) {
-//        model.addAttribute("boardList", boardService.findBoardInfoByWriter(memberInfo));
-//        return "/member/info";
-//    }
 }

@@ -1,16 +1,15 @@
 package com.www.scheduleer.service.Member;
 
-import com.google.cloud.storage.BlobInfo;
 import com.www.scheduleer.Repository.MemberRepository;
 import com.www.scheduleer.Repository.RefreshTokenRepository;
 import com.www.scheduleer.config.error.CustomException;
 import com.www.scheduleer.config.error.ErrorCode;
 import com.www.scheduleer.config.jwt.JwtTokenProvider;
 import com.www.scheduleer.config.utils.FileUtil;
+import com.www.scheduleer.controller.dto.board.BoardPageDto;
 import com.www.scheduleer.controller.dto.member.*;
 import com.www.scheduleer.domain.Board;
 import com.www.scheduleer.domain.Member;
-import com.www.scheduleer.controller.dto.member.UploadReqDto;
 import com.www.scheduleer.service.Board.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +34,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final AuthService authService;
     private final BoardService boardService;
-    private final GCSService gcsService;
+    private final S3Uploader s3Uploader;
     private final FileUtil fileUtil;
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtTokenProvider jwtTokenProvider;
@@ -70,21 +69,12 @@ public class MemberService {
         // 중복체크
         validateDuplicateUser(signUpDto.getEmail());
         signUpDto.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
-        UploadReqDto uploadReqDto = new UploadReqDto();
 
-        BlobInfo blobInfo = null;
+        String s3ObjectUrl = null;
         if (signUpDto.getPicture() != null) {
-
-            String saveFilePath = fileUtil.save(signUpDto.getPicture());
-
-            uploadReqDto.setBucketName("scheduleer");
-            uploadReqDto.setUploadFileName("profile/" + signUpDto.getEmail() + ".jpg");
-            uploadReqDto.setLocalFileLocation(saveFilePath);
-            blobInfo = gcsService.uploadFileToGCS(uploadReqDto);
-            fileUtil.delete(signUpDto.getPicture());
+            s3ObjectUrl = s3Uploader.upload(signUpDto.getPicture(), "image", signUpDto.getEmail());
         }
-
-        return memberRepository.save(Member.createEntity(signUpDto, blobInfo == null ? null : blobInfo.getMediaLink())).getId();
+        return memberRepository.save(Member.createEntity(signUpDto, s3ObjectUrl)).getId();
     }
     private void validateDuplicateUser(String email) {
         memberRepository.findByEmail(email)
@@ -127,26 +117,19 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    public MemberInfoDto getMemberInfo(String email) {
-        Optional<Member> m = this.getMember(email);
-        List<Board> b = boardService.findBoardInfoByWriterEmail(email);
-
+    public MemberInfoDto getMemberInfo(Member member) {
+        Optional<Member> m = this.getMember(member.getEmail());
         Member getMember = null;
-        List<BoardInfoDto> boardInfoDtoList = new ArrayList<>();
-
-        if (b.size() > 0) {
-            b.forEach(data -> {
-                boardInfoDtoList.add(BoardInfoDto.builder()
-                        .title(data.getTitle())
-                        .createDate(data.getRegDate())
-                        .isCheck(data.getCheckStar())
-                        .build());
-            });
-        }
 
         if (m.isPresent()) {
             getMember = m.get();
         }
-        return MemberInfoDto.builder().name(getMember.getName()).email(getMember.getEmail()).password(getMember.getPassword()).picture(getMember.getPicture()).boardInfoDtoList(boardInfoDtoList).build();
+
+        return MemberInfoDto.builder()
+                .name(getMember.getName())
+                .email(getMember.getEmail())
+                .password(getMember.getPassword())
+                .picture(getMember.getPicture())
+                .build();
     }
 }

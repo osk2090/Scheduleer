@@ -12,5 +12,5 @@ public class MemberInfoDto {
     private String email;
     private String password;
     private String picture;
-    private List<BoardInfoDto> boardInfoDtoList;
+//    private List<BoardInfoDto> boardInfoDtoList;
 }
