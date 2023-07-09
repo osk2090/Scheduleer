@@ -21,6 +21,15 @@ env:
   RESOURCE_PATH: ./src/main/resources/application.yml
   CODE_DEPLOY_APPLICATION_NAME: scheduleer-code-deploy
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: scheduleer
+  spring.datasource.url: ${{ secrets.MYSQL_DATABASE }}
+  spring.datasource.username: ${{ secrets.MYSQL_USER }}
+  spring.datasource.password: ${{ secrets.MYSQL_PASSWORD }}
+  jwt.secret-key: ${{ secrets.JWT_SECRET_KEY }}
+  services.scheduleer-mysql.environment.MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+  cloud.aws.credentials.accessKey: ${{ secrets.ACCESS_KEY }}
+  cloud.aws.credentials.secretKey: ${{ secrets.SECRET_KEY }}
+  cloud.aws.region.static: ${{ secrets.REGION }}
+  cloud.aws.s3.bucket: ${{ secrets.BUCKET }}
 
 jobs:
   build:

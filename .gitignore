@@ -38,5 +38,3 @@ out/
 persistence.xml
 application-oauth.yml
 credential-key.json
-
-/.env
