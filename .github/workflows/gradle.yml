@@ -21,15 +21,6 @@ env:
   RESOURCE_PATH: ./home/ec2-user/spring-github-action/src/main/resources/application.yml
   CODE_DEPLOY_APPLICATION_NAME: scheduleer-code-deploy
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: scheduleer
-  spring.datasource.url: ${{ secrets.MYSQL_DATABASE }}
-  spring.datasource.username: ${{ secrets.MYSQL_USER }}
-  spring.datasource.password: ${{ secrets.MYSQL_PASSWORD }}
-  jwt.secret-key: ${{ secrets.JWT_SECRET_KEY }}
-  services.scheduleer-mysql.environment.MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-  cloud.aws.credentials.accessKey: ${{ secrets.ACCESS_KEY }}
-  cloud.aws.credentials.secretKey: ${{ secrets.SECRET_KEY }}
-  cloud.aws.region.static: ${{ secrets.REGION }}
-  cloud.aws.s3.bucket: ${{ secrets.BUCKET }}
 
 jobs:
   build:
@@ -46,6 +37,21 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+
+# 환경변수 .env 파일 생성 및 write
+      - name: Set .env for configuration
+        run: |
+         touch ./.env
+         echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> ./.env
+         echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> ./.env
+         echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> ./.env
+         echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> ./.env
+         echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> ./.env
+         echo "ACCESS_KEY=${{ secrets.ACCESS_KEY }}" >> ./.env
+         echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> ./.env
+         echo "REGION=${{ secrets.REGION }}" >> ./.env
+         echo "BUCKET=${{ secrets.BUCKET }}" >> ./.env
+        shell: bash
 
       - name: Build with Gradle
           # uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
