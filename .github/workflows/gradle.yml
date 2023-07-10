@@ -41,6 +41,7 @@ jobs:
 # 환경변수 .env 파일 생성 및 write
       - name: Set .env for configuration
         run: |
+         touch .env
          echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env
          echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> .env
          echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
@@ -50,6 +51,7 @@ jobs:
          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
          echo "REGION=${{ secrets.REGION }}" >> .env
          echo "BUCKET=${{ secrets.BUCKET }}" >> .env
+        shell: bash
 
       - name: Build with Gradle
           # uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
