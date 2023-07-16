@@ -1,6 +1,6 @@
 spring:
   config:
-    import: application-app.yml, application-oauth.yml
+    import: application-app.yml
   mvc:
     hidden-method:
       filter:
