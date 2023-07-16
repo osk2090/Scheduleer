@@ -21,21 +21,20 @@ env:
   RESOURCE_PATH: ./home/ec2-user/spring-github-action/src/main/resources/application.yml
   CODE_DEPLOY_APPLICATION_NAME: scheduleer-code-deploy
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: scheduleer
+  MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+  MYSQL_USER: ${{ secrets.MYSQL_USER }}
+  MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+  JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+  MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+  ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
+  SECRET_KEY: ${{ secrets.SECRET_KEY }}
+  REGION: ${{ secrets.REGION }}
+  BUCKET: ${{ secrets.BUCKET }}
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
-    env:
-      MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-      MYSQL_USER: ${{ secrets.MYSQL_USER }}
-      MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-      JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
-      MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-      ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
-      SECRET_KEY: ${{ secrets.SECRET_KEY }}
-      REGION: ${{ secrets.REGION }}
-      BUCKET: ${{ secrets.BUCKET }}
 
     steps:
       - uses: actions/checkout@v3
