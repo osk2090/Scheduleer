@@ -1,6 +1,6 @@
 spring:
   config:
-    import: application-app.yml
+    import: classpath:application-app.yml
   mvc:
     hidden-method:
       filter:
