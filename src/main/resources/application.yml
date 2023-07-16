@@ -63,3 +63,8 @@ springdoc:
   default-produces-media-type: application/json
   paths-to-match:
     - /api/**
+
+jwt:
+  secret-key: {JWT_SECRET_KEY}
+  token-validity-in-sec: 1800
+  refresh-token-validity-in-sec: 2592000
