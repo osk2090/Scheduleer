@@ -1,6 +1,6 @@
 spring:
-  profiles:
-    include: oauth, app
+  config:
+    import: application-app.yml, application-oauth.yml
   mvc:
     hidden-method:
       filter:
