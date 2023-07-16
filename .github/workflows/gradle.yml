@@ -27,15 +27,15 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      spring.datasource.url: ${{ secrets.MYSQL_DATABASE }}
-      spring.datasource.username: ${{ secrets.MYSQL_USER }}
-      spring.datasource.password: ${{ secrets.MYSQL_PASSWORD }}
-      jwt.secret-key: ${{ secrets.JWT_SECRET_KEY }}
-      services.scheduleer-mysql.environment.MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-      cloud.aws.credentials.accessKey: ${{ secrets.ACCESS_KEY }}
-      cloud.aws.credentials.secretKey: ${{ secrets.SECRET_KEY }}
-      cloud.aws.region.static: ${{ secrets.REGION }}
-      cloud.aws.s3.bucket: ${{ secrets.BUCKET }}
+      MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+      MYSQL_USER: ${{ secrets.MYSQL_USER }}
+      MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+      JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+      MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+      ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      REGION: ${{ secrets.REGION }}
+      BUCKET: ${{ secrets.BUCKET }}
 
     steps:
       - uses: actions/checkout@v3
