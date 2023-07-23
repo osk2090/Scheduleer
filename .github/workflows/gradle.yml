@@ -79,10 +79,6 @@ jobs:
 #          push: true                # Dockerhub 푸쉬 여부
 #          tags: ${{ secrets.DOCKER_USERNAME }}/scheduleer    # docker 이미지 이름
 
-      - name: Deploy containers with docker-compose
-        run: |
-          docker-compose -f home/ec2-user/spring-github-action/docker-compose.yml up -d
-
       - name: AWS credential 설정
         uses: aws-actions/configure-aws-credentials@v1
         with:
