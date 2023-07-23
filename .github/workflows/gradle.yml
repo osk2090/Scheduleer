@@ -79,14 +79,13 @@ jobs:
 #          push: true                # Dockerhub 푸쉬 여부
 #          tags: ${{ secrets.DOCKER_USERNAME }}/scheduleer    # docker 이미지 이름
 
-      - name: Set .env for configuration
+      - name: Setting .env
         run: |
-          touch .env
           echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env
           echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> .env
           echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
-          echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
-        shell: bash
+          echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env          
+          cat .env
 
       - name: AWS credential 설정
         uses: aws-actions/configure-aws-credentials@v1
