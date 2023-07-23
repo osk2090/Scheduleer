@@ -68,22 +68,6 @@ jobs:
           docker images
           docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
 
-        # EC2에 접속하고 배포합니다.
-      - name: Deploy
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_KEY }}
-          # docker-compose가 있는 디렉토리로 이동해야 수행됩니다.
-          script: |
-            cd /home/ec2-user/spring-github-action
-            sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-            sudo docker rm -f $(sudo docker ps -qa)
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
-            sudo docker-compose up -d
-            sudo docker image prune -f
-
       - name: AWS credential 설정
         uses: aws-actions/configure-aws-credentials@v1
         with:
