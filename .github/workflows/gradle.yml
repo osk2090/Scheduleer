@@ -59,22 +59,25 @@ jobs:
         # arguments: build
         run : ./gradlew clean build --exclude-task test
 
+      # docker cli 플러그인인 buildx 설치. 후에 도커를 빌드할 수 있게 해줌
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Set up Docker Build
-        uses: docker/setup-buildx-action@v2
-
-      - name: Build and push
-        uses: docker/build-push-action@v4
+      # docker 이미지를 생성하고 dockerhub에 푸쉬
+      - name: Proxy Build And Push
+        uses: docker/build-push-action@v2
         with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/clockbox:latest
+          context: ./            # dockerfile이 있는 위치랑 맞춰주자
+          file: ./Dockerfile    # 빌드할 Dockerfile이 있는 디렉토리
+          platforms: linux/amd64    # 빌드할 때 사용할 환경.
+          push: true                # Dockerhub 푸쉬 여부
+          tags: ${{ secrets.DOCKER_USERNAME }}/scheduleer    # docker 이미지 이름
 
       - name: AWS credential 설정
         uses: aws-actions/configure-aws-credentials@v1
