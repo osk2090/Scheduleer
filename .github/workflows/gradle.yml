@@ -27,12 +27,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    env:
-      MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-      MYSQL_USER: ${{ secrets.MYSQL_USER }}
-      MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-      MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -84,6 +78,15 @@ jobs:
 #          platforms: linux/amd64    # 빌드할 때 사용할 환경.
 #          push: true                # Dockerhub 푸쉬 여부
 #          tags: ${{ secrets.DOCKER_USERNAME }}/scheduleer    # docker 이미지 이름
+
+      - name: Set .env for configuration
+        run: |
+          touch ./.env
+          echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env
+          echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> .env
+          echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
+          echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
+        shell: bash
 
       - name: AWS credential 설정
         uses: aws-actions/configure-aws-credentials@v1
