@@ -5,7 +5,7 @@ FROM azul/zulu-openjdk-alpine:17-jre
 WORKDIR /app
 
   # 호스트의 빌드된 Jar 파일을 컨테이너의 /app/ 디렉토리로 복사
-COPY /home/ec2-user/spring-github-action/build/libs/Scheduleer-0.0.1-SNAPSHOT.jar /app/
+COPY /home/ec2-user/spring-github-action/application.jar /app/
 
   # Spring Boot 애플리케이션의 포트 번호 (application.properties 또는 application.yml과 동일하게 설정)
 EXPOSE 8080
