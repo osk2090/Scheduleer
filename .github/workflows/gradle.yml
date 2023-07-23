@@ -59,25 +59,30 @@ jobs:
         # arguments: build
         run : ./gradlew clean build --exclude-task test
 
-      # Spring 어플리케이션 Docker Image 빌드
-      - name: Build Docker Image For Spring
+        # docker hub에 로그인하고 이미지를 빌드합니다. 이후에 push를 진행합니다.
+        # docker_username을 적지 않으면 push 시에 요청이 거부될 수 있습니다.
+      - name: Docker Hub build & push
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/도커 레파지토리 이름 .
-          docker push ${{ secrets.DOCKER_USERNAME }}/도커 레파지토리 이름
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }} .
+          docker images
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
 
-      # 서버에서 Docker 이미지 실행
-      - name: EC2 Docker Run
+        # EC2에 접속하고 배포합니다.
+      - name: Deploy
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_KEY }}
+          # docker-compose가 있는 디렉토리로 이동해야 수행됩니다.
           script: |
-            docker rm -f $(docker ps -qa)
-            docker rmi ${{ secrets.DOCKER_USERNAME }}/도커 레파지토리 이름
-            docker pull ${{ secrets.DOCKER_USERNAME }}/도커 레파지토리 이름
-            docker-compose up -d
+            cd /home/ec2-user/spring-github-action
+            sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            sudo docker rm -f $(sudo docker ps -qa)
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
+            sudo docker-compose up -d
+            sudo docker image prune -f
 
       - name: AWS credential 설정
         uses: aws-actions/configure-aws-credentials@v1
