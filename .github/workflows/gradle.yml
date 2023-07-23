@@ -27,6 +27,12 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+      MYSQL_USER: ${{ secrets.MYSQL_USER }}
+      MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+      MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -34,16 +40,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-
-      # 환경변수 .env 파일 생성 및 write
-      - name: Set .env for configuration
-        run: |
-          touch ./.env
-          echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> ./.env
-          echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> ./.env
-          echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> ./.env
-          echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> ./.env
-        shell: bash
 
       - name: Set yml file
         uses: microsoft/variable-substitution@v1
