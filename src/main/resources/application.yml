@@ -17,7 +17,7 @@ spring:
     cache: false
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://scheduleer_db_1:3306/${MYSQL_DATABASE}?useSSL=false
+    url: jdbc:mysql://mysql_db:3306/${MYSQL_DATABASE}?useSSL=false
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
 
