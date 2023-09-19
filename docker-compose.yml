@@ -1,9 +1,11 @@
 version: '3'
 services:
-  scheduleer-mysql:
+  database:
+    container_name: mysql_db
     image: mysql
+    restart: unless-stopped
     ports:
-      - "3307:3306" # HOST:CONTAINER
+      - "3306:3306" # HOST:CONTAINER
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -25,7 +27,6 @@ services:
       ZOOKEEPER_SYNC_LIMIT: 2
     ports:
       - "2181:2181"
-
   kafka:
     image: confluentinc/cp-kafka:latest
     depends_on:
@@ -40,6 +41,26 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+
+  application:
+    container_name: scheduleer
+    image: osk2090/scheduleer:latest
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    environment:
+      MYSQL_DATABASE: "scheduleer"
+      MYSQL_PASSWORD: "2090"
+      MYSQL_USER: "osk"
+      MYSQL_ROOT_PASSWORD: "9971"
+
+      ACCESS_KEY: ${ACCESS_KEY}
+      SECRET_KEY: ${SECRET_KEY}
+      region: ${region}
+      BUCKET: ${BUCKET}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+    depends_on:
+      - database
 
 volumes:
   mysql-data:
