@@ -35,7 +35,7 @@ spring:
       max-file-size: 1MB
       max-request-size: 10MB
   kafka:
-    bootstrap-servers: kafka:29092
+    bootstrap-servers: localhost:29092
 
 cloud:
   aws:
