@@ -3,7 +3,7 @@ package com.www.scheduleer.controller;
 import com.www.scheduleer.config.annotation.CurrentMember;
 import com.www.scheduleer.controller.dto.board.*;
 import com.www.scheduleer.domain.Member;
-import com.www.scheduleer.service.Board.BoardService;
+import com.www.scheduleer.service.board.BoardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

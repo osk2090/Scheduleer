@@ -1,4 +1,4 @@
-package com.www.scheduleer.service.Board;
+package com.www.scheduleer.service.board;
 
 import com.www.scheduleer.Repository.BoardRepository;
 import com.www.scheduleer.Repository.QueryDsl.BoardRepositorySupport;
@@ -29,7 +29,10 @@ public class BoardService {
     @Transactional
     public Long save(BoardSaveDto boardSaveDto, Member writer) {
         Long id = boardRepository.save(Board.createEntity(boardSaveDto, writer)).getId();
-        producer.sendMessage(writer.getNickName()+" 님이 새로운 계획을 등록하였습니다!");
+        // sse id값을 가져오는 로직
+
+        producer.sendMessage(writer.getId(), writer.getNickName() + " 님이 새로운 계획을 등록하였습니다!");
+
         return id;
     }
 
@@ -43,7 +46,7 @@ public class BoardService {
 
         List<Board> boardList = boardRepositorySupport.boards(id, limit, member, orderCondition);
         List<BoardResponseDto> responseDto = new ArrayList<>();
-        if (boardList.size() > 0) {
+        if (!boardList.isEmpty()) {
             boardList.forEach(data -> {
                 responseDto.add(
                         BoardResponseDto.builder()
@@ -61,7 +64,7 @@ public class BoardService {
 
         return BoardPageDto.builder()
                 .boardResponseDto(responseDto)
-                .lastIndex(responseDto.size() > 0 ? responseDto.get(responseDto.size() - 1).getId() : null)
+                .lastIndex(!responseDto.isEmpty() ? responseDto.get(responseDto.size() - 1).getId() : null)
                 .build();
     }
 
@@ -115,5 +118,14 @@ public class BoardService {
             return boardRepository.save(b).getId();
         }
         return null;
+    }
+
+    public Board findByBoardId(Long boardId) {
+        Optional<Board> board = boardRepository.findBoardInfoById(boardId);
+        Board b = null;
+        if (board.isPresent()) {
+             b = board.get();
+        }
+        return b;
     }
 }

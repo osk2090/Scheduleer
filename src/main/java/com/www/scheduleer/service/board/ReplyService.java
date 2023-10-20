@@ -1,9 +1,10 @@
-package com.www.scheduleer.service.Board;
+package com.www.scheduleer.service.board;
 
 import com.www.scheduleer.Repository.ReplyRepository;
 import com.www.scheduleer.controller.dto.reply.ReplyResponseDto;
 import com.www.scheduleer.controller.dto.board.ReplySaveDto;
 import com.www.scheduleer.controller.dto.member.MemberToReplyDto;
+import com.www.scheduleer.domain.Board;
 import com.www.scheduleer.domain.Member;
 import com.www.scheduleer.domain.Reply;
 import lombok.RequiredArgsConstructor;
@@ -72,4 +73,5 @@ public class ReplyService {
     public Long save(ReplySaveDto replySaveDto, Member member) {
         return replyRepository.save(Reply.createReply(replySaveDto, member)).getId();
     }
+
 }

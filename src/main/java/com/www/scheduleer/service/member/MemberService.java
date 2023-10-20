@@ -1,4 +1,4 @@
-package com.www.scheduleer.service.Member;
+package com.www.scheduleer.service.member;
 
 import com.www.scheduleer.Repository.MemberRepository;
 import com.www.scheduleer.Repository.RefreshTokenRepository;
@@ -6,11 +6,13 @@ import com.www.scheduleer.config.error.CustomException;
 import com.www.scheduleer.config.error.ErrorCode;
 import com.www.scheduleer.config.jwt.JwtTokenProvider;
 import com.www.scheduleer.config.utils.FileUtil;
-import com.www.scheduleer.controller.dto.board.BoardPageDto;
-import com.www.scheduleer.controller.dto.member.*;
-import com.www.scheduleer.domain.Board;
+import com.www.scheduleer.controller.dto.member.ChangePasswdDto;
+import com.www.scheduleer.controller.dto.member.MemberInfoDto;
+import com.www.scheduleer.controller.dto.member.MemberLoginResponseDto;
+import com.www.scheduleer.controller.dto.member.SignUpDto;
 import com.www.scheduleer.domain.Member;
-import com.www.scheduleer.service.Board.BoardService;
+import com.www.scheduleer.service.board.BoardService;
+import com.www.scheduleer.service.sse.SseEmitters;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +23,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +39,7 @@ public class MemberService {
     private final FileUtil fileUtil;
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final SseEmitters sseEmitters; // sse 연결 관련
 
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -65,7 +67,7 @@ public class MemberService {
     }
 
     @Transactional
-    public Long signUp(SignUpDto signUpDto) throws IOException { // 회원가입
+    public Long signUp(SignUpDto signUpDto) throws Exception { // 회원가입
         // 중복체크
         validateDuplicateUser(signUpDto.getEmail());
         signUpDto.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
@@ -98,6 +100,10 @@ public class MemberService {
 
         log.info("signIn service | authentication.getName : {}, authentication.getCredentials() : {}",
                 authentication.getName(), authentication.getCredentials());
+
+        // SSE id값 저장
+//        String sseId = sseEmitters.connect();
+//        sseService.saveSseId(sseId, authService.getMember());
 
         return new MemberLoginResponseDto(
                 "Bearer-" + jwtTokenProvider.createAccessToken(authentication),

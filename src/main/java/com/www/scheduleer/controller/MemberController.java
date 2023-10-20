@@ -6,15 +6,14 @@ import com.www.scheduleer.controller.dto.member.MemberLoginResponseDto;
 import com.www.scheduleer.controller.dto.member.SignInDto;
 import com.www.scheduleer.controller.dto.member.SignUpDto;
 import com.www.scheduleer.domain.Member;
-import com.www.scheduleer.service.Board.BoardService;
-import com.www.scheduleer.service.Member.MemberService;
+import com.www.scheduleer.service.board.BoardService;
+import com.www.scheduleer.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
 
 @RestController()
 @RequestMapping("/api/member")
@@ -27,11 +26,11 @@ public class MemberController {
     private final BoardService boardService;
 
     @PostMapping(value = "/signUp")
-    public Long signUp(@ModelAttribute SignUpDto signUpDto) throws IOException {
+    public Long signUp(@ModelAttribute SignUpDto signUpDto) throws Exception {
         return memberService.signUp(signUpDto);
     }
 
-    @PostMapping("/signIn")
+    @PostMapping(value = "/signIn")
     public MemberLoginResponseDto signInp(@RequestBody SignInDto signInDto) {
         return memberService.signIn(signInDto.getEmail(), signInDto.getPassword());
     }

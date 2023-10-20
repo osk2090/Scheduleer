@@ -7,7 +7,7 @@ import com.www.scheduleer.domain.Auth;
 import com.www.scheduleer.domain.Board;
 import com.www.scheduleer.domain.Member;
 import com.www.scheduleer.domain.Type;
-import com.www.scheduleer.service.Member.MemberService;
+import com.www.scheduleer.service.member.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
