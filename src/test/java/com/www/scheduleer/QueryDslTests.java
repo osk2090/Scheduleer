@@ -5,7 +5,7 @@ import com.www.scheduleer.Repository.QueryDsl.MemberRepositorySupport;
 import com.www.scheduleer.controller.dto.board.BoardSaveDto;
 import com.www.scheduleer.domain.Board;
 import com.www.scheduleer.domain.Member;
-import com.www.scheduleer.domain.OrderCondition;
+import com.www.scheduleer.domain.enums.OrderType;
 import com.www.scheduleer.service.board.BoardService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -58,7 +58,7 @@ public class QueryDslTests {
         Long cursor = 1L;
 
         if (cursor > 0L) {
-            List<Board> boards = boardRepositorySupport.boards(cursor, 5, null, OrderCondition.VIEW);
+            List<Board> boards = boardRepositorySupport.boards(cursor, 5, null, OrderType.VIEW);
 
             if (!boards.isEmpty()) {
                 boards.forEach(i -> {

@@ -1,33 +1,26 @@
 package com.www.scheduleer.service.kafka;
 
-import com.www.scheduleer.controller.dto.noti.NotiDto;
+import com.www.scheduleer.controller.dto.command.CommandDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class KafkaProducer {
-    private static final String TOPIC = "scheduleer-noti";
 
-    private final KafkaTemplate<String, NotiDto> kafkaTemplate;
+    @Value("${kafka.topic.notification}")
+    private String TOPIC;
 
-    public KafkaProducer(KafkaTemplate<String, NotiDto> kafkaTemplate) {
-        this.kafkaTemplate = kafkaTemplate;
-    }
+    private final KafkaTemplate<String, CommandDto> kafkaTemplate;
 
-    public void sendMessage(Long memberId, String message) {
-        NotiDto notiDto = NotiDto.builder()
-                .memberId(memberId)
-                .localDateTime(LocalDateTime.now())
-                .message(message)
-                .build();
-
-        log.info("Request send message to Kafka: {}", String.valueOf(notiDto));
-
-        kafkaTemplate.send(TOPIC, notiDto);
+    @Transactional
+    public void sendMessage(CommandDto commandDto) {
+        kafkaTemplate.send(TOPIC, commandDto);
+        log.info("Request send message to Kafka: {}", commandDto);
     }
 }

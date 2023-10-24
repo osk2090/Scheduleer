@@ -1,7 +1,7 @@
 package com.www.scheduleer.service.sse;
 
-import com.www.scheduleer.controller.dto.noti.NotiDto;
-import com.www.scheduleer.domain.NotiType;
+import com.www.scheduleer.controller.dto.command.DataType;
+import com.www.scheduleer.domain.enums.CommandType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,17 +10,23 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 @Slf4j
 @RequiredArgsConstructor
 public class SseEmitters {
     private static final ConcurrentHashMap<Long, SseEmitter> emitters = new ConcurrentHashMap<>();
-    private static final AtomicLong counter = new AtomicLong();
 
     @Value("${sse.timeout}")
     private String sseTimeout;
+
+    public boolean isValid(Long memberId) {
+        return emitters.get(memberId) != null;
+    }
+
+    public ConcurrentHashMap<Long, SseEmitter> getSseMap() {
+        return emitters;
+    }
 
     public SseEmitter connect(Long memberId) {
         final Long LONG_TYPE_SSE_TIMEOUT = Long.parseLong(
@@ -58,17 +64,17 @@ public class SseEmitters {
         return emitter;
     }
 
-    public void sendMessage(Long memberId, NotiDto notiDto) {
+    public void sendMessage(Long memberId, CommandType commandType, String msg) {
         emitters.forEach((key, value) -> {
             if (key.equals(memberId)) {
                 try {
                     value.send(
                             SseEmitter.event()
-                                    .name(NotiType.REPLY.name())
-                                    .data(notiDto.getMessage())
+                                    .name(commandType.name())
+                                    .data(msg)
                     );
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.warn(String.valueOf(e));
                 }
             }
         });

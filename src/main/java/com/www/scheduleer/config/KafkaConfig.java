@@ -1,6 +1,6 @@
 package com.www.scheduleer.config;
 
-import com.www.scheduleer.controller.dto.noti.NotiDto;
+import com.www.scheduleer.controller.dto.command.CommandDto;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -27,6 +27,9 @@ public class KafkaConfig {
     @Value(value = "${spring.kafka.bootstrap-servers}")
     private String bootstrapAddress;
 
+    @Value(value = "${kafka.topic.notification}")
+    private String topicName;
+
     @Bean
     public KafkaAdmin kafkaAdmin() {
         Map<String, Object> configs = new HashMap<>();
@@ -35,7 +38,7 @@ public class KafkaConfig {
     }
     @Bean
     public NewTopic myTopic1() {
-        return new NewTopic("scheduleer-noti", 2, (short) 1);
+        return new NewTopic(topicName, 2, (short) 1);
     }
 
     @Bean
@@ -53,21 +56,21 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ConsumerFactory<String, NotiDto> consumerFactory() {
+    public ConsumerFactory<String, CommandDto> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "scheduleer-noti");
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, topicName);
         props.put(ConsumerConfig.CLIENT_ID_CONFIG, UUID.randomUUID().toString());
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
         return new DefaultKafkaConsumerFactory<>(props,new StringDeserializer(),
-                new JsonDeserializer<>(NotiDto.class));
+                new JsonDeserializer<>(CommandDto.class));
     }
 
     @Bean("NotificationContainerFactory")
-    public ConcurrentKafkaListenerContainerFactory<String, NotiDto> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, NotiDto> factory =
+    public ConcurrentKafkaListenerContainerFactory<String, CommandDto> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, CommandDto> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);

@@ -3,18 +3,14 @@ package com.www.scheduleer.service;
 import com.www.scheduleer.Repository.BoardRepository;
 import com.www.scheduleer.Repository.MemberRepository;
 import com.www.scheduleer.controller.dto.board.BoardSaveDto;
-import com.www.scheduleer.domain.Auth;
 import com.www.scheduleer.domain.Board;
 import com.www.scheduleer.domain.Member;
-import com.www.scheduleer.domain.Type;
 import com.www.scheduleer.service.member.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
-import java.util.Collections;
 import java.util.Optional;
 
 @Service

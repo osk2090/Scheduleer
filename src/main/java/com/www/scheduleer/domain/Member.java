@@ -2,6 +2,8 @@ package com.www.scheduleer.domain;
 
 import com.www.scheduleer.controller.dto.BaseTimeEntity;
 import com.www.scheduleer.controller.dto.member.SignUpDto;
+import com.www.scheduleer.domain.enums.Auth;
+import com.www.scheduleer.domain.enums.Type;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
