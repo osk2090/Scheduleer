@@ -2,19 +2,11 @@ package com.www.scheduleer;
 
 import com.www.scheduleer.Repository.BoardRepository;
 import com.www.scheduleer.Repository.MemberRepository;
-import com.www.scheduleer.controller.dto.member.ChangePasswdDto;
-import com.www.scheduleer.domain.Auth;
-import com.www.scheduleer.domain.Board;
 import com.www.scheduleer.domain.Member;
-import com.www.scheduleer.service.Board.BoardService;
-import com.www.scheduleer.service.Member.MemberService;
-import com.www.scheduleer.domain.Type;
-import lombok.extern.log4j.Log4j2;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
+import com.www.scheduleer.service.board.BoardService;
+import com.www.scheduleer.service.member.MemberService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,10 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
-
 @SpringBootTest
-@Log4j2
 class ScheduleerApplicationTests {
 
 //    EntityManagerFactory emf = Persistence.createEntityManagerFactory("scheduleer");
@@ -106,41 +95,10 @@ class ScheduleerApplicationTests {
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     @Test
     void checkPW() {
-        if (passwordEncoder.matches("1111", memberService.getMember("1234@naver.com").get().getPassword())) {
-            System.out.println("y");
-        } else {
-            System.out.println("n");
-        }
-    }
-
-    @Test
-    @DisplayName("패스워드 변경 전후테스트")
-    @Transactional
-    void changePw() {
-        System.out.println("---- 패스워드 수정 전 ----");
-        String pw1 = "1234";
-        String pw2 = "1111";
-        System.out.println("현재 비밀번호: " + pw1);
-        assertThat(passwordEncoder.matches(pw1, memberService.getMember("1234@naver.com").get().getPassword())).isTrue();
-        ChangePasswdDto dto = new ChangePasswdDto();
-        dto.setBeforePasswd(pw1);
-        dto.setAfterPasswd(pw2);
-
-        memberService.changePw(dto, memberService.getMember("1234@naver.com").get());
-
-        System.out.println("---- 패스워드 수정 후 ----");
-        System.out.println("수정된 비밀번호: " + pw2);
-        assertThat(passwordEncoder.matches(pw2, memberService.getMember("1234@naver.com").get().getPassword())).isTrue();
-
-    }
-    @Value("${cloud.aws.credentials.secretKey}")
-    String secretKey;
-
-    @Value("${cloud.aws.credentials.accessKey}")
-    String accessKey;
-    @Test
-    void getAwsKey() {
-        System.out.println(secretKey);
-        System.out.println(accessKey);
+//        if (memberService.bc().matches("dh985622", memberService.getMember("osk@naver.com").get().getPassword())) {
+//            System.out.println("y");
+//        } else {
+//            System.out.println("n");
+//        }
     }
 }

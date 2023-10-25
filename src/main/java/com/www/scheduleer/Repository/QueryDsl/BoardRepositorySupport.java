@@ -4,10 +4,9 @@ import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.www.scheduleer.Repository.BoardRepository;
 import com.www.scheduleer.domain.Board;
 import com.www.scheduleer.domain.Member;
-import com.www.scheduleer.domain.OrderCondition;
+import com.www.scheduleer.domain.enums.OrderType;
 import com.www.scheduleer.domain.QBoard;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
@@ -49,8 +48,8 @@ public class BoardRepositorySupport extends QuerydslRepositorySupport {
         return board.writer.eq(member);
     }
 
-    public List<Board> boards(Long id, int limit, Member member, OrderCondition orderCondition) {
-        OrderSpecifier[] orderSpecifiers = createOrderSpecifier(orderCondition);
+    public List<Board> boards(Long id, int limit, Member member, OrderType orderType) {
+        OrderSpecifier[] orderSpecifiers = createOrderSpecifier(orderType);
 
         return queryFactory.selectFrom(board)
                 .where(gtId(id), eqMember(member))
@@ -58,12 +57,12 @@ public class BoardRepositorySupport extends QuerydslRepositorySupport {
                 .limit(limit)
                 .fetch();
     }
-    public OrderSpecifier[] createOrderSpecifier(OrderCondition orderCondition) {
+    public OrderSpecifier[] createOrderSpecifier(OrderType orderType) {
         List<OrderSpecifier> orderSpecifiers = new ArrayList<>();
 
-        if (Objects.isNull(orderCondition) || orderCondition.equals(OrderCondition.REG)) {
+        if (Objects.isNull(orderType) || orderType.equals(OrderType.REG)) {
             orderSpecifiers.add(new OrderSpecifier(Order.DESC, board.regDate));
-        } else if (orderCondition.equals(OrderCondition.VIEW)) {
+        } else if (orderType.equals(OrderType.VIEW)) {
             orderSpecifiers.add(new OrderSpecifier(Order.DESC, board.views));
         }
         return orderSpecifiers.toArray(new OrderSpecifier[orderSpecifiers.size()]);

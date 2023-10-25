@@ -1,4 +1,4 @@
-package com.www.scheduleer.service.Member;
+package com.www.scheduleer.service.member;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;

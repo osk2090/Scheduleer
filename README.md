@@ -16,8 +16,8 @@ Apache Kafka를 적용해보고싶어 다른이용자가 해당글에 댓글을 
 * Java
 * JPA
 * SpringFramework
-* Apache Kafka(예정)
+* Apache Kafka - 계획글 작성시 간단한 메시징 발송처리
 * Spring Batch(예정)
 
 #### Infra
-* GCP
+* AWS

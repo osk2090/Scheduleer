@@ -5,10 +5,9 @@ import com.www.scheduleer.controller.dto.member.MemberInfoDto;
 import com.www.scheduleer.domain.Board;
 import com.www.scheduleer.domain.Member;
 import com.www.scheduleer.controller.dto.member.UploadReqDto;
-import com.www.scheduleer.service.Board.BoardService;
-import com.www.scheduleer.service.Member.S3Uploader;
-import com.www.scheduleer.service.Member.MemberService;
-import lombok.extern.log4j.Log4j2;
+import com.www.scheduleer.service.board.BoardService;
+import com.www.scheduleer.service.member.S3Uploader;
+import com.www.scheduleer.service.member.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,6 @@ import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
-@Log4j2
 public class memberServiceTests {
     @Autowired
     private S3Uploader s3Uploader;

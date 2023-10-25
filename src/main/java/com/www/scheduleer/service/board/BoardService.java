@@ -1,13 +1,14 @@
-package com.www.scheduleer.service.Board;
+package com.www.scheduleer.service.board;
 
 import com.www.scheduleer.Repository.BoardRepository;
 import com.www.scheduleer.Repository.QueryDsl.BoardRepositorySupport;
 import com.www.scheduleer.config.error.CustomException;
 import com.www.scheduleer.config.error.ErrorCode;
 import com.www.scheduleer.controller.dto.board.*;
+import com.www.scheduleer.controller.dto.command.DataType;
 import com.www.scheduleer.domain.Board;
 import com.www.scheduleer.domain.Member;
-import com.www.scheduleer.domain.OrderCondition;
+import com.www.scheduleer.domain.enums.OrderType;
 import com.www.scheduleer.service.kafka.KafkaProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,27 +24,28 @@ public class BoardService {
     private final KafkaProducer producer;
 
     private final ReplyService replyService;
-
     private final BoardRepositorySupport boardRepositorySupport;
 
     @Transactional
     public Long save(BoardSaveDto boardSaveDto, Member writer) {
         Long id = boardRepository.save(Board.createEntity(boardSaveDto, writer)).getId();
-        producer.sendMessage(writer.getNickName()+" 님이 새로운 계획을 등록하였습니다!");
+        StringBuilder msg = new StringBuilder(writer.getNickName() + " 님이 새로운 계획을 등록하였습니다!");
+        //TODO: 새로운 테이블로 구성해야될지 검토
+//        producer.sendMessage(DataType.BOARD, writer.getId(), String.valueOf(msg));
         return id;
     }
 
     public BoardPageDto getBoardList(int sort, Long id, Member member, int limit) {
-        OrderCondition orderCondition = null;
+        OrderType orderType = null;
         if (sort == 0) {
-            orderCondition = OrderCondition.REG;
+            orderType = OrderType.REG;
         } else if (sort == 1) {
-            orderCondition = OrderCondition.VIEW;
+            orderType = OrderType.VIEW;
         }
 
-        List<Board> boardList = boardRepositorySupport.boards(id, limit, member, orderCondition);
+        List<Board> boardList = boardRepositorySupport.boards(id, limit, member, orderType);
         List<BoardResponseDto> responseDto = new ArrayList<>();
-        if (boardList.size() > 0) {
+        if (!boardList.isEmpty()) {
             boardList.forEach(data -> {
                 responseDto.add(
                         BoardResponseDto.builder()
@@ -61,7 +63,7 @@ public class BoardService {
 
         return BoardPageDto.builder()
                 .boardResponseDto(responseDto)
-                .lastIndex(responseDto.size() > 0 ? responseDto.get(responseDto.size() - 1).getId() : null)
+                .lastIndex(!responseDto.isEmpty() ? responseDto.get(responseDto.size() - 1).getId() : null)
                 .build();
     }
 
@@ -115,5 +117,14 @@ public class BoardService {
             return boardRepository.save(b).getId();
         }
         return null;
+    }
+
+    public Board findByBoardId(Long boardId) {
+        Optional<Board> board = boardRepository.findBoardInfoById(boardId);
+        Board b = null;
+        if (board.isPresent()) {
+             b = board.get();
+        }
+        return b;
     }
 }

@@ -2,6 +2,8 @@ package com.www.scheduleer.domain;
 
 import com.www.scheduleer.controller.dto.BaseTimeEntity;
 import com.www.scheduleer.controller.dto.member.SignUpDto;
+import com.www.scheduleer.domain.enums.Auth;
+import com.www.scheduleer.domain.enums.Type;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -39,9 +41,9 @@ public class Member extends BaseTimeEntity {
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private Type type;
+
     @Column(name = "auth")
     private String auth;
-
     @Builder
     public Member(String name, String nickName, String email, String password, String picture, Type type, String auth) {
         this.name = name;

@@ -1,15 +1,12 @@
 package com.www.scheduleer;
 
-import com.www.scheduleer.Repository.BoardRepository;
 import com.www.scheduleer.Repository.QueryDsl.BoardRepositorySupport;
 import com.www.scheduleer.Repository.QueryDsl.MemberRepositorySupport;
 import com.www.scheduleer.controller.dto.board.BoardSaveDto;
 import com.www.scheduleer.domain.Board;
 import com.www.scheduleer.domain.Member;
-import com.www.scheduleer.domain.OrderCondition;
-import com.www.scheduleer.service.Board.BoardService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import com.www.scheduleer.domain.enums.OrderType;
+import com.www.scheduleer.service.board.BoardService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +19,8 @@ import java.util.List;
 
 
 @SpringBootTest
-@Log4j2
 @Transactional
 @Rollback(value = false)
-@RequiredArgsConstructor
 public class QueryDslTests {
 
     @Autowired
@@ -63,7 +58,7 @@ public class QueryDslTests {
         Long cursor = 1L;
 
         if (cursor > 0L) {
-            List<Board> boards = boardRepositorySupport.boards(cursor, 5, null, OrderCondition.VIEW);
+            List<Board> boards = boardRepositorySupport.boards(cursor, 5, null, OrderType.VIEW);
 
             if (!boards.isEmpty()) {
                 boards.forEach(i -> {

@@ -4,7 +4,7 @@ import com.www.scheduleer.Repository.RefreshTokenRepository;
 import com.www.scheduleer.config.error.CustomException;
 import com.www.scheduleer.config.error.ErrorCode;
 import com.www.scheduleer.domain.RefreshToken;
-import com.www.scheduleer.service.Member.AuthService;
+import com.www.scheduleer.service.member.AuthService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;

@@ -21,9 +21,4 @@ public class ScheduleerApplication {
         return new HiddenHttpMethodFilter();
     }
 
-    @KafkaListener(topics = "Scheduleer",groupId = "foo")
-    public void listenWithHeaders(@Payload String message,
-                                  @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition) {
-        System.out.println(partition + " -> " + message);
-    }
 }

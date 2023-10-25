@@ -20,6 +20,7 @@ public class Reply extends BaseTimeEntity {
 
     @Column(nullable = false)
     private Long boardId;
+
     @Column()
     private Long reReplyId;
 

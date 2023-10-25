@@ -5,10 +5,8 @@ import com.www.scheduleer.Repository.QueryDsl.MemberRepositorySupport;
 import com.www.scheduleer.controller.dto.board.BoardSaveDto;
 import com.www.scheduleer.domain.Board;
 import com.www.scheduleer.domain.Member;
-import com.www.scheduleer.domain.OrderCondition;
-import com.www.scheduleer.service.Board.BoardService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import com.www.scheduleer.domain.enums.OrderType;
+import com.www.scheduleer.service.board.BoardService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +18,8 @@ import java.util.List;
 
 
 @SpringBootTest
-@Log4j2
 @Transactional
 @Rollback(value = false)
-@RequiredArgsConstructor
 public class BoardPagingTest {
     @Autowired
     private MemberRepositorySupport memberRepositorySupport;
@@ -57,7 +53,7 @@ public class BoardPagingTest {
     @Test
     @DisplayName("커서 방식의 페이지네이션 테스트 - 1페이지")
     void cursorPagingTest1() {
-        List<Board> boards = boardRepositorySupport.boards(null, 5, null, OrderCondition.REG);
+        List<Board> boards = boardRepositorySupport.boards(null, 5, null, OrderType.REG);
         if (!boards.isEmpty()) {
             System.out.println("page count: " + boards.size());
 
@@ -72,7 +68,7 @@ public class BoardPagingTest {
     @Test
     @DisplayName("커서 방식의 페이지네이션 테스트 - 2페이지")
     void cursorPagingTest2() {
-        List<Board> boards = boardRepositorySupport.boards(5L, 5, null, OrderCondition.REG);
+        List<Board> boards = boardRepositorySupport.boards(5L, 5, null, OrderType.REG);
         if (!boards.isEmpty()) {
             System.out.println("page count: " + boards.size());
 
