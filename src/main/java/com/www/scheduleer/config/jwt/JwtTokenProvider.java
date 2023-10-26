@@ -6,6 +6,7 @@ import com.www.scheduleer.config.error.ErrorCode;
 import com.www.scheduleer.service.member.AuthService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -61,10 +62,9 @@ public class JwtTokenProvider implements InitializingBean {
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-        } catch (ExpiredJwtException | IllegalArgumentException | MalformedJwtException |
+        } catch (ExpiredJwtException | IllegalArgumentException | MalformedJwtException | SignatureException |
                  UnsupportedJwtException e) {
             throw new CustomException(ErrorCode.TOKEN_ERROR);
         }
     }
-
 }
