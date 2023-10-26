@@ -1,18 +1,15 @@
 package com.www.scheduleer.config.jwt;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.www.scheduleer.config.error.CustomException;
-import com.www.scheduleer.config.error.ErrorCode;
-import com.www.scheduleer.config.error.ErrorResponse;
+import com.www.scheduleer.service.member.AuthService;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -21,70 +18,40 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
 @Component
 @Slf4j
 @RequiredArgsConstructor
 public class JwtTokenFilter extends OncePerRequestFilter {
-
-    public static final String AUTHORIZATION_HEADER = "Authorization";
-    public static final String REFRESH_HEADER = "Refresh";
-
     private final JwtTokenProvider jwtTokenProvider;
+    private final AuthService authService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, RuntimeException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws RuntimeException, ServletException, IOException {
         try {
-            String jwt = resolveToken(request, AUTHORIZATION_HEADER);
-
-            if (jwt != null) {
-                Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
+            String token = parseBearerToken(request);
+            if (token != null) {
+                Authentication authentication = parseUserSpecification(token);
+                log.info("authentication: {}", authentication);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                log.info("set Authentication to security context for '{}', uri: {}", authentication.getName(), request.getRequestURI());
-            } else {
-                String refresh = resolveToken(request, REFRESH_HEADER);
-                // refresh token을 확인해서 재발급해준다
-                if (refresh != null) {
-                    String newRefresh = jwtTokenProvider.reissueRefreshToken(refresh);
-                    if (newRefresh != null) {
-                        response.setHeader(REFRESH_HEADER, "Bearer-" + newRefresh);
-
-                        // access token 생성
-                        Authentication authentication = jwtTokenProvider.getAuthentication(refresh);
-                        response.setHeader(AUTHORIZATION_HEADER, "Bearer-" + jwtTokenProvider.createAccessToken(authentication));
-                        SecurityContextHolder.getContext().setAuthentication(authentication);
-                        log.info("reissue refresh Token & access Token");
-                    }
-                }
             }
-
-            filterChain.doFilter(request, response);
         } catch (CustomException e) {
-            setErrorResponse(response, ErrorCode.UNAUTHORIZED);
+            log.warn("exception: {}", e.getCode());
         }
+        filterChain.doFilter(request, response);
     }
 
-    private void setErrorResponse(
-            HttpServletResponse response,
-            ErrorCode errorCode
-    ){
-        ObjectMapper objectMapper = new ObjectMapper();
-        response.setStatus(errorCode.getStatus().value());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        ErrorResponse errorResponse = new ErrorResponse(errorCode.getStatus(), errorCode.getCode(), errorCode.getMessage());
-        log.error(errorResponse.toString());
-        try{
-            response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
-        }catch (IOException e){
-            e.printStackTrace();
-        }
+    private String parseBearerToken(HttpServletRequest request) {
+        return Optional.ofNullable(request.getHeader(HttpHeaders.AUTHORIZATION))
+                .filter(token -> token.substring(0, 7).equalsIgnoreCase("Bearer "))
+                .map(token -> token.substring(7))
+                .orElse(null);
     }
 
-    private String resolveToken(HttpServletRequest request, String header) {
-        String bearerToken = request.getHeader(header);
-        if (bearerToken != null && bearerToken.startsWith("Bearer-")) {
-            return bearerToken.substring(7);
-        }
-        return null;
+    private Authentication parseUserSpecification(String token) {
+        Claims claims = jwtTokenProvider.validateTokenAndGetSubject(token);
+        UserDetails userDetails = authService.loadUserByUsername(claims.getSubject().split(":")[0]);
+        return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
     }
 }

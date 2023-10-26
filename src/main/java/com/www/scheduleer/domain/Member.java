@@ -52,7 +52,7 @@ public class Member extends BaseTimeEntity {
         this.password = password;
         this.picture = picture;
         this.type = Type.GENERAL;
-        this.auth = "ROLE_USER";
+        this.auth = Auth.ROLE_USER.toString();
     }
 
     public static Member createEntity(SignUpDto signUpDto, String picture) {
@@ -68,8 +68,8 @@ public class Member extends BaseTimeEntity {
     }
 
     public List<String> getAuthList() {
-        if (auth.length() > 0) {
-            return Arrays.asList(auth.split(","));
+        if (!auth.isEmpty()) {
+            return List.of(auth.split(","));
         }
         return new ArrayList<>();
     }

@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -86,28 +87,17 @@ public class MemberService {
                 });
     }
 
-    @Transactional()
     public MemberLoginResponseDto signIn(String email, String pw) {
         UserDetails userDetails = authService.loadUserByUsername(email);
 
         if(!passwordEncoder.matches(pw, userDetails.getPassword())){
-//            throw new BadCredentialsException(userDetails.getUsername() + "Invalid password");
             throw new CustomException(ErrorCode.BAD_CREDENTIALS);
         }
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
-
-        log.info("signIn service | authentication.getName : {}, authentication.getCredentials() : {}",
-                authentication.getName(), authentication.getCredentials());
-
-        // SSE id값 저장
-//        String sseId = sseEmitters.connect();
-//        sseService.saveSseId(sseId, authService.getMember());
-
         return new MemberLoginResponseDto(
-                "Bearer-" + jwtTokenProvider.createAccessToken(authentication),
-                "Bearer-" + jwtTokenProvider.issueRefreshToken(authentication));
+                "Bearer " + jwtTokenProvider.createAccessToken(userDetails.getUsername() + ":" + userDetails.getAuthorities()),
+                null);
+//                "Bearer-" + jwtTokenProvider.issueRefreshToken(authentication));
     }
 
     public void changePw(ChangePasswdDto changePasswd, Member member) {
