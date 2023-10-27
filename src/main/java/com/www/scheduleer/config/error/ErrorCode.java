@@ -21,7 +21,7 @@ public enum ErrorCode {
 
     NOT_MATCH_PASSWORD(HttpStatus.BAD_REQUEST, "C005", "NOT_MATCH_PASSWORD"),
     NOT_MATCH_WRITER(HttpStatus.UNAUTHORIZED, "C006", "NOT_MATCH_WRITER"),
-    SERVER_ERROR(HttpStatus.BAD_GATEWAY, "C007", "Server is dead"),
+    SERVER_ERROR(HttpStatus.BAD_GATEWAY, "C007", "Server error"),
     ;
 
     private final HttpStatus status;

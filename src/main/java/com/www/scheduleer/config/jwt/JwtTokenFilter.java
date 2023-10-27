@@ -32,7 +32,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private final AuthService authService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, CustomException {
         try {
             String token = parseBearerToken(request);
             if (token != null) {
@@ -40,25 +40,19 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 log.info("authentication: {}", authentication);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-            filterChain.doFilter(request, response);
-        } catch (CustomException e) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            response.setCharacterEncoding("UTF-8");
-            objectMapper.writeValue(response.getWriter(), ErrorResponse.toResponseEntity(e.getCode()).getBody());
+        } catch (Exception e) {
+            request.setAttribute("exception", e); // exception:e 형식으로 요청값에 저장
+            log.error("token error: {}", e.getMessage());
         }
 
+        filterChain.doFilter(request, response);
     }
 
     private String parseBearerToken(HttpServletRequest request) {
-        try {
-            return Optional.ofNullable(request.getHeader(HttpHeaders.AUTHORIZATION))
-                    .filter(token -> token.substring(0, 7).equalsIgnoreCase("Bearer "))
-                    .map(token -> token.substring(7))
-                    .orElse(null);
-        } catch (Exception e) {
-            throw new CustomException(ErrorCode.TOKEN_ERROR);
-        }
+        return Optional.ofNullable(request.getHeader(HttpHeaders.AUTHORIZATION))
+                .filter(token -> token.substring(0, 7).equalsIgnoreCase("Bearer "))
+                .map(token -> token.substring(7))
+                .orElse(null);
     }
 
     private Authentication parseUserSpecification(String token) {
